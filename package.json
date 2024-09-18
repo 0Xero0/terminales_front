@@ -25,6 +25,7 @@
     "@sweetalert2/ngx-sweetalert2": "12.1.0",
     "@types/file-saver": "^2.0.5",
     "@types/luxon": "^3.2.0",
+    "admin": "file:",
     "bootstrap": "^5.2.0",
     "chart.js": "3.9.1",
     "file-saver": "^2.0.5",
