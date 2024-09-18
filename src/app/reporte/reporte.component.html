@@ -1,0 +1,93 @@
+<div class="px-sm-3 px-md-4 py-4">
+  <h2 class="fw-semibold texto-azul-004884 mb-3">Listado de soportes solicitados</h2>
+  <div class="d-flex flex-column justify-content-between align-items-start mb-4">
+    <!-- <form> -->
+      <span class="fs-18px fw-semibold texto-azul-004884 mb-3">Filtros</span>
+      <div class="d-flex align-items-end flex-gap-10">
+        <fieldset>
+          <label>Número de radicado</label>
+          <app-input-busqueda [(ngModel)]="buscarRadicado" (ngModelChange)="filtrar()"></app-input-busqueda>
+        </fieldset>
+        <fieldset>
+          <label>Estado</label>
+          <select [(ngModel)]="estadoSeleccionado" (change)="filtrar()" class="form-select" value="3">
+            <option value=0>Selecciona un estado</option>
+            <option [value]="estado.id" *ngFor="let estado of ESTADOS"><!-- {{ estado.id }} -  -->{{ estado.descripcion }}
+            </option>
+          </select>
+        </fieldset>
+        <fieldset>
+
+          <div class="text-center"><label>Módulos</label></div>
+            <button *ngFor="let aplicativo of aplicativos" class="button" type="button"
+              (click)="filtraPorAplicativo(aplicativo.titulo)"
+              [class.active]="aplicativo.titulo == aplicativoSeleccionado"
+            >
+            {{aplicativo.titulo}}
+          </button>
+        </fieldset>
+        <fieldset class="align-items-end">
+          <button type="button" class="boton primario delineado" (click)="limpiarFiltros()">
+            Limpiar Filtros
+          </button>
+        </fieldset>
+      </div>
+    <!-- </form> -->
+  </div>
+
+  <div class="d-flex mb-3">
+    <div class="table-responsive custom-scroll tabla-soportes">
+      <table class="table table-bordered tabla-primaria">
+        <thead>
+          <tr class="fs-14px">
+            <th class="">Módulos</th>
+            <th class="">Radicado</th>
+            <th class="">Estado</th>
+            <th class="">Fecha de creación</th>
+            <!--<th class="">NIT</th>
+             <th class="th-razon-social">Razón social</th>-->
+            <th class="th-descripcion">Descripción</th>
+            <th class="">Correo electrónico</th>
+            <th class="">Teléfono</th>
+            <th class="th-respuesta">Respuesta</th>
+          </tr>
+        </thead>
+        <tbody class="fs-14px"><!--  -->
+          <tr *ngFor="let reportes of reportesFiltrados | paginate: { itemsPerPage: pageSize, currentPage: page };"
+            max-height="100px">
+            <td>{{reportes.aplicativo}}</td>
+            <td class="fw-semibold">{{reportes.radicado}}</td>
+            <td class="fw-semibold">{{obtenerDescripcionEstado(reportes.id_estado)}}</td>
+            <td>{{reportes.fecha_creacion | fecha: 'dd/MM/yyyy'}}</td>
+            <!-- <td>{{reportes.nit}}</td>
+            <td class="td-razon-social">{{reportes.razon_social}}</td> -->
+            <td>
+              <div class="contenedor-descripcion">{{reportes.descripcion}}</div>
+            </td>
+            <td>{{reportes.email}}</td>
+            <td>{{reportes.telefono}}</td>
+            <td>
+              <div class="contenedor-respuesta">{{reportes.respuesta}}</div>
+            </td>
+          </tr>
+          <tr *ngIf="reportesFiltrados.length < 1">
+            <td colspan="10" class="text-center">
+              <span class="fw-semibold">No se encontraron soportes con los criterios de búsqueda actuales.</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Controles de paginación -->
+  <div class="d-flex justify-content-end">
+    <pagination-controls (pageChange)="page = $event"
+      previousLabel="Ant."
+      nextLabel="Sig."
+      screenReaderPaginationLabel="Paginación"
+      screenReaderPageLabel="página"
+      screenReaderCurrentLabel="Página actual"
+      class="fw-semibold">
+    </pagination-controls>
+  </div>
+</div>

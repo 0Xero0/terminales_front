@@ -1,0 +1,154 @@
+.fondo {
+  height: 858px;
+  max-height: 2160px;
+}
+
+.fondo-imagen {
+  background-image: url(../../assets/img/PNG/fondo1_oscuro.png);
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-attachment: fixed;
+  background-size: cover;
+  height: 250px;
+}
+
+.rectangulo {
+  height: 117px;
+  background: #004884 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+
+.contenedor-titulo {
+  position: relative;
+  top: 70px;
+}
+
+.card-container {
+  position: relative;
+  top: 100px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.card {
+  position: relative;
+  flex-direction: column;
+  justify-content: space-between;
+  display: flex;
+  width: 400px;
+  height: 550px;
+  margin: 10px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 5px;
+  opacity: 1;
+}
+
+.card-content {
+  padding: 40px;
+  position: relative;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease-in-out;
+  flex-grow: 1;
+  display: flex;
+}
+
+.contenedor-titulo-card {
+  position: relative;
+  top: 30%;
+}
+
+.card-title img {
+  width: 94px;
+  height: 93px;
+}
+
+.card-title h3 {
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.card-button {
+  background-color: #3366CC;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.card-button:hover {
+  background-color: #0056b3;
+}
+
+.estado-container {
+  position: relative;
+  top: 12%
+}
+
+.estado-container p {
+  margin-bottom: 1.5rem;
+}
+
+
+.estado-ok {
+  color: #3366CC;
+}
+
+.estado-pendiente {
+  color: #D6713F;
+}
+
+.titulo {
+  color: #ffffff;
+  font-weight: normal;
+  font-size: 32px;
+}
+
+.boton-reportar {
+  width: 160px;
+  height: 43px;
+}
+
+.boton-documentacion {
+  width: 235px;
+  height: 43px;
+}
+
+hr {
+  align-self: center;
+  width: 300px;
+  border: 1px solid #707070;
+}
+
+.card-provedores {
+  height: 388px !important;
+  width: 459px;
+}
+
+.card-description{
+  position: relative;
+  top:7%;
+  height: 88px;
+}
+
+.card-description p{
+  font-size: 16px;
+}
+
+.card-provedores .estado-container{
+  position: relative;
+  top: -7%;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 1366px) {
+  .fondo-imagen {
+    background-position: center top;
+    background-attachment:scroll;
+    background-size: cover;
+  }
+}

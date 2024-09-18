@@ -1,0 +1,50 @@
+<app-cabecera />
+<div class="fondo">
+  <div class="fondo-imagen">
+    <div class="d-flex justify-content-center">
+      <div class="informacion">
+        <div class="texto-login">
+          <h3 class="fs-32px fw-semibold texto-blanco">
+            VERIFICADOR DE INGRESO AL SISTEMA INTELIGENTE NACIONAL DE SUPERVISIÓN <b>AL TRANSPORTE (SINST)</b></h3> 
+        </div>
+        <div class="texto-login">
+          <p class="fs-14px mt-3">
+            Aquí puede verificar si está obligado a diligenciar la información de los aplicativos del
+            SISTEMA NACIONAL DE SUPERVISIÓN AL TRANSPORTE
+          </p>
+        </div>
+      </div>
+      <div class="card contenedor-inicio-sesion">
+        <div class="card-body">
+          <div class="logos d-flex w-100 px-2 justify-content-between">
+            <div class="col-12 ms-auto text-center">
+              <img draggable="false" class="img-fluid logo-supertransporte"
+                src="assets/img/cabecera/supertransporte.jpg" alt="ministerio-de-transporte">
+            </div>
+          </div>
+          <form class="w-100" [formGroup]="formulario">
+            <fieldset class="mb-4 justify-content-center">
+              <label class="fs-16px mb-2 texto-gris-4B4B4B" for="documentoId">NIT</label>
+              <app-input-numerico formControlName="documentoId" [largoMaximo]="10"
+                [placeholder]="'Ingrese aquí su NIT sin digito de verificación'" required
+                [ngClass]="{'input-error':this.formulario.controls['documentoId'].errors &&
+                this.formulario.controls['documentoId'].dirty && this.formulario.controls['documentoId'].errors['required']}" />
+              <span class="validacion"
+                *ngIf="this.formulario.controls['documentoId'].errors &&
+                        this.formulario.controls['documentoId'].dirty && this.formulario.controls['documentoId'].errors['required']">
+                Ingrese su NIT
+              </span>
+            </fieldset>
+            <fieldset style="display: flex; justify-content:end;">
+              <button type="button" class="boton primario relleno fs-16px" (click)="this.verificar()"
+                (keyup.enter)="this.verificar()">Verificar</button>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="rectangulo"></div>
+</div>
+
+<app-popup #popup />

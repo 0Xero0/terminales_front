@@ -1,0 +1,126 @@
+.fondo{
+  height: 989px;
+  max-height: 2160px;
+}
+
+.fondo-imagen{
+  background-image: url(../../../../assets/img/PNG/fondo1_oscuro.png);
+  background-repeat: no-repeat;
+  background-position:center top;
+  background-attachment: fixed;
+  background-size: cover;
+  height: 400px;
+}
+
+.texto-login{
+  position: relative;
+  top: -23%;
+}
+
+.rectangulo{
+  height: 119px;
+  background: #004884 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+
+a,a:hover{
+  text-decoration: none;
+  color: #3366CC;
+}
+
+.informacion{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Alinea los elementos al inicio del contenedor */
+  width: 553px;
+  height: 700px;
+  text-align: start;
+  margin: 70px;
+}
+
+hr{
+  width: 300px;
+  border: 1px solid #707070;
+}
+
+.texto-blanco{
+  color: #ffffff;
+  margin-top: 500px;
+}
+
+.contenedor-inicio-sesion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 420px;
+  height: 700px;
+  margin-top: 200px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+
+.contenedor-inicio-sesion .card-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  gap: 5px;
+  padding: 0 40px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.form-control{
+  width: 350px;
+}
+
+#contenedor-enlaces span {
+  color: #3366CC;
+}
+
+#contenedor-enlaces{
+margin: 0 auto;
+padding: 2px !important;
+}
+
+.card-body{
+  height: 650px;
+  border-radius: 5px;
+  box-shadow: 0px 3px 6px #00000029;
+}
+
+.logo-ministerio img{
+  height: 50px;
+}
+.logo-supertransporte {
+  height: 100px;
+}
+
+
+.input-error{
+  border-color: red;
+}
+
+.titulo-personalizado {
+  text-transform: uppercase; /* Convierte el texto a mayúsculas */
+  color: white; /* Color del texto */
+  text-shadow:
+    -1px -1px 0 var(--azul-oscuro),
+    1px -1px 0 var(--azul-oscuro),
+    -1px 1px 0 var(--azul-oscuro),
+    1px 1px 0 var(--azul-oscuro); /* Bordes azules */
+  /*font-weight: bold; /* Opcional: hace el texto más grueso */
+  font-size: 2em; /* Ajusta el tamaño del texto según tus necesidades */
+}
+
+.boton{
+  width: 160px;
+  height: 43px;
+}
+
+@media (max-width: 1366px) {
+  .fondo-imagen {
+    background-attachment:scroll;
+  }
+}

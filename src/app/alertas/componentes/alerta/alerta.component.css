@@ -1,0 +1,26 @@
+.alerta{
+    padding: 10px;
+    display: flex;
+    align-items: stretch;
+    font-size: 14px;
+    border-radius: 6px;
+}
+.alerta-peligro{
+    background-color: #FFEEEE;
+    border: 1px solid #AC0404;
+    color: #AC0404;
+}
+.alerta-informacion{
+    background-color: #E8F3FF;
+    border: 1px solid #202256;
+    color: #202256;
+}
+.alerta .icono{
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+.alerta p{
+    padding-top: 5px;
+    margin: 0;
+}

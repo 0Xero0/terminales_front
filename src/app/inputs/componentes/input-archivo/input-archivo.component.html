@@ -1,0 +1,17 @@
+<label [for]="nombre" class="input-archivo d-flex" [ngClass]="{'disabled': disabled}">
+    <div class="archivos">
+        <div class="archivo d-flex" *ngIf="archivo">
+            <span class="nombre-archivo">{{ archivo.name }}</span>
+            <button class="eliminar-archivo" (click)="manejarRemoverArchivo($event)">x</button>
+        </div>
+    </div>
+    <div class="boton-adjuntar d-flex align-items-center justify-content-center">Adjuntar</div>
+    <input 
+    #input 
+    type="file" 
+    [accept]="unirAcepta()" 
+    [id]="nombre" 
+    [disabled]="disabled"
+    (change)="onChangeFiles($event)">
+     
+</label>

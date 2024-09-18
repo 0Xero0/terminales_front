@@ -1,0 +1,90 @@
+<div class="fondo">
+  <div class="fondo-imagen">
+    <div class="text-center contenedor-titulo">
+      <h3 class="titulo">SISTEMA INTELIGENTE NACIONAL DE SUPERVISIÓN <br><b>AL TRANSPORTE (SINST)</b></h3>
+    </div>
+    <div class="card-container mx-2 justify-content-center" > <!-- *ngIf="rol.id !== 5" -->
+      <div *ngFor="let aplicativo of aplicativos"  
+        [ngClass]="{'card-provedores': aplicativo.titulo === 'PROVEEDORES'}"  class="card">
+        <div class="card-content">
+          <div class="card-title d-flex justify-content-between">
+            <div class="contenedor-titulo-card">
+              <h3>{{aplicativo.titulo}}</h3>
+              <!-- <h3 *ngIf="aplicativo.titulo == 'PECCIT'">PECCIT</h3>
+              <h3 *ngIf="aplicativo.titulo == 'PESV'">PESV</h3> -->
+            </div>
+            <div class="logos-aplicativos">
+              <img *ngIf="aplicativo.titulo == 'PÓLIZA'" src="assets/img/PNG/poliza_ico.png" alt="">
+              <img *ngIf="aplicativo.titulo == 'PECCIT'" src="assets/img/PNG/peccit_ico.png" alt="">
+              <img *ngIf="aplicativo.titulo == 'PESV'" src="assets/img/PNG/pesv_ico.png" alt="">
+              <img *ngIf="aplicativo.titulo == 'PROVEEDORES'" src="assets/img/PNG/proveedores@2x.png" alt="">
+            </div>
+          </div>
+          <div class="card-description">
+            <p>{{aplicativo.descripcion}}</p>
+          </div>
+          <div class="estado-container mb-auto mb-3">
+            <span class="fw-semibold text-center fs-16px" style="color:#4B4B4B">Estado:
+              <span *ngIf="aplicativo.estado == 'ok'" class="estado-ok mx-2 fs-16px">Finalizado</span>
+              <span *ngIf="aplicativo.estado == 'pendiente'" class="estado-pendiente mx-2 fs-16px">Pendiente</span>
+            </span>
+          </div>
+          <div class="justify-content-center text-center mb-2">
+            <button type="button" class="boton primario relleno fs-16px boton-reportar"
+              (click)="redirigir(aplicativo.ruta,aplicativo.titulo)">
+              Reportar
+            </button>
+          </div>
+          <hr *ngIf="aplicativo.documentacion[0]?.link">
+          <div *ngIf="aplicativo.documentacion[0]?.link" class="justify-content-center text-center mt-2">
+            <button type="button" class="boton primario relleno fs-16px boton-documentacion"
+              (click)="documentacion(aplicativo.documentacion[0].link)">
+              Documentación oficial
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Puedes agregar más tarjetas aquí -->
+    </div>
+    <!-- TARJETA EXCLUSIVA DE PROVEEDORES
+    <div class="card-container mx-2 justify-content-center" *ngIf="rol.id === 5">
+      <div *ngFor="let aplicativo of proveedores" class="card card-provedores">
+        <div class="card-content">
+          <div class="card-title d-flex justify-content-between">
+            <div class="contenedor-titulo-card">
+              <h3>{{aplicativo.titulo}}</h3>
+            </div>
+            <div class="logos-aplicativos">
+              <img src="assets/img/PNG/proveedores@2x.png" alt="">
+            </div>
+          </div>
+          <div class="card-description">
+            <p>{{aplicativo.descripcion}}</p>
+          </div>
+          <div class="estado-container-proveedores mt-auto mb-3">
+            <span class="fw-semibold text-center" style="color:#4B4B4B">Estado:
+              <span *ngIf="estadoProveedor == 'ok'" class="estado-ok mx-2 fs-16px">Finalizado</span>
+              <span *ngIf="estadoProveedor == 'pendiente'" class="estado-pendiente mx-2 fs-16px">Pendiente</span>
+            </span>
+          </div>
+          <div class="justify-content-center text-center">
+            <button type="button" class="boton primario relleno fs-16px boton-reportar"
+              (click)="redirigir(aplicativo.ruta,aplicativo.titulo)">
+              Reportar
+            </button>
+          </div>
+          <hr *ngIf="aplicativo.documentacion[0].link">
+          <div *ngIf="aplicativo.documentacion[0].link" class="justify-content-center text-center">
+            <button type="button" class="boton primario relleno fs-16px boton-documentacion"
+              (click)="documentacion(aplicativo.documentacion[0].link)">
+              Documentación oficial
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>-->
+  </div>
+  <div class="rectangulo"></div>
+</div>
+
+<script src="script.js"></script>

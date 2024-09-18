@@ -1,0 +1,57 @@
+<ng-template #modal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title fs-14px  fw-bolder">¿Olvidó su contraseña?</h4>
+      <button type="button" class="btn-close"  aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="alert alerta-contraseña alert-dismissible fade show" role="alert">
+      <label class="fs-14px">
+          <span class="fw-bold">Ingrese su usuario y correo electrónico principal</span>
+          registrado en el Sistema de Supervisión al transporte VIGÍA, para iniciar con el proceso de recuperar contraseña.</label>
+    </div>
+    <div class="modal-body">
+      <form  class="d-flex flex-column flex-gap-10" [formGroup]="this.formulario">
+        <div class="row">
+          <div class="col-6">
+            <fieldset>
+              <label for="usuario" class="fw-semibold">Usuario</label>
+              <input class="form-control" formControlName="usuario" type="text" required>
+              <span class="validacion"
+                    *ngIf="this.formulario.controls['usuario'].errors &&
+                    this.formulario.controls['usuario'].dirty && this.formulario.controls['usuario'].errors['required']">
+                    Ingrese su usuario
+                </span>
+              <span class="validacion"
+                    *ngIf="this.formulario.controls['usuario'].errors &&
+                    this.formulario.controls['usuario'].dirty && this.formulario.controls['usuario'].errors['pattern']">
+                    Debe tener almenos 6 dígitos.
+                </span>
+            </fieldset>
+          </div>
+          <div class="col-6">
+            <fieldset>
+              <label for="correo" class="fw-semibold">Correo electrónico  </label>
+              <input class="form-control" formControlName="correo" type="email" required>
+              <span class="validacion"
+              *ngIf="this.formulario.controls['correo'].errors &&
+              this.formulario.controls['correo'].dirty && this.formulario.controls['correo'].errors['required']">
+              Ingrese su correo electronico
+          </span>
+          <span class="validacion"
+              *ngIf="this.formulario.controls['correo'].errors &&
+              this.formulario.controls['correo'].dirty && this.formulario.controls['correo'].errors['email']">
+              Ingrese un correo valido
+          </span>
+            </fieldset>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer d-flex">
+      <button type="button" class="boton primario relleno ms-auto fw-semibold" (click)="recuperacion()">Enviar</button>
+    </div>
+  </ng-template>
+
+  <swal #popupExitoso></swal>
+  <swal #fallido></swal>
+
+  <app-popup #popup></app-popup>

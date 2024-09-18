@@ -1,0 +1,67 @@
+<div class="p-5 pt-0 mt-3" >
+
+<h1 class="fw-semibold">Verificar vehiculos</h1>
+<hr>
+
+
+<div class="filtros d-flex mb-3 flex-gap-20">
+    <fieldset class="me-2">
+        <label class="fs-14px fw-semibold">Filtrar</label>
+        <app-input-busqueda
+            [ngModel]="termino" 
+            (ngModelChange)="setTermino($event)" />
+    </fieldset>
+    <fieldset class="d-flex align-items-end me-2">
+        <button class="boton primario relleno" (click)="actualizarFiltros()">Buscar</button>
+    </fieldset>
+    <fieldset class="d-flex align-items-end me-2">
+        <button class="boton primario delineado" (click)="limpiarFiltros()">Limpiar filtros</button>
+    </fieldset>
+    <fieldset class="d-flex align-items-end ml-auto">
+        <button class="boton primario delineado" (click)="exportarVehiculos(1,1)">Exportar</button>
+    </fieldset>
+</div>
+    <div class="table-responsive custom-scroll mb-3">
+    <table class="table-bordered tabla-reportes">
+      <thead>
+          <tr class="fs-12px">
+              <th class="encabezado-tabla celda-centrada" width="100px">Nit</th>
+              <th class="encabezado-tabla celda-centrada" width="100px">Razón social</th>
+              <th class="encabezado-tabla celda-centrada" width="300px">Tipo</th>
+              <th class="encabezado-tabla celda-centrada" width="100px">Número de póliza</th>
+              <th class="encabezado-tabla celda-centrada" width="300px">Placa</th>
+              <th class="encabezado-tabla celda-centrada" width="300px">Cantidad de pasajeros</th>
+
+
+          </tr>
+      </thead>
+      <tbody class="fs-12px">
+          <tr *ngFor="let vehiculo of vehiculos ; let i = index">
+              <td class="celda-centrada">{{ vehiculo.nit }}</td>
+              <td class="celda-centrada">{{ vehiculo.razon_social }}</td>
+              <td class="celda-centrada">{{ vehiculo.tipo }}</td>
+              <td class="celda-centrada">{{ vehiculo.numero_poliza }}</td>
+              <td class="celda-centrada">{{ vehiculo.placa }}</td>
+              <td class="celda-centrada">{{ vehiculo.pasajeros }}</td>
+             
+          </tr>
+      </tbody>
+  </table>
+  
+  
+  </div>
+  <div class="d-flex justify-content-start">
+  <ngb-pagination 
+  [collectionSize]="paginador.totalRegistros ?? 0" 
+  [page]="paginador.pagina"
+  [pageSize]="paginador.limite"
+  (pageChange)="paginador.cambiarPagina($event)"
+  [maxSize]="5">
+    <ng-template ngbPaginationFirst>Prim.</ng-template>
+    <ng-template ngbPaginationLast>Ult.</ng-template>
+    <ng-template ngbPaginationPrevious>Ant.</ng-template>
+    <ng-template ngbPaginationNext>Sig.</ng-template>
+  </ngb-pagination>
+  </div>
+
+</div>

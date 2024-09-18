@@ -1,0 +1,17 @@
+<div class="alerta" [ngClass]="clases">
+    <div class="icono" *ngIf="tipo === 'peligro'">
+        <img src="assets/img/warning-rojo.svg" alt="alerta-peligro"> 
+    </div>
+    <div class="icono" *ngIf="tipo === 'advertencia'">
+        <img src="" alt="alerta-advertencia">
+    </div>
+    <div class="icono" *ngIf="tipo === 'informacion'">
+        <img src="assets/img/warning.svg" alt="alerta-informacion">
+    </div>
+    <div class="icono" *ngIf="tipo === 'completado'">
+        <img src="" alt="alerta-completado">
+    </div>
+    <p>
+        <ng-content></ng-content>
+    </p>
+</div>

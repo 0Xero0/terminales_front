@@ -1,0 +1,77 @@
+.tabla-soportes{
+  width: 100%;
+}
+.tabla-soportes table td{
+  width: auto;
+}
+.th-respuesta,.th-descripcion{
+  min-width: 300px;
+}
+.td-razon-social{
+  white-space: nowrap;
+}
+.contenedor-descripcion, .contenedor-respuesta{
+  overflow-y: hidden;
+  max-height: 67px;
+  text-overflow: ellipsis;
+}
+
+/* Estilo para el contenedor del paginador */
+.ngx-pagination {
+  border: #6c757d;
+  border-radius: 10%;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Estilo para los elementos del paginador */
+.ngx-pagination li {
+  display: inline;
+  margin: 0 5px;
+}
+
+/* Estilo para los enlaces del paginador */
+.ngx-pagination li a {
+  color: #007bff; /* Color del texto del enlace */
+  text-decoration: none;
+  padding: 5px 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+/* Estilo para los enlaces del paginador al pasar el mouse */
+.ngx-pagination li a:hover {
+  background-color: #489ef3; /* Color de fondo al pasar el mouse */
+  color: #0056b3; /* Color del texto al pasar el mouse */
+}
+
+/* Estilo para la página actual */
+.ngx-pagination .current {
+  background-color: #007bff; /* Color de fondo de la página actual */
+  color: white; /* Color del texto de la página actual */
+  border: 1px solid #007bff;
+  border-radius: 4px;
+}
+
+/* Estilo para deshabilitar enlaces */
+.ngx-pagination .disabled a {
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.button-group {
+  margin-bottom: 10px;
+}
+button {
+  margin-right: 5px;
+  border-radius: 20px;
+  /* border: none; */
+  padding: 5px 17px;
+  background-color: aliceblue;
+}
+.active {
+  background-color: #007bff;
+  color: white;
+}
+

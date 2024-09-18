@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="85.26" height="85.664" viewBox="0 0 85.26 85.664">
+  <g id="Grupo_1435" data-name="Grupo 1435" transform="translate(-647.861 -205.699)">
+    <g id="Grupo_1116" data-name="Grupo 1116" transform="translate(650.889 205.699)">
+      <g id="Elipse_59" data-name="Elipse 59" transform="translate(9.441 0)" fill="none" stroke="#da2128" stroke-width="6">
+        <circle cx="19.068" cy="19.068" r="19.068" stroke="none"/>
+        <circle cx="19.068" cy="19.068" r="16.068" fill="none"/>
+      </g>
+      <g id="Grupo_1118" data-name="Grupo 1118" transform="translate(0 44.356)">
+        <path id="Trazado_370" data-name="Trazado 370" d="M10813.7-2165.367c-31.3,0-29.641,26.87-29.641,26.87" transform="translate(-10784.044 2165.367)" fill="none" stroke="#da2128" stroke-linecap="round" stroke-width="6"/>
+        <path id="Trazado_371" data-name="Trazado 371" d="M10815.727-2138.5s3.565-26.87-31.3-26.87" transform="translate(-10754.772 2165.367)" fill="none" stroke="#da2128" stroke-linecap="round" stroke-width="6"/>
+      </g>
+    </g>
+    <g id="Elipse_67" data-name="Elipse 67" transform="translate(686.909 245.937)" fill="#fff" stroke="#da2128" stroke-width="5">
+      <circle cx="18.471" cy="18.471" r="18.471" stroke="none"/>
+      <circle cx="18.471" cy="18.471" r="15.971" fill="none"/>
+    </g>
+    <g id="Grupo_1436" data-name="Grupo 1436" transform="translate(698.989 253.833)">
+      <path id="Trazado_531" data-name="Trazado 531" d="M-593.686,313.238v2.1a1.549,1.549,0,0,1-1.586,1.586,1.588,1.588,0,0,1-1.586-1.586v-3.366c0-.032.033-.032.033-.065-.033-.033-.033-.033-.033-.065a1.632,1.632,0,0,1,1.586-1.586,3.654,3.654,0,0,0,3.69-3.625,3.633,3.633,0,0,0-3.69-3.625,3.576,3.576,0,0,0-3.107,1.78,1.6,1.6,0,0,1-2.2.583,1.578,1.578,0,0,1-.55-2.168,6.786,6.786,0,0,1,5.858-3.366,6.824,6.824,0,0,1,6.829,6.8A6.8,6.8,0,0,1-593.686,313.238Zm0,7.088v.583a1.549,1.549,0,0,1-1.586,1.586,1.588,1.588,0,0,1-1.586-1.586v-.583a1.61,1.61,0,0,1,1.586-1.586A1.568,1.568,0,0,1-593.686,320.326Z" transform="translate(601.354 -299.839)" fill="#da2128"/>
+    </g>
+    <line id="Línea_290" data-name="Línea 290" x2="11.429" y2="9.955" transform="translate(717.46 277.176)" fill="none" stroke="#da2128" stroke-linecap="round" stroke-width="6"/>
+  </g>
+</svg>

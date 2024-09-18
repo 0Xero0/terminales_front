@@ -1,0 +1,38 @@
+:root{
+    --ancho-menu-lateral: 250px;
+    --z-index-menu-lateral: 1000;
+    --z-index-barra-navegacion: 990;
+    --alto-barra-navegacion: 54px;
+    --azul-cabecera: #3366cc;
+    --azul: #3366cc;
+    --azul-oscuro: #004884;
+    --azul-claro: #E6EFFD;
+
+    --gris: #4B4B4B;
+    --gris-1: #a9a9a9;
+    --gris-2: gainsboro;
+
+    --color-scroll: #e0e0e0;
+    --color-scroll-hover: #c5c5c5;
+
+    --bg-color-peligro: #ffe6e6;
+    --bg-color-exitoso: #eff6ef;
+    --bg-color-advertencia: rgb(255, 255, 228);
+}
+
+/* .card{
+    border-radius: 10px !important;
+    box-shadow: 0px 0px 20px #00000029 !important;
+    border: 1px solid #EDEFF0 !important;
+}
+
+.form-select {
+    display: block;
+    width: 100%;
+    height: 30px;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--gris) !important;
+} */

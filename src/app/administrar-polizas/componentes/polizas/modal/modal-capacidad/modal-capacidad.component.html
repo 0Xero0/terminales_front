@@ -1,0 +1,213 @@
+<ng-template #modal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title fs-14px  fw-bolder">Modalidades</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+    </div>
+    <div class="modal-body justify-content-center">
+      <div class="d-flex">
+        <span class="fs-14px">
+          <p>Por favor, registre las modalidades en las cuales se encuentra <br>actualmente habilitado (mixto, especial, pasajero por carretera)</p>
+        </span>
+      </div>
+        <form >
+            <!-- Modal MX -->
+            <div *ngIf="modalidades[0].estado" class="clasificacion d-flex w-100 cursor-pointer fondo-desplegable-azul texto-blanco mb-3" (click)="alternarDesplegarMX()">
+                    <div class="mx-3">
+                        <span>
+                            <img alt="" *ngIf="desplegarMX" src="assets/img/desplegado.png" class="cursor-pointer" draggable="false">
+                            <img alt="" *ngIf="!desplegarMX" src="assets/img/replegado.png" class="cursor-pointer" draggable="false">
+                        </span>
+                        <span class="fs-14px fw-semibold texto">
+                            {{modalidades[0].nombre}}
+                        </span>
+                    </div>
+            </div>
+            <div *ngIf="modalidades[0].estado" class="d-flex w-100 overflow-auto mb-3" [ngClass]="{'d-none': !desplegarMX, 'd-block': desplegarMX}">
+                <form [formGroup]="formMX">
+                    <div class="col-12">
+                            <div class="row">
+                                <fieldset>
+                                    <label for="numeroResolucionVigente" class="fw-semibold">
+                                        Número de resolución vigente
+                                    </label>
+                                    <input title="número resolución" type="number" class="form-control"
+                                    formControlName="numeroRMX">
+                                    <span *ngIf="formMX.get('numeroRMX')?.hasError('maxLengthNumber')" class="validacion"> Deben ser máximo 18 digitos.</span>
+                                    <span *ngIf="formMX.get('numeroRMX')?.hasError('negativo')" class="validacion"> No debe ser número negativo.</span>
+                                    <app-validacion
+                                    [validacion]="'required'"
+                                    [texto]="'El número de la resolución vigente es requerido.'"
+                                    [control]="this.formMX.controls['numeroRMX']"
+                                    />
+                                </fieldset>
+                            </div>
+                            <div class="row">
+                                <fieldset>
+                                    <label for="fechaResolucionVigente" class="fw-semibold">
+                                        Fecha de la resolución vigente
+                                    </label>
+                                    <input title="fecha resolución" type="date" class="form-control" formControlName="fechaRMX"
+                                    (change)="fechaValida($event, 1)" name="fechaRMX">
+                                    <app-validacion
+                                    [validacion]="'required'"
+                                    [texto]="'La fecha de la resolución vigente es requerida.'"
+                                    [control]="this.formMX.controls['fechaRMX']"
+                                    />
+                                </fieldset>
+                            </div>
+                            <div class="row">
+                                <fieldset>
+                                    <label for="PDFResolucionVigente" class="fw-semibold">
+                                      Resolución (PDF, tamaño máximo 5MB)
+                                    </label>
+                                    <input title="PDF resolución" type="file" class="form-control"
+                                    formControlName="PDFRMX" accept=".pdf" maxlength="1"
+                                    (change)="cargarArchivoPDf($event,1)">
+                                    <app-validacion
+                                    [validacion]="'required'"
+                                    [texto]="'El documento es requerido.'"
+                                    [control]="this.formMX.controls['PDFRMX']"
+                                    />
+                                </fieldset>
+                            </div>
+                    </div>
+                </form>
+            </div>
+            <!--  Modal ES -->
+            <div *ngIf="modalidades[1].estado" class="clasificacion d-flex w-100 cursor-pointer fondo-desplegable-azul texto-blanco mb-3" (click)="alternarDesplegarES()">
+                <div class="mx-3">
+                    <span>
+                        <img alt="" *ngIf="desplegarES" src="assets/img/desplegado.png" class="cursor-pointer" draggable="false">
+                        <img alt="" *ngIf="!desplegarES" src="assets/img/replegado.png" class="cursor-pointer" draggable="false">
+                    </span>
+                    <span class="fs-14px fw-semibold texto">
+                        {{modalidades[1].nombre}}
+                    </span>
+                </div>
+            </div>
+            <div *ngIf="modalidades[1].estado" class="d-flex w-100 overflow-auto mb-3" [ngClass]="{'d-none': !desplegarES, 'd-block': desplegarES}">
+                <form [formGroup]="formES">
+                    <div class="col-12">
+                        <div class="row">
+                            <fieldset>
+                                <label for="numeroResolucionVigente" class="fw-semibold">
+                                    Número de resolución vigente
+                                </label>
+                                <input title="número resolución" type="number" class="form-control"
+                                formControlName="numeroRES">
+                                <span *ngIf="formMX.get('numeroRES')?.hasError('maxLengthNumber')" class="validacion"> Deben ser máximo 18 digitos.</span>
+                                <span *ngIf="formMX.get('numeroRES')?.hasError('negativo')" class="validacion"> No debe ser número negativo.</span>
+                                <app-validacion
+                                    [validacion]="'required'"
+                                    [texto]="'El número de la resolución vigente es requerido.'"
+                                    [control]="this.formES.controls['numeroRES']"
+                                    />
+                            </fieldset>
+                        </div>
+                        <div class="row">
+                            <fieldset>
+                                <label for="fechaResolucionVigente" class="fw-semibold">
+                                    Fecha de la resolución vigente
+                                </label>
+                                <input title="fecha resolución" type="date" class="form-control" formControlName="fechaRES"
+                                (change)="fechaValida($event, 2)" name="fechaRES">
+                                <app-validacion
+                                    [validacion]="'required'"
+                                    [texto]="'La fecha de la resolución vigente es requerida.'"
+                                    [control]="this.formES.controls['fechaRES']"
+                                    />
+                            </fieldset>
+                        </div>
+                        <div class="row">
+                            <fieldset>
+                                <label for="PDFResolucionVigente" class="fw-semibold">
+                                  Resolución vigente (PDF, tamaño máximo 5MB)
+                                </label>
+                                <input title="PDF resolución" type="file" class="form-control"
+                                formControlName="PDFRES" accept=".pdf" maxlength="1"
+                                (change)="cargarArchivoPDf($event,2)">
+                                <app-validacion
+                                    [validacion]="'required'"
+                                    [texto]="'El documento requerido.'"
+                                    [control]="this.formES.controls['PDFRES']"
+                                    />
+                            </fieldset>
+                        </div>
+                    </div>
+                </form>
+            </div>
+             <!-- Modal PC  -->
+            <div *ngIf="modalidades[2].estado" class="clasificacion d-flex w-100 cursor-pointer fondo-desplegable-azul texto-blanco mb-3" (click)="alternarDesplegarPC()">
+                <div class="mx-3">
+                    <span>
+                        <img alt="" *ngIf="desplegarPC" src="assets/img/desplegado.png" class="cursor-pointer" draggable="false">
+                        <img alt="" *ngIf="!desplegarPC" src="assets/img/replegado.png" class="cursor-pointer" draggable="false">
+                    </span>
+                    <span class="fs-14px fw-semibold texto">
+                        {{modalidades[2].nombre}}
+                    </span>
+                </div>
+            </div>
+            <div *ngIf="modalidades[2].estado" class="d-flex w-100 overflow-auto mb-3" [ngClass]="{'d-none': !desplegarPC, 'd-block': desplegarPC}">
+                <form [formGroup]="formPC">
+                    <div class="col-12">
+                        <div class="row">
+                            <fieldset>
+                                <label for="numeroResolucionVigente" class="fw-semibold">
+                                    Número de resolución vigente
+                                </label>
+                                <input title="número resolución" type="number" class="form-control"
+                                formControlName="numeroRPC">
+                                <span *ngIf="formMX.get('numeroRPC')?.hasError('maxLengthNumber')" class="validacion"> Deben ser máximo 18 digitos.</span>
+                                <span *ngIf="formMX.get('numeroRPC')?.hasError('negativo')" class="validacion"> No debe ser número negativo.</span>
+                                <app-validacion
+                                        [validacion]="'required'"
+                                        [texto]="'El número de la resolución vigente es requerido.'"
+                                        [control]="this.formPC.controls['numeroRPC']"
+                                        />
+                            </fieldset>
+                        </div>
+                        <div class="row">
+                            <fieldset>
+                                <label for="fechaResolucionVigente" class="fw-semibold">
+                                    Fecha de la resolución vigente
+                                </label>
+                                <input title="fecha resolución" type="date" class="form-control" formControlName="fechaRPC"
+                                (change)="fechaValida($event, 3)" name="fechaRPC">
+                                <app-validacion
+                                        [validacion]="'required'"
+                                        [texto]="'La fecha de la resolución vigente es requerida.'"
+                                        [control]="this.formPC.controls['fechaRPC']"
+                                        />
+                            </fieldset>
+                        </div>
+                        <div class="row">
+                                <fieldset>
+                                <label for="PDFResolucionVigente" class="fw-semibold">
+                                  Resolución (PDF, tamaño máximo 5MB)
+                                </label>
+                                <input title="PDF resolución" type="file" class="form-control"
+                                formControlName="PDFRPC" accept=".pdf" maxlength="1"
+                                (change)="cargarArchivoPDf($event,3)">
+                                <app-validacion
+                                        [validacion]="'required'"
+                                        [texto]="'El documento es requerido.'"
+                                        [control]="this.formPC.controls['PDFRPC']"
+                                        />
+                            </fieldset>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <div class="d-flex justify-content-end">
+            <button type="button" class="boton primario relleno"
+            (click)="guardarCapacidades()">
+              <span class="fw-semibold">Enviar a ST</span>
+            </button>
+          </div>
+    </div>
+</ng-template>
+<app-popup #popup />

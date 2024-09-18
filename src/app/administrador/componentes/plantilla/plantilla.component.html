@@ -1,0 +1,12 @@
+<main class="contenido">
+    <app-barra-navegacion
+        #barraDeNavegacion
+        (menuLateralDesplegado)="this.abrirMenuLateral()"
+        (usuarioQuiereCerrarSesion)="this.cerrarSesion()"
+        id="barra-navegacion">
+    </app-barra-navegacion>
+    <app-menu></app-menu>
+    <section class="container-fluid seccion">
+        <router-outlet></router-outlet>
+    </section>
+</main>

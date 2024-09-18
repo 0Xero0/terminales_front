@@ -1,0 +1,113 @@
+@font-face {
+    font-family: 'AdventPro';
+    src: url('../assets/fonts/AdventPro/AdventPro-Regular.ttf');
+    font-weight: normal;
+}
+@font-face {
+    font-family: 'AdventPro';
+    src: url('../assets/fonts/AdventPro/AdventPro-SemiBold.ttf');
+    font-weight: bold;
+}
+@font-face {
+    font-family: 'AdventPro';
+    src: url('../assets/fonts/AdventPro/AdventPro-Bold.ttf');
+    font-weight: bolder;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../assets/fonts/Montserrat/Montserrat-Light.ttf');
+    font-weight: 300;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../assets/fonts/Montserrat/Montserrat-Regular.ttf');
+    font-weight: 400;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../assets/fonts/Montserrat/Montserrat-SemiBold.ttf');
+    font-weight: 600;
+}
+@font-face{
+    font-family: 'Montserrat';
+    src: url('../assets/fonts/Montserrat/Montserrat-Bold.ttf');
+    font-weight: 700;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../assets/fonts/Montserrat/Montserrat-Bold.ttf');
+    font-weight: 800;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../assets/fonts/Montserrat/Montserrat-ExtraBold.ttf');
+    font-weight: 1000;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../assets/fonts/Poppins/Poppins-Light.ttf');
+  font-weight: 300;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('../assets/fonts/Poppins/Poppins-Regular.ttf');
+    font-weight: 400;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../assets/fonts/Poppins/Poppins-SemiBold.ttf');
+    font-weight: 600;
+}
+@font-face{
+    font-family: 'Poppins';
+    src: url('../assets/fonts/Poppins/Poppins-Bold.ttf');
+    font-weight: 700;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../assets/fonts/Poppins/Poppins-Bold.ttf');
+    font-weight: 800;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../assets/fonts/Poppins/Poppins-ExtraBold.ttf');
+    font-weight: 1000;
+}
+
+.fs-12px{
+    font-size: 12px !important;
+}
+.fs-14px{
+    font-size: 14px !important;
+}
+.fs-16px{
+    font-size: 16px !important;
+}
+.fs-18px{
+    font-size: 18px !important;
+}
+.fs-20px{
+    font-size: 20px !important;
+}
+.fs-25px{
+  font-size: 25px !important;
+}
+
+.texto-gris{
+    color: var(--gris);
+}
+.texto-gris-1{
+    color: var(--gris-1)
+}
+.texto-primario{
+    color: #004884;
+}
+.texto-azul-004884{
+    color: #004884;
+}
+.texto-gris-4B4B4B{
+    color: #4B4B4B;
+}

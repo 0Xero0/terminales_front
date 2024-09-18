@@ -1,0 +1,129 @@
+<nav class="navbar w-100 ps-5">
+    <div class="container-fluid d-flex">
+      <div class="logo">
+        <img class="img-fluid" src="assets/img/cabecera/gov.png" alt="">
+      </div>
+    </div>
+</nav>
+<div class="p-5">
+    <div class="contenedor-formulario mx-auto">
+        <h3 class="fw-semibold texto-azul-004884 mb-3">Problemas de acceso</h3>
+        <hr>
+        <div class="d-flex align-items-center justify-content-center flex-gap-20 mb-3">
+            <button class="boton primario relleno" (click)="crearSoporte()" [disabled]="generandoRadicado">Guardar</button>
+            <button class="boton primario delineado" [routerLink]="['/inicio-sesion']">Regresar</button>
+        </div>
+        <form [formGroup]="formulario">
+            <div class="row mb-3">
+                <div class="col-sm-12 col-md-6">
+                    <fieldset>
+                        <label>
+                            NIT <span class="validacion">*</span>
+                        </label>
+                    </fieldset>
+                    <input type="number" class="form-control" formControlName="nit"/>
+                    <app-validacion  
+                            [control]="this.formulario.controls['nit']" 
+                            [texto]="'El nit es requerido.'" 
+                            [validacion]="'required'"/>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <fieldset>
+                        <label>
+                            Razón social <span class="validacion">*</span>
+                        </label>
+                    </fieldset>
+                    <input type="text" class="form-control" formControlName="razonSocial"/>
+                    <app-validacion  
+                            [control]="this.formulario.controls['razonSocial']" 
+                            [texto]="'La razón social es requerida.'" 
+                            [validacion]="'required'"/>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12 col-md-6">
+                    <fieldset>
+                        <label>
+                            Correo electrónico <span class="validacion">*</span>
+                        </label>
+                    </fieldset>
+                    <input type="text" class="form-control" formControlName="correo"/>
+                    <app-validacion  
+                            [control]="this.formulario.controls['correo']" 
+                            [texto]="'El correo es requerido.'" 
+                            [validacion]="'required'"/>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <fieldset>
+                        <label>
+                            Teléfono
+                        </label>
+                    </fieldset>
+                    <input type="text" class="form-control" formControlName="telefono"/>
+                    <app-validacion  
+                            [control]="this.formulario.controls['telefono']" 
+                            [texto]="'El teléfono es requerido.'" 
+                            [validacion]="'required'"/>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-2">
+                            <span>Motivo/Error<span class="validacion">*</span></span>
+                        </div>
+                        <div class="col-10">
+                            <p class="validacion">
+                                Intente recuperar su contraseña para recibir la información del error
+                            </p>
+                            <select class="form-select" formControlName="errorAcceso" >
+                                <option value="">Seleccione una opción</option>
+                                <option value="001">001 - Error de usuario</option>
+                                <option value="002">002 - Error de correo electrónico</option>
+                            </select>
+                            <app-validacion  
+                            [control]="this.formulario.controls['errorAcceso']" 
+                            [texto]="'Seleccione una opción.'" 
+                            [validacion]="'required'"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-2">
+                            <span>Descripción <span class="validacion">*</span></span>
+                        </div>
+                        <div class="col-10">
+                            <textarea class="form-control" formControlName="descripcion" cols="30" rows="50" style="height: 200px;"></textarea>
+                            <app-validacion  
+                            [control]="this.formulario.controls['descripcion']" 
+                            [texto]="'La descripción es requerida.'" 
+                            [validacion]="'required'"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-2">
+                            <span>Evidencia <span class="validacion">*</span></span>
+                        </div>
+                        <div class="col-5">
+                            <app-input-archivo
+                            [acepta]="['.pdf','.docx','.jpg','.png','.jpge']"
+                            [tamanoMaximoMb]="7"
+                            (excedeTamano)="manejarExcedeTamano()"
+                            formControlName="adjunto" />
+                            <span class="fw-semibold fs-12px">Máximo 7 Mb</span> <br>
+                            <span class="fs-12px">(PDF's, Documentos Word e imágenes)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<app-popup #popup/>

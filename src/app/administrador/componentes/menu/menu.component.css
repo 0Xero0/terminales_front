@@ -1,0 +1,77 @@
+.menu{
+    height: 77px;
+    background-color: #004884;
+    color: white;
+}
+.modulos{
+  display: flex;
+  height: 100%;
+  padding: 0;
+}
+.modulo{
+    position: relative;
+}
+.nombre-modulo{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 23px 18px 26px;
+    font-size: 14px;
+}
+.modulo.activo::after, .modulo:hover::after{
+    content: "";
+    position: absolute;
+    top: 4px;
+    width: 100%;
+    border-top: 3px solid #2DB2EA;
+}
+.modulo .submodulos{
+    display: none;
+    padding: 0;
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    left: 0;
+    top: 100%;
+    background-color: #E6EFFD;
+    color: #3366CC;
+}
+.modulo:hover .submodulos{
+    display: block;
+}
+.submodulo{
+    border-bottom: 1px solid black;
+    cursor: pointer;
+}
+.nombre-submodulo{
+    display: block;
+    padding: 8px 15px;
+}
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.menu-toggle .bar {
+  width: 25px;
+  height: 3px;
+  background-color: #fff;
+  margin: 4px 0;
+}
+
+.swal2-content-custom {
+  padding: 20%;
+  margin: auto;
+  background-color: #f11111;
+  text-align: center;
+  /*text-align: left;  Esto es opcional, para asegurarte de que el texto está alineado a la izquierda */
+}
+
+.swal2-container-custom .swal2-popup {
+  padding: 20px !important;
+}
+

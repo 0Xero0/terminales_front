@@ -1,0 +1,92 @@
+.fondo{
+  height: 989px;
+  max-height: 2160px;
+}
+
+.fondo-imagen{
+  background-image: url(../../assets/img/PNG/fondo2_oscuro.png);
+  background-repeat: no-repeat;
+  background-position:center top;
+  background-attachment: fixed;
+  background-size: cover;
+  height: 400px;
+}
+
+.rectangulo{
+  height: 148px;
+  background: #004884 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+
+.informacion{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Alinea los elementos al inicio del contenedor */
+  width: 553px;
+  height: 700px;
+  text-align: start;
+  margin: 70px;
+}
+
+a,a:hover{
+  text-decoration: none;
+  color: #3366CC;
+}
+
+.texto-blanco{
+  color: #ffffff;
+  margin-top: 500px;
+}
+
+.texto-login{
+  position: relative;
+  top: -23%;
+}
+
+.contenedor-inicio-sesion {
+  position: relative;
+  top: 350px;
+  width: 370px;
+  height: 300px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: none !important;
+  opacity: 1;
+}
+
+.contenedor-inicio-sesion .card-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  gap: 5px;
+}
+
+.card-body{
+  height: 650px;
+  border-radius: 5px;
+  box-shadow: 0px 3px 6px #00000029;
+}
+
+.card-body input{
+  width:500px ;
+}
+
+
+.logo-supertransporte{
+  height: 100px;
+}
+
+.logo-ministerio img{
+  height: 50px;
+}
+
+.input-error{
+  border-color: red;
+}
+
+.boton{
+  width: 160px;
+  height: 43px;
+}
+

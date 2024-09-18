@@ -1,0 +1,113 @@
+<div class="p-5" *ngIf="soporte">
+    <div class="contenedor-formulario mx-auto">
+        <h3 class="fw-semibold texto-azul-004884 mb-3">Responder soporte</h3>
+        <hr>
+        <div class="d-flex justify-content-between mb-3">
+            <div class="">
+                <button class="boton primario relleno" (click)="responderSoporte()" [disabled]="respondido">Guardar</button>
+            </div>
+            <div class="">
+                <button class="boton primario delineado ms-auto" (click)="volver()">Volver</button>
+            </div>
+        </div>
+        <div class="row mx-0 fondo-gris-1 mb-2">
+            <div class="col d-flex flex-column p-2">
+                <label class="fs-14px fw-semibold">No. Radicado:</label>
+                <span class="fs-14px">{{ soporte.radicado }}</span>
+            </div>
+            <div class="col d-flex flex-column p-2">
+                <label class="fs-14px fw-semibold">Fecha de creación:</label>
+                <span class="fs-14px">{{ soporte.fechaCreacion }}</span>
+            </div>
+        </div>
+
+        <div class="row mx-0 fondo-gris-1">
+            <div class="col d-flex p-2">
+                <div class="col-4 d-flex">
+                    <label class="fs-14px fw-semibold">NIT</label>
+                </div>
+                <div class="col-8 d-flex">
+                    <span class="fs-14px">{{ soporte.nit }}</span>
+                </div>
+            </div>
+            <div class="col d-flex p-2">
+                <div class="col-4 d-flex">
+                    <label class="fs-14px fw-semibold">Razón social</label>
+                </div>
+                <div class="col-8 d-flex">
+                    <span class="fs-14px">{{ soporte.razonSocial }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="row mx-0 fondo-gris-1 mb-2">
+            <div class="col d-flex p-2">
+                <div class="col-4 d-flex">
+                    <label class="fs-14px fw-semibold">E-mail</label>
+                </div>
+                <div class="col-8 d-flex">
+                    <span class="fs-14px">
+                        {{ soporte.email }}
+                    </span>
+                </div>
+            </div>
+            <div class="col d-flex p-2">
+                <div class="col-4 d-flex">
+                    <label class="fs-14px fw-semibold">Teléfono</label>
+                </div>
+                <div class="col-8 d-flex">
+                    <span class="fs-14px">{{ soporte.telefono }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="row mx-0 fondo-gris-1">
+            <div class="col-2 p-2">
+                <label class="fs-14px fw-semibold">Descripción </label>
+            </div>
+            <div class="col-10 p-2">
+                <span class="fs-14px">{{ soporte.descripcion }}</span>
+            </div>
+        </div>
+        <div class="row mx-0 fondo-gris-1 mb-2">
+            <div class="col-2 p-2">
+                <label class="fs-14px fw-semibold">Documento</label>
+            </div>
+            <div class="col-10 p-2">
+                <span class="fs-14px cursor-pointer texto-primario" 
+                (click)="descargarArchivo()" *ngIf="soporte.documento">{{ soporte.documento }}</span>
+            </div>
+        </div>
+
+        <form [formGroup]="formulario">
+            <div class="row mx-0 mb-2 fondo-gris-1">
+                <div class="col-2 p-2">
+                    <span class="fs-14px fw-semibold">Respuesta <span class="validacion">*</span></span>
+                </div>
+                <div class="col-10 p-2">
+                    <textarea 
+                    class="form-control" 
+                    formControlName="respuesta" cols="30" rows="50" 
+                    style="height: 200px;"
+                    ></textarea>
+                    <app-validacion  
+                    [control]="this.formulario.controls['respuesta']" 
+                    [texto]="'La respuesta es requerida.'" 
+                    [validacion]="'required'"/>
+                </div>
+            </div>
+            <div class="row mx-0 mb-3 fondo-gris-1">
+                <div class="col-2 p-2">
+                    <span class="fs-14px fw-semibold">Evidencia <span class="validacion">*</span></span>
+                </div>
+                <div class="col-4 p-2">
+                    <app-input-archivo formControlName="adjunto" [disabled]="soporte.idEstado !== 1"/>
+                </div>
+                <div class="col-6 p-2" *ngIf="soporte.documentoRespuesta">
+                    <span class="cursor-pointer fs-14px" (click)="descargarArchivoRespuesta()">
+                        {{ soporte.documentoRespuesta }}
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<app-popup #popup/>

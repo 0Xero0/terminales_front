@@ -1,0 +1,123 @@
+<app-cabecera />
+<div class="py-2 mt-5 px-sm-3 px-md-4 px-lg-5">
+  <div class="d-flex justify-content-between align-items-center mb-4" *ngIf="rol!.id === 7">
+    <h3 class="texto-primario fw-semibold">Cargue de información</h3>
+    <button type="button" class="boton primario relleno" (click)="volver()">
+      <i class="bi bi-arrow-return-left me-2"></i>Volver
+    </button>
+  </div>
+  <div class="d-block mb-3">
+    <table class="tabla-informacion">
+      <thead>
+        <tr>
+          <th colspan="2">Información del formulario.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="fw-semibold">Empresa</td>
+          <td>
+            <ng-container>
+              {{ usuario?.nombre }}
+            </ng-container>
+          </td>
+        </tr>
+        <tr>
+          <td class="fw-semibold">Nit</td>
+          <td>
+            {{ usuario?.usuario }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="d-flex justify-content-between align-items-center mb-4" *ngIf="rol!.id !== 7"><!-- Proveedor -->
+    <button type="button" class="boton primario delineado" (click)="enviar()" [disabled]="hayCambios || !editable">Enviar a ST</button>
+    <button type="button" class="boton primario relleno" (click)="guardar()" [disabled]="!hayCambios || !editable">Guardar</button>
+  </div>
+  <div class="d-flex justify-content-between align-items-center mb-4" *ngIf="rol!.id === 7"><!-- Verificador -->
+    <button type="button" class="boton primario delineado" (click)="enviarVerificacion()" [disabled]="hayCambios || !verificacionEditable || aprobado">Enviar a ST</button>
+    <button type="button" class="boton primario relleno" (click)="guardarVerificacion()" [disabled]="!hayCambios || !verificacionEditable">Guardar</button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead >
+        <tr>
+          <th colspan="5">
+            <label class="fw-semibold fs-16px mb-2">Seleccione el módulo al que aspira como proveedor tecnológico</label>
+          </th>
+        </tr>
+      </thead>
+      <tbody >
+        <tr>
+          <td colspan="5">
+            <div class="row mb-5">
+              <div class="col-sm-6 col-md-3" *ngFor="let aplicativo of aplicativos">
+                <fieldset>
+                  <input type="checkbox" id="aplicativos" (change)="aplicativosSeleccionados($event,aplicativo.id)"
+                  [checked]="aplicativo.estado" [disabled]="!editable">
+                  {{aplicativo.titulo}}
+                </fieldset>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <thead>
+        <tr>
+          <th style="width: 5%;">N°</th>
+          <th style="width: 30%;">Documento requerido</th>
+          <th style="width: 20%;">Cargue de archivo Max. 5MB</th>
+          <th style="width: 15%;" class="fw-semibold" *ngIf="verificacionVisible">¿Corresponde?</th>
+          <th style="width: 30%;" class="fw-semibold" *ngIf="verificacionVisible">Observación</th>
+          <th *ngIf="!verificacionVisible" colspan="2"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pregunta of formulario">
+          <td class="fw-semibold">{{pregunta.codigo}}</td>
+          <td>{{pregunta.nombreDocumento}}</td>
+          <td class="custom-file">
+            <!-- <div class="d-flex align-items-center"> -->
+            <label class="input-archivo d-flex" [for]="pregunta.id" [ngClass]="{'disabled': !editable}">
+              <div class="boton-adjuntar d-flex align-items-center justify-content-center">Adjuntar</div>
+              <div class="archivos">
+                <div class="archivo d-flex" *ngIf="pregunta.nombreOriginal">
+                  <span class="nombre-archivo">{{ pregunta.nombreOriginal }}</span>
+                  <button class="eliminar-archivo" (click)="manejarRemoverArchivo(input,$event,pregunta.codigo)" [disabled]="!editable">X</button>
+                </div>
+              </div>
+              <input #input type="file" [id]="pregunta.id" name="adjuntar" accept=".pdf"
+              (change)="guardarArchivo($event,pregunta.codigo)" [disabled]="!editable">
+            </label>
+            <span class="validacion" *ngIf="marcarFaltante(pregunta.id,1)">Falta Adjuntar documento</span>
+            <a *ngIf="pregunta.nombreOriginal" (click)="descargarArchivo(pregunta.nombreOriginal,pregunta.nombre, pregunta.ruta)"
+            class="a">
+              Descargar {{pregunta.nombreOriginal}}
+            </a>
+          </td>
+          <td>
+            <!-- <label [for]="pregunta.id" class="fw-semibold">¿Corresponde?</label> -->
+            <select [name]="pregunta.codigo" [id]="pregunta.id" class="form-select" (change)="manejarCorresponde($event,pregunta.id)"
+            *ngIf="verificacionVisible" [disabled]="!verificacionEditable || aprobado" [(ngModel)]="pregunta.corresponde">
+              <option [value]="null">Seleccione una opción.</option>
+              <option *ngFor="let opt of corresponde" [value]="opt.id">{{opt.nombre}}</option>
+              <!-- <option [value]="1">Si</option>
+              <option [value]="2">No</option> -->
+            </select>
+            <span class="validacion" *ngIf="marcarFaltante(pregunta.id,2)">Falta por responder</span>
+          </td>
+          <td>
+            <!-- <label [for]="pregunta.id" class="fw-semibold">Observación</label> -->
+            <textarea name="Observación" [id]="pregunta.id + '-textarea'" class="form-control"
+            [disabled]="pregunta.corresponde === 1 || !pregunta.corresponde || pregunta.corresponde === null || aprobado || !verificacionEditable"
+            *ngIf="verificacionVisible" [value]="pregunta.observacion" (input)="manejarObservacion($event,pregunta.id)"></textarea>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

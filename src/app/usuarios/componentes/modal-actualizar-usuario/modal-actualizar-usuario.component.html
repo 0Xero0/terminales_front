@@ -1,0 +1,123 @@
+<ng-template #modal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title fs-14px  fw-bolder">Editar usuario</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="formulario">
+      <div class="row mb-3">
+        <label class="fw-semibold fs-16px mb-2">Datos del usuario</label>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+          <fieldset>
+            <label>Nombre completo o Razón social <span class="validacion">*</span></label>
+            <input formControlName="nombre" type="text" class="form-control" placeholder="Ingresa el nombre o Razón social">
+            <app-validacion [validacion]="'required'" [texto]="'El nombre es requerido.'"
+              [control]="this.formulario.controls['nombre']" />
+          </fieldset>
+        </div>
+        <!-- <div class="col-sm-12 col-md-6 col-lg-3">
+          <fieldset>
+            <label>Apellido</label>
+            <input formControlName="apellido" type="text" class="form-control" placeholder="Ingresa el apellido">
+          </fieldset>
+        </div> -->
+        <div class="col-sm-12 col-md-6 col-lg-6">
+          <fieldset>
+            <label>Identificación <span class="validacion">*</span></label>
+            <input formControlName="identificacion" type="text" class="form-control" (keypress)="validarSoloNumeros($event)"
+              placeholder="Ingresa la Identificación">
+            <app-validacion [validacion]="'required'" [texto]="'La identificación es requerida.'"
+              [control]="this.formulario.controls['identificacion']" />
+          </fieldset>
+        </div>
+        <!-- <div class="col-sm-12 col-md-6 col-lg-3">
+          <fieldset>
+            <label>Fecha de nacimiento</label>
+            <input formControlName="fechaNacimiento" type="date" class="form-control"
+              placeholder="Ingresa la fecha de nacimiento">
+          </fieldset>
+        </div> -->
+      </div>
+      <!-- <div class="row mb-3">
+        <label class="fw-semibold fs-16px mb-2">Departamento y municipio</label>
+        <div class="col-sm-12 col-md-6">
+            <label>Departamento <span class="validacion">*</span></label>
+            <select title="departamento" class="form-select" formControlName="departamento">
+                <option value="">Selecciona un departamento</option>
+                <option *ngFor="let departamento of departamentos" [value]="departamento.id">
+                    {{ departamento.id }} - {{ departamento.name }}
+                </option>
+            </select>
+            <app-validacion
+                [validacion]="'required'"
+                [texto]="'El departamento es requerido.'"
+                [control]="this.formulario.controls['departamento']"
+                />
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <label>Municipio <span class="validacion">*</span></label>
+            <select title="municipio" class="form-select" formControlName="municipio">
+                <option value="">Selecciona un municipio</option>
+                <option *ngFor="let municipio of municipios" [value]="municipio.id">
+                    {{ municipio.id }} - {{ municipio.name }}
+                </option>
+            </select>
+            <app-validacion
+                [validacion]="'required'"
+                [texto]="'El municipio es requerido.'"
+                [control]="this.formulario.controls['municipio']"
+                />
+        </div>
+    </div> -->
+      <div class="row mb-3">
+        <div class="col-sm-6 col-md-6">
+          <label class="fw-semibold fs-16px mb-2">Información de contacto</label>
+          <fieldset>
+            <label>Correo <span class="validacion">*</span></label>
+            <input formControlName="correo" type="email" class="form-control" placeholder="Ingresa el correo" (ngModelChange)="validarCorreo()">
+            <app-validacion [validacion]="'required'" [texto]="'El correo es requerido.'"
+              [control]="this.formulario.controls['correo']" />
+            <span *ngIf="errorCorreo" class="validacion">Introduce un correo electrónico válido como: usuario@ejemplo.com</span>
+          </fieldset>
+        </div>
+        <div class="col-sm-6 col-md-6">
+          <label class="fw-semibold fs-16px mb-2">Información de rol</label>
+          <fieldset>
+            <label>Rol <span class="validacion">*</span></label>
+            <select title="rol" formControlName="rol" class="form-select" (ngModelChange)="validarRol($event)">
+              <option value="" selected>Selecciona un rol</option>
+              <option *ngFor="let rol of roles" [value]="rol._id">{{ rol._nombre }}</option>
+            </select>
+            <app-validacion [validacion]="'required'" [texto]="'El rol es requerido.'"
+              [control]="this.formulario.controls['rol']" />
+          </fieldset>
+        </div>
+        <!-- <div class="col-sm-12 col-md-6">
+          <fieldset>
+            <label>Teléfono</label>
+            <input formControlName="telefono" type="text" class="form-control" placeholder="Ingresa el teléfono">
+          </fieldset>
+        </div> -->
+      </div>
+      <div class="row mb-5">
+        <label class="fw-semibold fs-16px mb-2">Asignación de módulos<span *ngIf="esVigilado" class="validacion">*</span></label>
+        <div class="col-sm-6 col-md-3" *ngFor="let aplicativo of mostrarAplicativos">
+          <fieldset>
+            <input type="checkbox" id="aplicativos" [checked]="aplicativo.estado"
+            (change)="aplicativosSeleccionados($event,aplicativo.id)"
+            >
+            {{aplicativo.titulo}}
+          </fieldset>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer d-flex">
+    <div class="d-flex justify-content-end">
+      <button type="button" class="boton primario relleno" (click)="actualizar()">
+        Guardar
+      </button>
+    </div>
+  </div>
+</ng-template>
+<app-popup #popup></app-popup>

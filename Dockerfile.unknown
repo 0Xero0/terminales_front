@@ -1,0 +1,19 @@
+FROM node:18-bullseye
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+
+
+#variables de entorno
+ENV PATH /app/node_modules/.bin:$PATH
+
+COPY package.json /usr/src/app/
+
+RUN npm install
+RUN npm install node-sass@5.0.0
+COPY . /usr/src/app
+RUN npm run build
+
+
+EXPOSE  3000
+CMD ["npm", "start"]

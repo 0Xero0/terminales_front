@@ -1,0 +1,103 @@
+<div class="p-5 pt-0">
+    <div class="d-block w-100">
+        <h2 class="fs-20px fw-semibold texto-azul-004884 mb-3 text-center mt-3 w-100">INFORMACIÓN GENERAL DEL VIGILADO
+            EN EL SISTEMA VIGÍA</h2>
+        <div class="d-flex w-100">
+            <p class="w-100">
+                Estimado usuario, de la manera más cordial, solicitamos que se registre y/o actualice los datos en el
+                Sistema Vigía. Para continuar con el proceso, por favor haga clic en el siguiente enlace: Sistema
+                Nacional de Supervisión al Transporte (<a
+                href="http://vigia.supertransporte.gov.co/VigiaSSO/pages/index?execution=e1s1"
+                target="_blank">supertransporte.gov.co</a>). <br>
+                Es importante aclarar que lo expuesto en el párrafo anterior NO es un prerrequisito para el
+                diligenciamiento de los aplicativos del SISTEMA NACIONAL DE SUPERVISIÓN AL TRANSPORTE.
+            </p>
+        </div>
+    </div>
+    <form [formGroup]="formulario" class="d-block" *ngIf="informacion">
+        <div class="row mx-0 mb-3">
+            <div class="col-4">
+                <fieldset>
+                    <label>NIT</label>
+                    <input formControlName="numeroDocumento" type="text" class="form-control">
+                </fieldset>
+            </div>
+            <div class="col-4">
+                <fieldset>
+                    <label>Razón social</label>
+                    <input formControlName="razonSocial" type="text" class="form-control">
+                </fieldset>
+            </div>
+            <div class="col-4">
+                <fieldset>
+                    <label>Numero de identificación</label>
+                    <input formControlName="numeroDocumento" type="text" class="form-control">
+                </fieldset>
+            </div>
+        </div>
+        <div class="row mx-0 mb-3">
+            <div class="col-4">
+                <fieldset>
+                    <label>Departamento</label>
+                    <input formControlName="nombreDepto" type="text" class="form-control">
+                </fieldset>
+            </div>
+            <div class="col-4">
+                <fieldset>
+                    <label>Ciudad</label>
+                    <input formControlName="nombreMunicipio" type="text" class="form-control">
+                </fieldset>
+            </div>
+            <div class="col-4">
+                <fieldset>
+                    <label>Teléfono</label>
+                    <input formControlName="telefono" type="text" class="form-control">
+                </fieldset>
+            </div>
+        </div>
+        <div class="row mx-0 mb-3">
+            <div class="col-4">
+                <fieldset>
+                    <label>Correo electrónico principal</label>
+                    <input formControlName="correoElectronico" type="text" class="form-control">
+                </fieldset>
+            </div>
+
+            <div class="col-4">
+                <fieldset>
+                    <label>Correo electrónico secundario</label>
+                    <input formControlName="correoOpcionalNotificacion" type="text" class="form-control">
+                </fieldset>
+            </div>
+        </div>
+        <div class="row mx-0 mb-3">
+            <div class="col-4">
+                <fieldset>
+                    <label>Correo electrónico representante legal</label>
+                    <input formControlName="correoElectronicoRepres" type="text" class="form-control">
+                </fieldset>
+            </div>
+            <div class="col-4">
+                <fieldset>
+                    <label>Nombre representante legal</label>
+                    <input formControlName="nombreRepresentante" type="text" class="form-control">
+                </fieldset>
+            </div>
+        </div>
+        <div class="row mx-0 mb-4">
+            <div class="col-4">
+                <fieldset>
+                    <label>Dirección del domicilio principal</label>
+                    <input formControlName="direccion" type="text" class="form-control">
+                </fieldset>
+            </div>
+            <div class="col-4">
+                <fieldset>
+                    <label>Apellidos representante legal</label>
+                    <input formControlName="apellidoRepresentante" type="text" class="form-control">
+                </fieldset>
+            </div>
+        </div>
+    </form>
+</div>
+<app-popup #popup></app-popup>

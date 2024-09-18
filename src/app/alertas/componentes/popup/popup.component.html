@@ -1,0 +1,51 @@
+<swal #popup>
+    <div *swalPortal="undefined">
+        <div class="d-flex flex-column card-body flex-gap-10 pt-4 px-4">
+            <h3 class="fs-18px fw-semibold mb-3" *ngIf="opciones.titulo">{{ opciones.titulo }}</h3>
+            <div class="d-flex justify-content-center">
+                <img class="icono" src="./assets/img/iconos/exito.svg" alt="exitoso" *ngIf="opciones.icono === 'exitoso'">
+                <img class="icono" src="./assets/img/iconos/error.svg" alt="error" *ngIf="opciones.icono === 'error'">
+                <img class="icono" src="./assets/img/iconos/advertencia.svg" alt="advertencia" *ngIf="opciones.icono === 'advertencia'">
+            </div>
+            <p class="fs-16px mt-3" *ngIf="opciones.texto">{{opciones.texto}}</p>
+        </div>
+        <div class="card-footer">
+            <button class="boton primario relleno" (click)="this.cerrar()">Aceptar</button>
+        </div>
+    </div>
+</swal>
+
+
+<swal #exitoso>
+    <div *swalPortal="undefined">
+        <div class="d-flex flex-column card-body flex-gap-10 pt-4 px-4">
+            <h3 class="fs-20px fw-semibold mb-3">{{tituloExito}}</h3>
+            <div class="d-flex justify-content-center">
+                <img class="icono" src="./assets/img/iconos/exito.svg" alt="">
+            </div>
+            <p class="fs-18px mt-3" *ngIf="descripcionExito">{{descripcionExito}}</p>
+        </div>
+        <div class="card-footer">
+            <button class="boton primario relleno" (click)="this.cerrarPopupExitoso()">Aceptar</button>
+        </div>
+    </div>
+</swal>
+
+
+<swal #fallido>
+    <div *swalPortal="undefined">
+        <div class="card-header d-flex">
+            <span class="ms-auto btn-close" (click)="this.cerrarPopupFallido()"></span>
+        </div>
+        <div class="d-flex flex-column card-body flex-gap-20 pt-4 px-4">
+            <h3 class="fs-18px fw-semibold mb-3">{{tituloFallido}}</h3>
+            <div class="d-flex justify-content-center">
+                <img class="icono" src="./assets/img/iconos/error.svg" alt="">
+            </div>
+            <p class="fs-18px mt-3" *ngIf="infoFallido">{{infoFallido}}</p>
+        </div>
+        <div class="card-footer">
+            <button class="boton primario relleno" (click)="this.cerrarPopupFallido()">Aceptar</button>
+        </div>
+    </div>
+</swal>

@@ -1,0 +1,7 @@
+.imagen-ministerio,.imagen-supertransporte{
+    height: 60px;
+}
+.imagen-ministerio img,.imagen-supertransporte img{
+    width: auto;
+    height: 100%;
+}

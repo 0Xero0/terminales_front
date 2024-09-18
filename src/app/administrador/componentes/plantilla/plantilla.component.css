@@ -1,0 +1,14 @@
+#menu-lateral{
+}
+.contenido{
+    position: relative;
+}
+.seccion{
+    padding: 0 !important;
+}
+
+@media (max-width: 1024px) {
+    .contenido{
+        padding-left: 0px;
+    }
+}

@@ -1,0 +1,17 @@
+.tabla-soportes{
+    width: 100%;
+}
+.tabla-soportes table td{
+    width: auto;
+}
+.th-respuesta,.th-descripcion{
+    min-width: 300px;
+}
+.td-razon-social{
+    white-space: nowrap;
+}
+.contenedor-descripcion, .contenedor-respuesta{
+    overflow-y: hidden;
+    max-height: 67px;
+    text-overflow: ellipsis;
+}

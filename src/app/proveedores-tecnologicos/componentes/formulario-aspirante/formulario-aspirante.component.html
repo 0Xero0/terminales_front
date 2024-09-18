@@ -1,0 +1,330 @@
+<app-cabecera />
+<div class="py-5 mt-5 px-sm-3 px-md-4 px-lg-5">
+  <h3 class="texto-primario fw-semibold mb-4 text-center">Aspirante a proveedor tecnológico Sistema Nacional de Supervisión al transporte</h3>
+  <div class="row mb-5">
+    <label class="fw-semibold fs-16px mb-2">Seleccione el módulo al que aspira como proveedor tecnológico<!-- <span *ngIf="esVigilado" class="validacion">*</span> --></label>
+    <div class="col-sm-6 col-md-3" *ngFor="let aplicativo of aplicativos">
+      <fieldset>
+        <input type="checkbox" id="aplicativos" (change)="aplicativosSeleccionados($event,aplicativo.id)" [checked]="aplicativo.estado">
+        {{aplicativo.titulo}}
+      </fieldset>
+    </div><span *ngIf="sinAplicativos" class="validacion">Seleccione, por lo menos, un modulo.</span>
+  </div>
+  <form [formGroup]="formulario">
+    <div ngbAccordion>
+      <div ngbAccordionItem [collapsed]="false">
+        <h2 ngbAccordionHeader>
+          <button ngbAccordionButton class="fw-semibold texto-primario">
+            Datos operador tecnológico
+          </button>
+        </h2>
+        <div ngbAccordionCollapse>
+          <div ngbAccordionBody>
+            <ng-template>
+              <div class="p-4">
+
+                <div class="row mb-2">
+                  <div class="col-3">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Razón social</label>
+                      <input formControlName="razon_social" type="text" class="form-control" placeholder="Razón social">
+                      <app-validacion [control]="this.formulario.get('razon_social')!" [validacion]="'required'"
+                        [texto]="'La razón social es requerida.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-3">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">NIT</label>
+                      <input formControlName="nit" type="text" class="form-control" placeholder="NIT">
+                      <app-validacion [control]="this.formulario.get('nit')!" [validacion]="'required'"
+                        [texto]="'El nit es requerido.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-1">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">DV</label>
+                      <input formControlName="dv" type="number" class="form-control">
+                      <app-validacion [control]="this.formulario.get('dv')!" [validacion]="'required'"
+                        [texto]="'El campo es requerido.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-2">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Sigla</label>
+                      <input formControlName="sigla" type="text" class="form-control" placeholder="Sigla">
+                      <app-validacion [control]="this.formulario.get('sigla')!" [validacion]="'required'"
+                        [texto]="'La sigla es requerida.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-3">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Estado de la matrícula cámara y
+                        comercio</label>
+                      <select formControlName="estado_matricula" class="form-select">
+                        <option value="">Selecciona una opción</option>
+                        <option value="Activa">Activa</option>
+                        <option value="Cancelada">Cancelada</option>
+                        <option value="Reorganización empresarial ley 1116">Reorganización empresarial ley 1116</option>
+                        <option value="Concordato ley 550">Concordato ley 550</option>
+                        <option value="En liquidación">En liquidación</option>
+                        <option value="En liquidación judicial">En liquidación judicial</option>
+                        <option value="Liquidada">Liquidada</option>
+                        <option value="Liquidada judicialmente">Liquidada judicialmente</option>
+                        <option value="En disolución">En disolución</option>
+                        <option value="Disuelta">Disuelta</option>
+                      </select>
+                      <app-validacion [control]="this.formulario.get('estado_matricula')!" [validacion]="'required'"
+                        [texto]="'Selecciona una opción.'" />
+                    </fieldset>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Correo notificacion electrónica</label>
+                      <input formControlName="correo_notificacion" type="text" class="form-control"
+                        placeholder="Correo electrónico">
+                      <app-validacion [control]="this.formulario.get('correo_notificacion')!" [validacion]="'required'"
+                        [texto]="'El correo es requerido.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-6">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Direccion</label>
+                      <input formControlName="direccion" type="text" class="form-control" placeholder="Dirección">
+                      <app-validacion [control]="this.formulario.get('direccion')!" [validacion]="'required'"
+                        [texto]="'La direccion es requerida.'" />
+                    </fieldset>
+                  </div>
+                </div>
+
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
+      <div ngbAccordionItem [collapsed]="true">
+        <h2 ngbAccordionHeader>
+          <button ngbAccordionButton class="fw-semibold texto-primario">
+            Representante legal
+          </button>
+        </h2>
+        <div ngbAccordionCollapse>
+          <div ngbAccordionBody>
+            <ng-template>
+              <div class="p-4">
+
+                <div class="row mb-2">
+                  <div class="col-3">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Nombres</label>
+                      <input formControlName="nombres_rep_legal" type="text" class="form-control" placeholder="Nombres">
+                      <app-validacion [control]="this.formulario.get('nombres_rep_legal')!" [validacion]="'required'"
+                        [texto]="'Nombres requeridos.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-3">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Apellidos</label>
+                      <input formControlName="apellidos_rep_legal" type="text" class="form-control"
+                        placeholder="Apellidos">
+                      <app-validacion [control]="this.formulario.get('apellidos_rep_legal')!" [validacion]="'required'"
+                        [texto]="'Apellidos requeridos.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-3">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Tipo de documento</label>
+                      <select formControlName="tipo_documento_rep_legal" class="form-select" id="">
+                        <option value="">Selecciona una opción</option>
+                        <option value="CC">CC</option>
+                        <option value="CE">CE</option>
+                      </select>
+                      <app-validacion [control]="this.formulario.get('tipo_documento_rep_legal')!"
+                        [validacion]="'required'" [texto]="'Selecciona una opción.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-3">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Nro. identificación</label>
+                      <input formControlName="identificacion_rep_legal" type="text" class="form-control"
+                        placeholder="Nro. identificación">
+                      <app-validacion [control]="this.formulario.get('identificacion_rep_legal')!"
+                        [validacion]="'required'" [texto]="'Número de identificación requerido.'" />
+                    </fieldset>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-4">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Número de contacto</label>
+                      <input formControlName="numero_contacto_rep_legal" type="text" class="form-control"
+                        placeholder="Número de contacto">
+                      <app-validacion [control]="this.formulario.get('numero_contacto_rep_legal')!"
+                        [validacion]="'required'" [texto]="'Contacto requerido.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-4">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Correo electrónico</label>
+                      <input formControlName="correo_rep_legal" type="text" class="form-control"
+                        placeholder="Correo electrónico">
+                      <app-validacion [control]="this.formulario.get('correo_rep_legal')!" [validacion]="'required'"
+                        [texto]="'Correo requerido.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-4">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Dirección</label>
+                      <input formControlName="direccion_rep_legal" type="text" class="form-control"
+                        placeholder="Dirección">
+                      <app-validacion [control]="this.formulario.get('direccion_rep_legal')!" [validacion]="'required'"
+                        [texto]="'Dirección requerida.'" />
+                    </fieldset>
+                  </div>
+                </div>
+
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
+      <div ngbAccordionItem [collapsed]="true">
+        <h2 ngbAccordionHeader>
+          <button ngbAccordionButton class="fw-semibold texto-primario">
+            Contacto técnico
+          </button>
+        </h2>
+        <div ngbAccordionCollapse>
+          <div ngbAccordionBody>
+            <ng-template>
+              <div class="p-4">
+
+                <div class="row mb-2">
+                  <div class="col-3">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Nombres</label>
+                      <input formControlName="nombres_cont_tecnico" type="text" class="form-control"
+                        placeholder="Nombres">
+                      <app-validacion [control]="this.formulario.get('nombres_cont_tecnico')!" [validacion]="'required'"
+                        [texto]="'Nombres requeridos.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-3">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Apellidos</label>
+                      <input formControlName="apellidos_cont_tecnico" type="text" class="form-control"
+                        placeholder="Apellidos">
+                      <app-validacion [control]="this.formulario.get('apellidos_cont_tecnico')!"
+                        [validacion]="'required'" [texto]="'Apellidos requeridos.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-3">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Tipo de documento</label>
+                      <select formControlName="tipo_documento_cont_tecnico" class="form-select" name="" id="">
+                        <option value="">Selecciona una opción</option>
+                        <option value="CC">CC</option>
+                        <option value="CE">CE</option>
+                      </select>
+                      <app-validacion [control]="this.formulario.get('tipo_documento_cont_tecnico')!"
+                        [validacion]="'required'" [texto]="'Selecciona una opción.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-3">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Nro. identificación</label>
+                      <input formControlName="identificacion_cont_tecnico" type="text" class="form-control"
+                        placeholder="Nro. identificación">
+                      <app-validacion [control]="this.formulario.get('identificacion_cont_tecnico')!"
+                        [validacion]="'required'" [texto]="'Identificación requerida.'" />
+                    </fieldset>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-4">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Número de contacto</label>
+                      <input formControlName="numero_contacto_cont_tecnico" type="text" class="form-control"
+                        placeholder="Número de contacto">
+                      <app-validacion [control]="this.formulario.get('numero_contacto_cont_tecnico')!"
+                        [validacion]="'required'" [texto]="'Contacto requerido.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-4">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Correo electrónico</label>
+                      <input formControlName="correo_cont_tecnico" type="text" class="form-control"
+                        placeholder="Correo electrónico">
+                      <app-validacion [control]="this.formulario.get('correo_cont_tecnico')!" [validacion]="'required'"
+                        [texto]="'Correo requerido.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-4">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Dirección</label>
+                      <input formControlName="direccion_cont_tecnico" type="text" class="form-control"
+                        placeholder="Dirección">
+                      <app-validacion [control]="this.formulario.get('direccion_cont_tecnico')!"
+                        [validacion]="'required'" [texto]="'Direccion requerida.'" />
+                    </fieldset>
+                  </div>
+                </div>
+
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
+      <div ngbAccordionItem [collapsed]="true">
+        <h2 ngbAccordionHeader>
+          <button ngbAccordionButton class="fw-semibold texto-primario">
+            Carga de documentos
+          </button>
+        </h2>
+        <div ngbAccordionCollapse>
+          <div ngbAccordionBody>
+            <ng-template>
+              <div class="p-4">
+
+                <div class="row mb-2">
+                  <div class="col-6">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Cámara y comercio PDF (Máximo 20Mb)</label>
+                      <app-input-archivo formControlName="doc_camara" [acepta]="['.pdf']" [nombre]="'1'"
+                        [tamanoMaximoMb]="20" />
+                      <app-validacion [control]="this.formulario.get('doc_camara')!" [validacion]="'required'"
+                        [texto]="'Documento requerido.'" />
+                    </fieldset>
+                  </div>
+                  <div class="col-6">
+                    <fieldset>
+                      <label class="fw-semibold fs-14px">Certificación del Rep. Legal en PDF (Máximo 20Mb)</label>
+                      <app-input-archivo formControlName="doc_certificacion" [acepta]="['.pdf']" [nombre]="'2'"
+                        [tamanoMaximoMb]="20" />
+                      <app-validacion [control]="this.formulario.get('doc_certificacion')!" [validacion]="'required'"
+                        [texto]="'Documento requerido.'" />
+                    </fieldset>
+                  </div>
+                </div>
+
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="d-flex justify-content-end mt-3">
+      <button class="boton primario relleno" (click)="enviarFormulario()">Enviar formulario</button>
+    </div>
+  </form>
+</div>
+<app-popup #popup />

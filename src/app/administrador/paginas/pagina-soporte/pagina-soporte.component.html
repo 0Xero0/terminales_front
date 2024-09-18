@@ -1,0 +1,65 @@
+<div class="p-5">
+    <div class="contenedor-formulario mx-auto">
+        <h3 class="fw-semibold texto-azul-004884 mb-3">Solicitud de soporte</h3>
+        <hr>
+        <div class="d-flex align-items-center justify-content-center mb-3">
+            <button class="boton primario relleno" (click)="crearSoporte()">Guardar</button>
+        </div>
+        <form [formGroup]="formulario">
+            <div class="row mb-3">
+                <div class="col-2">
+                    <span>Motivo</span>
+                    <span class="validacion"> *</span>
+                </div>
+                <div class="col-10">
+                    <fieldset>
+                        <select formControlName="motivo" class="form-select">
+                            <option value="" selected>Selecciona un motivo</option>
+                            <option *ngFor="let motivo of motivos" [value]="motivo.id">{{ motivo.id }} - {{ motivo.descripcion }}</option> 
+                        </select>
+                        <app-validacion  
+                        [control]="this.formulario.controls['motivo']" 
+                        [texto]="'Selecciona un motivo.'" 
+                        [validacion]="'required'"/>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-2">
+                            <span>Descripción <span class="validacion">*</span></span>
+                        </div>
+                        <div class="col-10">
+                            <textarea class="form-control" formControlName="descripcion" cols="30" rows="50" style="height: 200px;"></textarea>
+                            <app-validacion  
+                            [control]="this.formulario.controls['descripcion']" 
+                            [texto]="'La descripción es requerida.'" 
+                            [validacion]="'required'"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-2">
+                            <span>Evidencia <span class="validacion">*</span></span>
+                        </div>
+                        <div class="col-5">
+                            <app-input-archivo
+                            (excedeTamano)="manejarExcedeTamanio()"
+                            [tamanoMaximoMb]="7" 
+                            [nombre]="'evidencia'"
+                            [acepta]="['.pdf', '.docx', '.jpg', '.jpge', '.png']" 
+                            formControlName="adjunto" />
+                            <span class="fw-semibold fs-12px">Máximo 7 Mb</span> <br> 
+                            <span class="fs-12px">(PDF, documento Word e imágenes)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<app-popup #popup/>

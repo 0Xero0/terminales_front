@@ -1,0 +1,11 @@
+.tabla-reportes{
+  table-layout: fixed;
+}
+.tabla-reportes th, .tabla-reportes td{
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.tabla-reportes td{
+  padding: 5px;
+}

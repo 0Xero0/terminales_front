@@ -1,0 +1,33 @@
+<nav class="menu d-flex" *ngIf="this.rol && this.rol.modulos">
+  <div class="menu-toggle" id="mobile-menu">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </div>
+  <ul class="modulos">
+    <li [routerLinkActive]="'activo'" class="modulo" *ngFor="let modulo of this.rol.modulos">
+      <span
+      class="nombre-modulo"
+      routerLink="/administrar{{modulo.ruta}}"
+      >{{modulo.nombre}}</span>
+      <ul class="submodulos" *ngIf="modulo.submodulos">
+        <li class="submodulo" *ngFor="let submodulo of modulo.submodulos" (click)="navegarAlSubmodulo(submodulo)">
+          <span class="nombre-submodulo">{{ submodulo.nombre }}</span>
+        </li>
+      </ul>
+    </li>
+    <li class="modulo">
+      <span class="nombre-modulo">Seguridad</span>
+      <ul class="submodulos">
+        <li class="submodulo" (click)="cerrarSesion()">
+          <span class="nombre-submodulo">Salir</span>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <div class="d-flex align-items-center justify-content-end ms-auto" *ngIf="usuario">
+    <span class="fs-12px p-3 cursor-pointer"><b>Usuario: </b>{{ usuario.nombre }} {{ usuario.apellido }}</span>
+  </div>
+</nav>
+
+<script></script>

@@ -1,0 +1,13 @@
+.label{
+    height: 36px;
+    background-color: var(--gris-2);
+    padding: 10px;
+    color: gray;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-radius: 1px solid gray;
+}
+.indicador-moneda .form-control{
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}

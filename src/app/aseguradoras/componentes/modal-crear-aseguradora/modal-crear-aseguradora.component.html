@@ -1,0 +1,53 @@
+<ng-template #modal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title fs-14px  fw-bolder">Crear aseguradora</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="form">
+        <div class="row mb-3">
+          <div class="col-sm-12 col-md-6 col-lg-3">
+            <fieldset>
+              <label>Nit <span class="validacion">*</span></label>
+              <input formControlName="nit" type="text" class="form-control" placeholder="nit">
+              <app-validacion [validacion]="'required'" [texto]="'El nit es requerido.'"
+                [control]="this.form.controls['nit']" />
+            </fieldset>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-3">
+            <fieldset>
+              <label>Nombre <span class="validacion">*</span></label>
+              <input formControlName="nombre" type="text" class="form-control" placeholder="nombre">
+              <app-validacion [validacion]="'required'" [texto]="'El nombre es requerido.'"
+              [control]="this.form.controls['nombre']" />
+            </fieldset>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-3">
+            <fieldset>
+              <label>Dirección <span class="validacion">*</span></label>
+              <input formControlName="direccion" type="text" class="form-control"
+                placeholder="direccion">
+              <app-validacion [validacion]="'required'" [texto]="'La dirección es requerida.'"
+                [control]="this.form.controls['direccion']" />
+            </fieldset>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-3">
+            <fieldset>
+              <label>Teléfono </label>
+              <input formControlName="telefono" type="text" class="form-control"
+                placeholder="telefono">
+            </fieldset>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer d-flex">
+      <div class="d-flex justify-content-end">
+        <button type="button" class="boton primario relleno" (click)="create()">
+          Guardar
+        </button>
+      </div>
+    </div>
+    
+  </ng-template>
+  <app-popup #popup />

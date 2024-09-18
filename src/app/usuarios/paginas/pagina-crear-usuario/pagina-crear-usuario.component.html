@@ -1,0 +1,207 @@
+<div class="p-5">
+    <h2 class="texto-primario fw-semibold mb-3">Crear usuario</h2>
+      <!--<form id="formulario">[formGroup]="formulario"-->
+        <div class="row mb-3">
+            <label class="fw-semibold fs-16px mb-2">Datos del usuario</label>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+              <fieldset>
+                <label>Identificación <span class="validacion">*</span></label>
+                <input [(ngModel)]="identificacion" type="text" class="form-control" placeholder="Ingrese el número de Identificación aquí"
+                (change)="llenarFormulario($event)" (ngModelChange)="validar($event,'identificacion')" (keypress)="validarSoloNumeros($event)">
+                <span *ngIf="errorForm == 'identificacion'" class="validacion"> Debe ingresar el número de identificación</span>
+              </fieldset>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <fieldset>
+                    <label>Nombre completo o Razón social <span class="validacion">*</span></label>
+                    <input [(ngModel)]="nombre"  type="text" class="form-control" placeholder="Ingresa el nombre completo o razón social aquí"
+                    [disabled]="deshabilitado" (ngModelChange)="validar($event,'nombre')">
+                    <span *ngIf="errorForm == 'nombre'" class="validacion"> Debe ingresar el nombre o razón social</span>
+
+                </fieldset>
+            </div>
+            <!-- <div class="col-sm-12 col-md-6 col-lg-3">
+                <fieldset>
+                    <label>Apellido</label>
+                    <input [(ngModel)]="apellido" type="text" class="form-control" placeholder="Ingresa el apellido" [disabled]="deshabilitado">
+                </fieldset>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <fieldset>
+                    <label>Fecha de nacimiento </label>
+                    <input [(ngModel)]="fechaNacimiento" type="date" class="form-control" placeholder="Ingresa la fecha de nacimiento" [disabled]="deshabilitado">
+
+                </fieldset>
+            </div> -->
+        </div>
+        <!-- <div class="row mb-3">
+            <label class="fw-semibold fs-16px mb-2">Departamento y municipio</label>
+            <div class="col-sm-12 col-md-6">
+                <label>Departamento <span class="validacion">*</span></label>
+                <select title="departamento" class="form-select" formControlName="departamento">
+                    <option value="">Selecciona un departamento</option>
+                    <option *ngFor="let departamento of departamentos" [value]="departamento.id">
+                        {{ departamento.id }} - {{ departamento.name }}
+                    </option>
+                </select>
+                <app-validacion
+                    [validacion]="'required'"
+                    [texto]="'El departamento es requerido.'"
+                    [control]="this.formulario.controls['departamento']"
+                    />
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <label>Municipio <span class="validacion">*</span></label>
+                <select title="municipio" class="form-select" formControlName="municipio">
+                    <option value="">Selecciona un municipio</option>
+                    <option *ngFor="let municipio of municipios" [value]="municipio.id">
+                        {{ municipio.id }} - {{ municipio.name }}
+                    </option>
+                </select>
+                <app-validacion
+                    [validacion]="'required'"
+                    [texto]="'El municipio es requerido.'"
+                    [control]="this.formulario.controls['municipio']"
+                    />
+            </div>
+        </div> -->
+        <div class="row mb-3">
+            <div class="col-sm-12 col-md-6">
+              <label class="fw-semibold fs-16px mb-2">Información de contacto</label>
+                <fieldset>
+                    <label>Correo electrónico <span class="validacion">*</span></label>
+                    <input [(ngModel)]="correo" type="email" class="form-control" placeholder="Ingresa el correo electrónico aquí"
+                    [disabled]="deshabilitado" (ngModelChange)="[validar($event,'correo'),validarEmail()]">
+                    <span *ngIf="errorForm == 'correo'" class="validacion"> Debe ingresar el correo electrónico</span>
+                    <span *ngIf="errorCorreo" class="validacion">Introduce un correo electrónico válido como: usuario@ejemplo.com</span>
+                </fieldset>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-4">
+              <label class="fw-semibold fs-16px mb-2">Información de rol</label>
+                <fieldset>
+                    <label>Rol <span class="validacion">*</span></label>
+                    <select title="rol" [(ngModel)]="idRol" class="form-select" (change)="[validar($event,'rol'),validarRol($event)]">
+                        <option [value]="undefined" selected>Seleccione un rol</option>
+                        <option *ngFor="let rol of roles" [value]="rol._id">
+                          {{ rol._nombre }}
+                        </option>
+                    </select>
+                    <span *ngIf="errorForm == 'rol'" class="validacion"> Debe seleccionar un rol</span>
+                </fieldset>
+            </div>
+            <!-- <div class="col-sm-12 col-md-6">
+                <fieldset>
+                    <label>Teléfono</label>
+                    <input [(ngModel)]="telefono" type="text" class="form-control" placeholder="Ingresa el teléfono" [disabled]="deshabilitado">
+                </fieldset>
+            </div> -->
+        </div>
+        <!-- <div class="row mb-3">
+            <label class="fw-semibold fs-16px mb-2">Información de cargo</label>
+            <div class="col-sm-12 col-md-6">
+                <fieldset>
+                    <label>Cargo <span class="validacion">*</span></label>
+                    <select title="cargo" formControlName="cargo" class="form-select">
+                        <option value="" selected>Selecciona un rol</option>
+                        <option *ngFor="let rol of roles" [value]="rol._id">{{ rol._nombre }}</option>
+                    </select>
+                    <app-validacion
+                    [validacion]="'required'"
+                    [texto]="'El rol es requerido.'"
+                    [control]="this.formulario.controls['rol']"
+                    />
+                </fieldset>
+            </div>
+        </div> -->
+        <div class="row mb-5">
+          <label class="fw-semibold fs-16px mb-2">Asignación de módulos<span *ngIf="esVigilado" class="validacion">*</span></label>
+          <div class="col-sm-6 col-md-3" *ngFor="let aplicativo of aplicativos">
+            <fieldset>
+              <input type="checkbox" id="aplicativos" [checked]="aplicativo.estado"
+              (change)="aplicativosSeleccionados($event,aplicativo.id)"
+              >
+              {{aplicativo.titulo}}
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <button type="button" class="boton primario relleno" (click)="crear()">
+                Guardar
+            </button>
+        </div>
+    <!-- </form> -->
+    <hr>
+    <h2 class="texto-primario fw-semibold mb-3">Lista de usuarios</h2>
+    <div class="d-flex mb-3 flex-gap-20">
+        <fieldset>
+            <label class="fs-14px fw-semibold">Palabra clave</label>
+            <app-input-busqueda [(ngModel)]="termino" />
+        </fieldset>
+        <fieldset>
+            <label class="fs-14px fw-semibold">Rol</label>
+            <select title="rol" [(ngModel)]="rol" class="form-select">
+                <option value="" selected>Selecciona un rol</option>
+                <option *ngFor="let rol of roles" [value]="rol._id">{{ rol._nombre }}</option>
+            </select>
+        </fieldset>
+        <fieldset class="d-flex align-items-end">
+            <button class="boton primario relleno me-2" (click)="actualizarFiltros()">
+                Buscar
+            </button>
+            <button class="boton primario delineado" (click)="limpiarFiltros()">
+                Limpiar filtros
+            </button>
+        </fieldset>
+    </div>
+    <div class="table-responsive mb-3">
+        <table class="table lista-de-usuarios">
+            <thead>
+                <tr>
+                    <th>Documento</th>
+                    <th>Nombre</th>
+                    <!-- <th>Apellido</th> -->
+                    <th>Correo</th>
+                    <!-- <th>Fecha de nacimiento</th> -->
+                    <th>Editar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let usuario of usuarios">
+                    <td>{{ usuario.usuario }}</td>
+                    <td>{{ usuario.nombre }}</td>
+                    <!-- <td>{{ usuario.apellido }}</td> -->
+                    <td>{{ usuario.correo }}</td>
+                    <!-- <td>{{ usuario.fechaNacimiento | fecha: 'dd/MM/yyyy' }}</td> -->
+                    <td>
+                        <span class="cursor-pointer" (click)="abrirModalActualizarUsuario(usuario)">Editar</span>
+                    </td>
+                </tr>
+                <tr *ngIf="usuarios.length === 0">
+                    <td colspan="6">No se encontraron usuarios con los filtros establecidos.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="d-flex justify-content-end">
+        <ngb-pagination
+        [collectionSize]="this.paginador.totalRegistros ?? 0"
+        [pageSize]="this.paginador.limite"
+        [page]="this.paginador.pagina"
+        [maxSize]="5"
+        (pageChange)="this.paginador.cambiarPagina($event)"
+        >
+            <ng-template ngbPaginationFirst>Prim.</ng-template>
+            <ng-template ngbPaginationLast>Ult.</ng-template>
+            <ng-template ngbPaginationPrevious>Ant.</ng-template>
+            <ng-template ngbPaginationNext>Sig.</ng-template>
+        </ngb-pagination>
+    </div>
+</div>
+<app-modal-actualizar-usuario
+    #modalActualizarUsuario
+    (usuarioActualizado)="manejarUsuarioActualizado()" />
+<app-popup #popup />
+
+
+

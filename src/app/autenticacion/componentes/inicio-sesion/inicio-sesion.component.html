@@ -1,0 +1,104 @@
+<app-cabecera />
+<div class="fondo ">
+  <div class="fondo-imagen">
+    <div class="d-flex justify-content-center">
+      <div class="informacion">
+        <div class="texto-login">
+          <h3 class="fs-32px texto-blanco">SISTEMA INTELIGENTE NACIONAL DE SUPERVISIÓN <b>AL TRANSPORTE
+            (SINST)</b></h3>
+        </div>
+          <div class="texto-login">
+            <p class="fs-14px mt-3">
+              La información aquí contenida es solicitada por esta Autoridad
+              con fines de vigilancia, inspección y control propios de sus funciones.
+              Podrá consultar la Política Institucional de Seguridad y Privacidad de
+              la información en el siguiente enlace
+              <a class="fw-semibold fs-14px cursor-pointer"
+                href="assets/documentos/TIC-PO-001-V2-Seguridad-y-Privacidad-de-la-Informacion.pdf" target="_blank">
+                ver política
+              </a>
+            </p>
+          </div>
+        </div>
+    <div class="card contenedor-inicio-sesion">
+      <div class="card-body">
+        <div class="logos d-flex w-100 px-2 justify-content-between">
+          <div class="col-12 ms-auto text-center">
+            <img draggable="false" class="img-fluid logo-supertransporte" src="assets/img/cabecera/supertransporte.jpg"
+              alt="ministerio-de-transporte">
+          </div>
+        </div>
+        <div class="contenedor-formulario">
+          <form class="w-100" [formGroup]="this.formulario">
+            <fieldset class="mb-4">
+              <label class="fs-16px mb-2 texto-gris-4B4B4B" for="usuario">Usuario</label>
+              <input placeholder="Ingrese aquí su NIT sin digito de verificación" class="form-control" type="text"
+                name="usuario" formControlName="usuario" required
+                [ngClass]="{'input-error':this.formulario.controls['usuario'].errors &&
+                        this.formulario.controls['usuario'].dirty && this.formulario.controls['usuario'].errors['required']}">
+              <span class="validacion"
+                *ngIf="this.formulario.controls['usuario'].errors &&
+                        this.formulario.controls['usuario'].dirty && this.formulario.controls['usuario'].errors['required']">
+                Ingrese su usuario
+              </span>
+            </fieldset>
+            <fieldset class="mb-4">
+              <label class="fs-16px mb-2 texto-gris-4B4B4B" for="clave">Contraseña</label>
+              <input placeholder="Ingrese aquí su contraseña" class="form-control" type="password" name="clave"
+                formControlName="clave" required [ngClass]="{'input-error':this.formulario.controls['clave'].errors &&
+                        this.formulario.controls['clave'].dirty}">
+              <span class="validacion" *ngIf="this.formulario.controls['clave'].invalid &&
+                        this.formulario.controls['clave'].dirty">
+                Ingrese su contraseña
+              </span>
+            </fieldset>
+            <fieldset class="mb-3 d-flex align-items-start">
+              <div class="d-block"
+                [ngClass]="{'input-error':this.formulario.controls['captcha'].errors &&
+                      this.formulario.controls['captcha'].dirty && this.formulario.controls['captcha'].errors['required']}">
+                <ngx-recaptcha2 #captchaElem [siteKey]="llaveCaptcha" [useGlobalDomain]="false" [theme]="'light'"
+                  formControlName='captcha' required>
+                </ngx-recaptcha2>
+                <app-validacion [texto]="'Debe marcar la casilla'" [validacion]="'required'"
+                  [control]="this.formulario.controls['captcha']" />
+              </div>
+            </fieldset>
+            <fieldset style="display: flex; justify-content:end;">
+              <button type="button" class="boton primario relleno fs-16px" (click)="this.iniciarSesion()"
+                (keyup.enter)="this.iniciarSesion()">Ingresar</button>
+            </fieldset>
+            <hr>
+          </form>  
+        </div>
+        <div class="p-4 w-100" id="contenedor-enlaces">
+          <span class="texto-primario fs-16px texto-azul-004884 cursor-pointer"
+            (click)="this.abrirModalRecuperacion()">
+            Olvidé mi contraseña
+          </span><br>
+          <span class="fs-16px texto-azul-004884 cursor-pointer">
+            <a href="https://www.youtube.com/watch?v=4zJH7N8OgV4" target="_blank">
+              Video tutorial de recuperación de contraseña
+            </a>
+          </span><br>
+          <span class="fs-16px texto-azul-004884 cursor-pointer">
+            <a href="assets/documentos/manual_polizas.pdf" target="_blank">
+              Manual de usuario
+            </a>
+          </span>
+          <span class="fs-16px texto-azul-004884 cursor-pointer">
+            <a href="assets/documentos/PREGUNTAS_FRECUENTES_PECCIT.pdf" target="_blank">
+              Preguntas frecuentes
+            </a>
+          </span><br>
+          <span class="fs-16px texto-azul-004884 cursor-pointer" [routerLink]="['/soporte']">
+            Problemas de acceso
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="rectangulo"></div>
+</div>
+<app-modal-recuperacion-contrasena #modalRecuperacion></app-modal-recuperacion-contrasena>
+<app-popup #popup />

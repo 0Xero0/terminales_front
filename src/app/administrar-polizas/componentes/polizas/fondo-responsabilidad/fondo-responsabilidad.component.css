@@ -1,0 +1,12 @@
+.fondo-desplegable{
+    background-color: rgb(97, 61, 136);
+}
+
+.texto{
+    color: white;
+}
+
+.centrar{
+    align-content: center;
+    align-items: center;
+}

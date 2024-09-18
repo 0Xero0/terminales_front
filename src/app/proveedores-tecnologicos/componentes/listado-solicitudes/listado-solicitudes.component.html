@@ -1,0 +1,54 @@
+<div class="px-md-3 px-lg-4 mt-4">
+  <h2 class="fw-semibold texto-azul-004884 mb-3">Solicitudes</h2>
+  <div class="d-flex flex-gap-20 align-items-center mb-4" *ngIf="this.rol && this.rol.id != 3">
+    <fieldset>
+      <app-input-busqueda [(ngModel)]="termino" />
+    </fieldset>
+    <fieldset>
+      <button class="boton primario relleno" (click)="actualizarFiltros()">Buscar</button>
+    </fieldset>
+    <fieldset>
+      <button class="boton primario relleno" (click)="limpiarFiltros()">Limpiar</button>
+    </fieldset>
+  </div>
+  <div class="d-flex">
+    <div class="table-responsive custom-scroll">
+      <table class="table table-bordered tabla-primaria">
+        <thead>
+          <tr class="fs-14px">
+            <th class="">ACCESO A FORMULARIO</th>
+            <th class="">NIT</th>
+            <th class="">RAZÓN SOCIAL</th>
+            <th class="">FECHA DE REGISTRO</th>
+            <th class="">TIPO DE SOLICITUD</th>
+            <th class="">ESTADO DEL CARGUE</th>
+            <th class="">ESTADO DE VALIDACIÓN</th>
+          </tr>
+        </thead>
+        <tbody class="fs-14px">
+          <tr *ngFor="let solicitud of solicitudes ; let i = index">
+            <td>
+              <img class="cursor-pointer" src="assets/img/buscar-documento.png" alt="buscar-encuesta" draggable="false"
+                (click)="visualizarSolicitud(solicitud.solicitudId)">
+            </td>
+            <td>{{solicitud.nit}}</td>
+            <td>{{solicitud.razonSocial}}</td>
+            <td>{{solicitud.fechaRegistro | fecha: 'dd/MM/yyyy'}}</td>
+            <td>{{solicitud.modulo}}</td>
+            <td>{{solicitud.estadoCargue}}</td>
+            <td>{{solicitud.estadoValidacion}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="d-flex justify-content-start">
+    <ngb-pagination [collectionSize]="paginador.totalRegistros ?? 0" [page]="paginador.pagina"
+      [pageSize]="paginador.limite" (pageChange)="paginador.cambiarPagina($event)" [maxSize]="5">
+      <ng-template ngbPaginationFirst>Prim.</ng-template>
+      <ng-template ngbPaginationLast>Ult.</ng-template>
+      <ng-template ngbPaginationPrevious>Ant.</ng-template>
+      <ng-template ngbPaginationNext>Sig.</ng-template>
+    </ngb-pagination>
+  </div>
+</div>
