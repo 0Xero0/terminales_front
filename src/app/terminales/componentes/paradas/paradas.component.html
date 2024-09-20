@@ -1,1 +1,60 @@
-<p>paradas works!</p>
+<div ngbAccordion>
+  <div ngbAccordionItem [collapsed]="false">
+    <h2 ngbAccordionHeader>
+      <button ngbAccordionButton class="fw-semibold texto-primario">
+        PARADAS
+      </button>
+    </h2>
+    <div ngbAccordionCollapse>
+      <div ngbAccordionBody>
+        <ng-template>
+          <table class="table">
+            <thead class="encabezado">
+              <tr>
+                <th>Número</th>
+                <th>Departamento</th>
+                <th>Municipio</th>
+                <th>Centro poblado</th>
+                <th>Tipo de llegada</th>
+                <th>Dirección</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>001</td>
+                <td>
+                  <select name="" id="" class="form-select">
+                    <option value="">Seleccione una opción</option>
+                  </select>
+                </td>
+                <td>
+                  <select name="" id="" class="form-select">
+                    <option value="">Seleccione una opción</option>
+                  </select>
+                </td>
+                <td>
+                  <select name="" id="" class="form-select">
+                    <option value="">Seleccione una opción</option>
+                  </select>
+                </td>
+                <td>
+                  <select name="" id="" class="form-select">
+                    <option value="">Seleccione una opción</option>
+                  </select>
+                </td>
+                <td>
+                  <select name="" id="" class="form-select">
+                    <option value="">Seleccione una opción</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-template>
+      </div>
+      <div ngbAccordionToggle>
+        <button type="button" class="btn btn-primary boton-agregar">Agregar Parada <i class="bi bi-plus-circle"></i></button>
+      </div>
+    </div>
+  </div>
+</div>

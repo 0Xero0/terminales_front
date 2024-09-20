@@ -1,0 +1,49 @@
+<div ngbAccordion>
+  <div ngbAccordionItem [collapsed]="true">
+    <h2 ngbAccordionHeader>
+      <button ngbAccordionButton class="fw-semibold texto-primario">
+        CLASES
+      </button>
+    </h2>
+    <div ngbAccordionCollapse>
+      <div ngbAccordionBody>
+        <ng-template>
+          <table class="table">
+            <thead class="encabezado">
+              <tr>
+                <th>Clase</th>
+                <th>Tipo de vehículo</th>
+                <th>Activa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>GRUPO A</td>
+                <td>
+                  <select name="" id="" class="form-select">
+                    <option value="">Seleccione una opción</option>
+                  </select>
+                </td>
+                <td>
+                  <select name="" id="" class="form-select">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option [value]="1">Si</option>
+                    <option [value]="2">No</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-template>
+      </div>
+      <div ngbAccordionToggle>
+        <div class="row boton-agregar">
+          <label for="">Dado el caso que haga falta información, debe agregarla.</label>
+        </div>
+        <div class="boton-agregar">
+          <button type="button" class="btn btn-primary boton-agregar">Agregar Clase <i class="bi bi-plus-circle"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+.clasificacion{
+  box-sizing: border-box;
+  padding: 12px 0;
+}
+.clasificacion:hover{
+  background-color: #f8f8f8;
+}
+.encabezado{
+  width: auto;
+  box-sizing: border-box;
+  padding: 12px 15px;
+  background-color: #E6EFFD;
+  color: #004884;
+  font-weight: 600;
+}
+
+.selected {
+  background-color: #f0d78371;  /* Color de fondo para el registro seleccionado */
+}

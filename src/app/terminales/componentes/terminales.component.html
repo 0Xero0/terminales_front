@@ -1,0 +1,32 @@
+<app-cabecera />
+<div class="py-2 mt-5 px-sm-3 px-md-4 px-lg-5">
+  <div class="d-flex justify-content-between mb-4" ><!-- *ngIf="rol!.id === 7" -->
+    <h3 class="texto-primario fw-semibold">Terminales</h3>
+  </div>
+  <div class="d-block mb-3">
+    <table class="tabla-informacion">
+      <thead>
+        <tr>
+          <th colspan="2">Información del formulario.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="fw-semibold">Razón social</td>
+          <td>
+            <ng-container>
+              CARIBEÑA
+            </ng-container>
+          </td>
+        </tr>
+        <tr>
+          <td class="fw-semibold">N° de Rutas</td>
+          <td>
+            12
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <app-rutas></app-rutas>
+</div>

@@ -18,6 +18,8 @@ import { FormularioAspiranteComponent } from './proveedores-tecnologicos/compone
 import { DocumentacionComponent } from './proveedores-tecnologicos/componentes/documentacion/documentacion.component';
 import { ListadoSolicitudesComponent } from './proveedores-tecnologicos/componentes/listado-solicitudes/listado-solicitudes.component';
 import { AsignacionesComponent } from './asignaciones/componentes/asignaciones.component';
+import { InicioVigia2Component } from './autenticacion/componentes/inicio-vigia2/inicio-vigia2.component';
+import { TerminalesComponent } from './terminales/componentes/terminales.component';
 
 
 
@@ -76,11 +78,19 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'inicio-sesion'
+    redirectTo: 'inicio-vigia2'
   },
   {
+    path: 'inicio-vigia2',
+    component: InicioVigia2Component
+  },
+  /* {
     path: 'inicio-sesion',
     component: InicioSesionComponent
+  }, */
+  {
+    path: 'terminales',
+    component: TerminalesComponent
   },
   {
     path: 'actualizar-contrasena',
@@ -101,7 +111,7 @@ const routes: Routes = [
   {
     path: '**',
     /* pathMatch: 'full', */
-    redirectTo: 'inicio-sesion'
+    redirectTo: 'inicio-vigia2'
   }
 ];
 
