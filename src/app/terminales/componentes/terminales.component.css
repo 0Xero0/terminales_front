@@ -1,0 +1,65 @@
+.contenedor-titulo {
+  height: 125px;
+  background-color: #333333;
+  padding: 1.8%;
+  /* margin-top: 45px; */
+}
+
+.titulo {
+  margin: 0%;
+  font-size: 32px;
+  font-weight: bold;
+  margin-left: 25px;
+  color: white;
+}
+
+.descripcion {
+  /* color: #004884; */
+  color: white;
+  font-size: 16px;
+  margin-left: 26px;
+  margin-bottom: 15px;
+}
+
+.linea {
+  height: 5px;
+  background-color: #3366cc;
+  margin-bottom: 15px;
+}
+
+.informacion {
+  width: 480px;
+  border-color: 1px solid black !important;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 5px;
+}
+
+.titulo-fila {
+  color: #4b4b4b;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.nav {
+  top: 54px;
+  left: 0px;
+  height: 75px;
+  background: #004884 0% 0% no-repeat padding-box;
+  opacity: 1;
+  margin-top: 54px;
+}
+
+.item {
+  top: 54px;
+  left: 316px;
+  width: 183px;
+  height: 75px;
+  cursor: pointer;
+  align-content: center;
+  text-align: center;
+  color: white;
+}
+.item:hover{
+  background-color: #ffffff;
+  color: #3366cc;
+}

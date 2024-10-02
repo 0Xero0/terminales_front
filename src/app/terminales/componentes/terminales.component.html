@@ -1,32 +1,58 @@
 <app-cabecera />
-<div class="py-2 mt-5 px-sm-3 px-md-4 px-lg-5">
-  <div class="d-flex justify-content-between mb-4" ><!-- *ngIf="rol!.id === 7" -->
-    <h3 class="texto-primario fw-semibold">Terminales</h3>
-  </div>
+<nav class="nav">
+  <div class="item">TERMINALES</div>
+  <div class="item">Seguridad</div>
+</nav><!-- ESTO DEBO QUITARLO -->
+
+<div class="contenedor-titulo"><!-- *ngIf="rol!.id === 7" -->
+  <h2 class="titulo">TERMINALES</h2>
+  <p class="fs-16 descripcion">SISTEMA NACIONAL DE SUPERVISIÓN AL TRANSPORTE</p>
+</div>
+<div class="linea"></div>
+<!--  -->
+
+<div class="py-2 px-sm-3 px-md-4 px-lg-5">
   <div class="d-block mb-3">
-    <table class="tabla-informacion">
+    <table class="informacion tabla-informacion ">
       <thead>
         <tr>
-          <th colspan="2">Información del formulario.</th>
+          <th colspan="2" style="text-align: center !important;">Información del formulario.</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="fw-semibold">Razón social</td>
+          <td class="fw-semibold titulo-fila" style="width: 150px !important;">Razón social</td>
           <td>
             <ng-container>
-              CARIBEÑA
+              {{usuario.razonSocial}}
             </ng-container>
           </td>
         </tr>
         <tr>
-          <td class="fw-semibold">N° de Rutas</td>
+          <td class="fw-semibold titulo-fila">N° de Rutas</td>
           <td>
-            12
+            <ng-container>
+              {{usuario.nRutas}}
+            </ng-container>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <app-rutas></app-rutas>
+  <!-- //////////////SECCION BOTONES /////////////////////////////////////////// -->
+  <div class="d-flex mt-4">
+    <button type="button" class="boton primario relleno" [disabled]="hayCambios">Enviar a ST</button>
+    <button type="button" class="boton primario relleno" style="margin-left: 300px;" [disabled]="!hayCambios">Guardar</button>
+    <button type="button" class="boton primario delineado" style="margin-left: 300px;">Volver</button>
+  </div>
+  <!--  -->
+  <app-rutas
+    [verificacionVisible]="verificacionVisible"
+    [verificacionEditable]="verificacionEditable"
+    (hayCambios)="recibirHayCambios($event)"
+    (rutasGuardar)="recibirRutas($event)"
+    (paradasGuardar)="recibirParada($event)"
+    (clasesGuardar)="recibirClases($event)"
+  >
+  </app-rutas>
 </div>

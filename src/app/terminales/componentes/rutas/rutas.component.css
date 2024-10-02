@@ -1,19 +1,43 @@
-.clasificacion{
-  box-sizing: border-box;
-  padding: 12px 0;
+.ruta {
+  overflow: auto;
+  margin-top: 10px;
 }
-.clasificacion:hover{
+.titulo-ruta {
+  margin-top: 30px;
+  margin-left: 10px;
+  width: 500px;
+  height: 19px;
+  text-align: left;
+  font: normal normal bold 16px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #004884;
+  opacity: 1;
+}
+/* .clasificacion:hover {
   background-color: #f8f8f8;
-}
-.encabezado{
-  width: auto;
-  box-sizing: border-box;
-  padding: 12px 15px;
-  background-color: #E6EFFD;
+} */
+.encabezado {
+  background: #e6effd 0% 0% no-repeat padding-box;
+  border-radius: 5px 5px 0px 0px;
+  opacity: 1;
   color: #004884;
   font-weight: 600;
 }
 
 .selected {
-  background-color: #f0d78371;  /* Color de fondo para el registro seleccionado */
+  background-color: #f0d78371; /* Color de fondo para el registro seleccionado */
+}
+
+.campo-seleccionar {
+  cursor: pointer; /* Cambia el cursor a una mano */
+}
+.campo-seleccionar:hover {
+  background-color: #f0d78371; /* Cambia el color de fondo al pasar el puntero */
+}
+
+.fila td:nth-child(-n+5):hover, /* Aplica el hover solo a los primeros 5 campos */
+.fila:hover td:nth-child(-n+5) {
+  /* Cambia el estilo de los primeros 5 campos cuando cualquier campo tiene hover */
+  cursor: pointer; /* Cambia el cursor a una mano */
+  background-color: #f0d78371; /* Cambia este color al que desees */
 }
