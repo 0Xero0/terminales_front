@@ -24,7 +24,7 @@
     border: 1px solid #CFCBCB;
     -webkit-appearance: none;
     appearance: none;
-    border-radius: 7px;
+    border-radius: 3px;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     overflow: visible;
 }
@@ -68,7 +68,7 @@ input.form-control[type=number] {
     font-weight: 400;
     line-height: 1.5;
     border: 1px solid #CFCBCB;
-    border-radius: 7px;
+    border-radius: 3px;
     color: var(--gris) !important;
 }
 .form-select.sm{
@@ -78,6 +78,12 @@ input.form-control[type=number] {
     border-color: var(--azul);
     outline: 0;
     box-shadow: none !important;
+}
+.form-select option:hover{
+  background-color: #80bdff !important;
+}
+.form-select option:checked{
+  background-color: #80bdff;
 }
 
 .dropdown-toggle::after {
@@ -145,4 +151,34 @@ padding:0px;
 
 .accordion-button:not(.collapsed)::after{
   background-image: url('../assets/img/menos.png');
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1;
+}
+
+.footer {
+  height: 75px;
+  background-color: #3366cc;
+  color: white;
+  text-align: left;
+  padding: 10px;
+  position: relative;
+  width: 100%;
+}
+
+footer-logo {
+  max-width: 100px; /* Ajusta el tamaño del logo según lo que necesites */
+  margin-bottom: 10px; /* Espacio entre el logo y el texto */
 }

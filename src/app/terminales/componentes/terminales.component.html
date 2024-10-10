@@ -1,16 +1,3 @@
-<app-cabecera />
-<nav class="nav">
-  <div class="item">TERMINALES</div>
-  <div class="item">Seguridad</div>
-</nav><!-- ESTO DEBO QUITARLO -->
-
-<div class="contenedor-titulo"><!-- *ngIf="rol!.id === 7" -->
-  <h2 class="titulo">TERMINALES</h2>
-  <p class="fs-16 descripcion">SISTEMA NACIONAL DE SUPERVISIÓN AL TRANSPORTE</p>
-</div>
-<div class="linea"></div>
-<!--  -->
-
 <div class="py-2 px-sm-3 px-md-4 px-lg-5">
   <div class="d-block mb-3">
     <table class="informacion tabla-informacion ">
@@ -24,7 +11,7 @@
           <td class="fw-semibold titulo-fila" style="width: 150px !important;">Razón social</td>
           <td>
             <ng-container>
-              {{usuario.razonSocial}}
+              {{usuario.nombre}}
             </ng-container>
           </td>
         </tr>
@@ -32,7 +19,7 @@
           <td class="fw-semibold titulo-fila">N° de Rutas</td>
           <td>
             <ng-container>
-              {{usuario.nRutas}}
+              {{usuario.usuario}}
             </ng-container>
           </td>
         </tr>
@@ -49,6 +36,7 @@
   <app-rutas
     [verificacionVisible]="verificacionVisible"
     [verificacionEditable]="verificacionEditable"
+    [editable]="editable"
     (hayCambios)="recibirHayCambios($event)"
     (rutasGuardar)="recibirRutas($event)"
     (paradasGuardar)="recibirParada($event)"

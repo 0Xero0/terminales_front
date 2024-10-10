@@ -5,6 +5,7 @@ import { Usuario } from 'src/app/autenticacion/modelos/IniciarSesionRespuesta';
 import { AutenticacionService } from 'src/app/autenticacion/servicios/autenticacion.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { MenuHeaderPService } from '../../utilidades/services-menu-p/menu-header-p-service';
 
 @Component({
   selector: 'app-menu',
@@ -20,7 +21,8 @@ export class MenuComponent implements OnInit {
   constructor(
     private servicioLocalStorage: ServicioLocalStorage,
     private servicioAutenticacion: AutenticacionService,
-    private router: Router
+    private router: Router,
+    public ServiceMenuP:MenuHeaderPService
   ) {
   }
 
@@ -37,46 +39,19 @@ export class MenuComponent implements OnInit {
     this.desplegado = false
   }
 
-  /* public advertencia(){
-
-    Swal.fire({
-      title: 'Cierre de sesión',
-      icon: 'warning',
-      html: 'Al salir, también se cerrarán los aplicativos que tenga abiertos.<br>Asegúrese de haber guardado la información diligenciada.',
-      showConfirmButton: true,
-      confirmButtonText: 'Salir',
-      showCancelButton: true,
-      cancelButtonText: 'Volver',
-      didOpen: () => {
-        const content = document.querySelector('.swal2-html-container');
-        if (content) {
-          content.setAttribute('style', 'margin: 400px; text-align: center;');
-        }
-        const popup = document.querySelector('.swal2-popup');
-        if (popup) {
-          // popup.setAttribute('style', 'margin: 4px 0 !important;'); 
-        }
-      }
-    }).then((respuesta) => {
-      if(respuesta.isConfirmed){
-        this.cerrarSesion()
-      }
-    })
-  } */
+  /*** CODIGO DE PAOLO************************************* */
+  public SeleccionarMenuP(rutaModelo:string) :boolean
+  {
+    //console.log(this.ServiceMenuP.RutaModelo);
+    //console.log(`/administrar${rutaModelo}`);
+    if(this.ServiceMenuP.RutaModelo===`/administrar${rutaModelo}`)
+    {
+      return true
+    }
+    return false
+  }
 
   cerrarSesion(){
-    /* var openTabs = JSON.parse(localStorage.getItem("openTabs")!) || [];
-    for(let tabName of openTabs){
-      var tab = window.open("", tabName);
-      if (tab && !tab.closed) {
-        tab.close();
-      }
-
-      // Limpiar el array en localStorage después de cerrar las pestañas
-      localStorage.removeItem("openTabs");
-
-      window.focus()
-    } */
 
     this.servicioAutenticacion.cerrarSesion()
     this.router.navigateByUrl('/inicio-sesion')

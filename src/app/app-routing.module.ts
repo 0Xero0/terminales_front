@@ -73,24 +73,24 @@ const routes: Routes = [
         path: 'asignaciones',
         component: AsignacionesComponent
       },
+      {
+        path: 'terminales',
+        component: TerminalesComponent
+      },
     ]
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'inicio-vigia2'
+    redirectTo: 'inicio-sesion'
   },
   {
     path: 'inicio-vigia2',
     component: InicioVigia2Component
   },
-  /* {
+  {
     path: 'inicio-sesion',
     component: InicioSesionComponent
-  }, */
-  {
-    path: 'terminales',
-    component: TerminalesComponent
   },
   {
     path: 'actualizar-contrasena',
@@ -111,7 +111,7 @@ const routes: Routes = [
   {
     path: '**',
     /* pathMatch: 'full', */
-    redirectTo: 'inicio-vigia2'
+    redirectTo: 'inicio-sesion'
   }
 ];
 

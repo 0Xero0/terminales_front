@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Paradas } from '../../modelos/paradas';
+import { TerminalesService } from '../../servicios/terminales.service';
 
 @Component({
   selector: 'app-paradas',
@@ -18,7 +19,7 @@ export class ParadasComponent implements OnInit {
   municipios: Array<{ id: number, nombre: string }> = []
   centrosPoblados: Array<{ id: number, nombre: string }> = []
 
-  constructor(){}
+  constructor(private servicioTerminales: TerminalesService){}
 
   ngOnInit(): void {
     this.listarParadas(); // Inicializamos con un registro vacío
@@ -39,12 +40,18 @@ export class ParadasComponent implements OnInit {
   }
 
   maestraDepartamentos(){
-    this.departamentos = [
-      { id: 1, nombre: 'Córdoba' },
-      { id: 2, nombre: 'Atlantico' },
-      { id: 3, nombre: 'Sucre' },
-      { id: 4, nombre: 'Bolivar' },
-    ]
+    this.servicioTerminales.maestraDepartamentos().subscribe({
+      next: (respuesta:any) => {
+        console.log(respuesta)
+        //this.departamentos = respuesta
+        this.departamentos = [
+          { id: 1, nombre: 'Córdoba' },
+          { id: 2, nombre: 'Atlantico' },
+          { id: 3, nombre: 'Sucre' },
+          { id: 4, nombre: 'Bolivar' },
+        ]
+      }
+    })
   }
 
   maestraMunicipios(id_departamento:any, index:any){

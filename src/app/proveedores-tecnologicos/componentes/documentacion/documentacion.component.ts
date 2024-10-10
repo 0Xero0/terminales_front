@@ -172,7 +172,7 @@ export class DocumentacionComponent implements OnInit {
       Swal.showLoading(null);
       console.log(this.tamanoValido(event.target.files[0]))
       if(this.tamanoValido(event.target.files[0])){
-        this.servicioArchivos.guardarArchivo(event.target.files[0], 'proveedores', this.usuario?.usuario!).subscribe({
+        this.servicioArchivos.guardarArchivo(event.target.files[0], 'terminales', this.usuario?.usuario!).subscribe({
           next: (archivo:any)=>{
             Swal.close()
             for(let i = 0;i < this.formulario.length;i++){

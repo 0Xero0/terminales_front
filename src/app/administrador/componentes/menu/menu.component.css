@@ -50,6 +50,22 @@
     padding: 8px 15px;
 }
 
+.paolo
+{
+    background-color: #fff !important;
+    color: #004884;
+}
+
+.logoP{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    height: 90px;
+
+}
+
 .menu-toggle {
   display: none;
   flex-direction: column;
@@ -75,3 +91,49 @@
   padding: 20px !important;
 }
 
+/******CLASES DE PAOLO*********************************/
+.activeP
+{
+    background-color: #fff !important;
+    color: #004884;
+}
+
+.logoP{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    height: 90px;
+
+}
+
+/* ////////////////////////////////////////////////////////////////////////////////// */
+.contenedor-titulo {
+  height: 90px;
+  background-color: #333333;
+  padding: 1.8%;
+  /* margin-top: 45px; */
+}
+
+.titulo {
+  margin: 0%;
+  font-size: 32px;
+  font-weight: bold;
+  margin-left: 25px;
+  color: white;
+}
+
+.descripcion {
+  /* color: #004884; */
+  color: white;
+  font-size: 16px;
+  margin-left: 26px;
+  margin-bottom: 15px;
+}
+
+.linea {
+  height: 5px;
+  background-color: #3366cc;
+  margin-bottom: 15px;
+}
