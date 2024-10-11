@@ -11,13 +11,17 @@ import { NgxCaptchaModule } from 'ngx-captcha';
 import { AlertasModule } from '../alertas/alertas.module';
 import { InputsModule } from '../inputs/inputs.module';
 import { TemplatesModule } from '../templates/templates.module';
+import { TerminalesComponent } from './componentes/terminales.component';
+import { ClasesComponent } from './componentes/clases/clases.component';
 
 
 
 @NgModule({
   declarations: [
+    TerminalesComponent,
     RutasComponent,
-    ParadasComponent
+    ParadasComponent,
+    ClasesComponent
   ],
   imports: [
     CommonModule,

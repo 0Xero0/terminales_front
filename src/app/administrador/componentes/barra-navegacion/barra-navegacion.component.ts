@@ -1,6 +1,8 @@
 import { Component, DoCheck, EventEmitter, OnInit, Output } from '@angular/core';
 import { TitleStrategy } from '@angular/router';
 import { ServicioCabeceraService } from '../../servicios/servicio-cabecera.service';
+import { Usuario } from 'src/app/autenticacion/modelos/IniciarSesionRespuesta';
+import { ServicioLocalStorage } from '../../servicios/local-storage.service';
 
 @Component({
   selector: 'app-barra-navegacion',
@@ -10,6 +12,7 @@ import { ServicioCabeceraService } from '../../servicios/servicio-cabecera.servi
 export class BarraNavegacionComponent implements OnInit {
   @Output() usuarioQuiereCerrarSesion:EventEmitter<void>
   @Output() menuLateralDesplegado:EventEmitter<void>
+  usuario?: Usuario | null;
   public roles: any;
   public nombre: string = '';
   public cabeceraModulo: string[] = [];
@@ -17,7 +20,7 @@ export class BarraNavegacionComponent implements OnInit {
   public readonly llaveRolesLocalStorage = 'rolVigia'
   public readonly llaveUsuarioLocalStorage = 'UsuarioVigia'
 
-  constructor(private servicioCabecera: ServicioCabeceraService) {
+  constructor(private servicioCabecera: ServicioCabeceraService, private servicioLocalStorage: ServicioLocalStorage,) {
     this.usuarioQuiereCerrarSesion = new EventEmitter<void>()
     this.menuLateralDesplegado = new EventEmitter<void>()
     this.servicioCabecera.suscribirseACambioDeTitulo().subscribe(cabeceraModulo =>{
@@ -26,6 +29,7 @@ export class BarraNavegacionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.usuario = this.servicioLocalStorage.obtenerUsuario()
     this.roles = JSON.parse(localStorage.getItem(this.llaveRolesLocalStorage)!)
     const Usuario = JSON.parse(localStorage.getItem(this.llaveUsuarioLocalStorage)!)
     this.nombre = `${Usuario.nombre} ${Usuario.apellido}`

@@ -27,6 +27,11 @@ export class AutenticacionService {
     })
   }
 
+  public inicioVigia2(token:string){
+    const endpoint = '/api/v1/autenticacion/inicio-vigia'
+    return this.clientHttp.post<any>(`${this.urlBackend}${endpoint}`, {token: token})
+  }
+
   public iniciarSesion(documento:string, clave:string):Observable<IniciarSesionRespuesta>{
     const endpoint = '/api/v1/autenticacion/inicio-sesion'
     return this.clientHttp.post<IniciarSesionRespuesta>(`${this.urlBackend}${endpoint}`, {usuario: documento, contrasena: clave})
