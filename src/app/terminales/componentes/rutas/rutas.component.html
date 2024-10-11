@@ -6,7 +6,7 @@
     <table class="table custom-scroll">
       <thead class="encabezado">
         <tr>
-          <th style="width: 80px;"><span class="fs-14px">Id_Ruta</span></th>
+          <th style="width: 100px;"><span class="fs-14px">Id_Ruta</span></th>
           <th style="width: 200px;"><span class="fs-14px">Departamento de origen</span></th>
           <th style="width: 200px;"><span class="fs-14px">Municipio de origen</span></th>
           <th style="width: 200px;"><span class="fs-14px">Centro poblado de origen</span></th>
@@ -30,7 +30,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let ruta of rutas; let i = index" [class.selected]="i === rutaSeleccionada" class="fila">
+        <tr *ngFor="let ruta of rutas; let i = index" [class.selected]="i === rutaSeleccionada">
           <td (click)="seleccionarRuta(ruta, i)">
             {{ruta.id_ruta}}
           </td>
@@ -53,7 +53,8 @@
             {{ruta.centro_poblado_destino}}
           </td>
           <td><!-- SELECT TIPO DE LLEGADA -->
-            <select [(ngModel)]="ruta.tipo_llegada" name="tipo_llegada_{{i}}" class="form-select" (change)="maestraDireccion(ruta.tipo_llegada, i, 1)">
+            <select [(ngModel)]="ruta.tipo_llegada" name="tipo_llegada_{{i}}" class="form-select" [class.marcar-error]="!ruta.tipo_llegada && errorRutas"
+            (change)="maestraDireccion(ruta.tipo_llegada, i, 1)">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let opt of tipoLlegada" [value]='opt.id'>{{opt.descripcion}}</option>
             </select>
@@ -117,6 +118,11 @@
             <button (click)="eliminarRuta(i)" type="button" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
           </td> -->
         </tr>
+        <tr *ngIf="rutas.length <= 0">
+          <td colspan="18">
+            <h6 class="sin-registros"> -- No hay rutas para mostrar. --</h6>
+          </td>
+        </tr>
         <!-- ///////////// BOTÓN PARA HABILITAR EL AGREGAR NUEVA RUTA -->
         <tr *ngIf="!verificacionVisible">
           <td colspan="18">
@@ -127,103 +133,111 @@
         </tr>
         <!-- //////////// AGREGAR NUEVA RUTA ///////////////////// -->
         <tr *ngIf="!verificacionVisible && rutaNuevaHabilitada"><!--  -->
-          <td><input [(ngModel)]="rutaNueva.id_ruta" type="text" name="id_ruta" id="" class="form-control"></td>
+          <td>
+            <input [(ngModel)]="rutaNueva.id_ruta" type="text" name="id_ruta" id="" class="form-control" [class.marcar-error]="!rutaNueva.id_ruta && error"
+            placeholder="Id_Ruta">
+          </td>
           <td>
             <!-- SELECT DEPARTAMENTOS ORIGEN -->
-            <select id="dep origen" class="form-select" (change)="maestraMunicipios($event,'mun origen',1)">
+            <select id="dep origen" class="form-select" (change)="maestraMunicipios($event,'mun origen',1)" [class.marcar-error]="validarCampo('dep origen') && error">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let opt of departamentos" [value]='opt.codigoDepartamento'>{{opt.nombre}}</option>
             </select>
           </td>
           <td>
             <!-- SELECT MUNICIPIOS ORIGEN -->
-            <select id="mun origen" class="form-select" (change)="maestraCP($event,'cp origen',1)" disabled>
+            <select id="mun origen" class="form-select" (change)="maestraCP($event,'cp origen',1)" disabled [class.marcar-error]="validarCampo('mun origen') && error">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let opt of municipiosOrigen" [value]='opt.codigoMunicipio'>{{opt.nombre}}</option>
             </select>
           </td>
           <td>
             <!-- SELECT CENTROS POBLADOR ORIGEN -->
-            <select id="cp origen" class="form-select" disabled>
+            <select [(ngModel)]="rutaNueva.centro_poblado_origen" id="cp origen" class="form-select" disabled [class.marcar-error]="!rutaNueva.centro_poblado_origen && error">
               <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of centroPobladoOrigen" [value]='opt.codigoMunicipio'>{{opt.nombre}}</option>
+              <option *ngFor="let opt of centroPobladoOrigen" [value]='opt.codigoCP'>{{opt.nombre}}</option>
             </select>
           </td>
           <td>
             <!-- SELECT DEPARTAMENTOS DESTINO -->
-            <select id="dep destino" class="form-select" (change)="maestraMunicipios($event,'mun destino',2)">
+            <select id="dep destino" class="form-select" (change)="maestraMunicipios($event,'mun destino',2)" [class.marcar-error]="validarCampo('dep destino') && error">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let opt of departamentos" [value]='opt.codigoDepartamento'>{{opt.nombre}}</option>
             </select>
           </td>
           <td><!-- SELECT MUNICIPIOS DESTINO -->
-            <select id="mun destino" class="form-select" (change)="maestraCP($event,'cp destino',2)" disabled>
+            <select id="mun destino" class="form-select" (change)="maestraCP($event,'cp destino',2)" disabled [class.marcar-error]="validarCampo('mun destino') && error">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let opt of municipiosDestino" [value]='opt.codigoMunicipio'>{{opt.nombre}}</option>
             </select>
           </td>
           <td><!-- SELECT CENTROS POBLADOR DESTINO -->
-            <select id="cp destino" class="form-select" disabled>
+            <select [(ngModel)]="rutaNueva.centro_poblado_destino" id="cp destino" class="form-select" disabled [class.marcar-error]="!rutaNueva.centro_poblado_destino && error">
               <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of centroPobladoDestino" [value]='opt.codigoMunicipio'>{{opt.nombre}}</option>
+              <option *ngFor="let opt of centroPobladoDestino" [value]='opt.codigoCP'>{{opt.nombre}}</option>
             </select>
           </td>
           <td><!-- SELECT TIPO DE LLEGADA -->
-            <select [(ngModel)]="rutaNueva.tipo_llegada" name="tipo_llegada" class="form-select" (change)="maestraDireccion(rutaNueva.tipo_llegada,undefined,2)">
+            <select [(ngModel)]="rutaNueva.tipo_llegada" name="tipo_llegada" class="form-select" (change)="maestraDireccion(rutaNueva.tipo_llegada,undefined,2)"
+            [class.marcar-error]="!rutaNueva.tipo_llegada && error">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let opt of tipoLlegada" [value]='opt.id'>{{opt.descripcion}}</option>
             </select>
           </td>
           <td><!-- SELECT DIRECCIONES -->
-            <select [(ngModel)]="rutaNueva.direccion" name="direccion" class="form-select" [disabled]="rutaNueva.tipo_llegada === null">
+            <select [(ngModel)]="rutaNueva.direccion" name="direccion" class="form-select" [disabled]="rutaNueva.tipo_llegada === null"
+            [class.marcar-error]="!rutaNueva.direccion && error">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let direccion of direcciones" [value]='direccion.id'>{{direccion.descripcion}}</option>
             </select>
           </td>
           <td style="width: 130px;">
-            <input [(ngModel)]="rutaNueva.via" name="via" type="text" class="form-control">
+            <input [(ngModel)]="rutaNueva.via" name="via" type="text" class="form-control" [class.marcar-error]="!rutaNueva.via && error"
+            placeholder="Vía">
           </td>
           <td>
-            <select [(ngModel)]="rutaNueva.ruta_activa" name="ruta_activa" class="form-select">
+            <select [(ngModel)]="rutaNueva.ruta_activa" name="ruta_activa" class="form-select" [class.marcar-error]="!rutaNueva.ruta_activa && error">
               <option [value]='null'>Seleccione una opción</option>
               <option value='1'>Si</option>
               <option value='2'>No</option>
             </select>
           </td>
-          <td><input [(ngModel)]="rutaNueva.n_resolucion_bd" type="text" name="num BD" id="" class="form-control"></td>
-          <td>
-            <select [(ngModel)]="rutaNueva.resolucion_corresponde" name="resolucion_corresponde" class="form-select" type="number"
-              [disabled]="rutaNueva.ruta_activa === null || rutaNueva.ruta_activa === '2'">
-              <option [value]='null'>Seleccione una opción</option>
+          <td><!-- [class.marcar-error]="!rutaNueva.n_resolucion_bd && error" -->
+            <input type="text" name="num BD" id="" class="form-control" [disabled]="true" placeholder="-">
+          </td>
+          <td><!-- rutaNueva.ruta_activa === null || rutaNueva.ruta_activa === '2' // [class.marcar-error]="!rutaNueva.resolucion_corresponde && error"-->
+            <select name="resolucion_corresponde" class="form-select" type="number"
+              [disabled]="true" >
+              <option [value]='null'>-</option>
               <option [value]='1'>Si</option>
               <option [value]='2'>No</option>
             </select>
           </td>
-          <td>
+          <td><!-- [disabled]="rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === '1'" -->
             <input [(ngModel)]="rutaNueva.n_resolucion_actual" name="n_resolucion_actual" type="number" class="form-control"
-            [disabled]="rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === 1">
+             [class.marcar-error]="!rutaNueva.n_resolucion_actual && error" placeholder="N° de la resolución">
           </td>
           <td>
-            <input [(ngModel)]="rutaNueva.dir_territorial" type="text" name="dir_territorial" id="" class="form-control" >
+            <input [(ngModel)]="rutaNueva.dir_territorial" type="text" name="dir_territorial" id="" class="form-control"
+            [class.marcar-error]="!rutaNueva.dir_territorial && error" placeholder="Dirección territorial">
           </td>
           <td>
             <!-- <input [(ngModel)]="rutaNueva.pdf" name="pdf" type="file" class="form-control"
-            [disabled]="rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === 1"> -->
-            <label class="input-archivo d-flex" for="adjuntar"
-            [ngClass]="{'disabled':rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === 1 || !editable}">
+            [disabled]="rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === 1"> // [ngClass]="{'disabled':rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === '1'}"-->
+            <label [class.marcar-error]="!rutaNueva.nombreOriginal && error" class="input-archivo d-flex" for="adjuntar"
+            >
               <div class="boton-adjuntar d-flex align-items-center justify-content-center">Seleccionar archivo</div>
               <div class="archivos">
                 <div class="archivo d-flex" *ngIf="rutaNueva.nombreOriginal">
-                  <span class="nombre-archivo">{{ rutaNueva.nombreOriginal }}</span>
-                  <button class="eliminar-archivo" (click)="manejarRemoverArchivo(input,$event,2)"
-                  [disabled]="rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === 1 || !editable"><i class="bi bi-trash"></i></button>
+                  <span class="nombre-archivo">{{ rutaNueva.nombreOriginal }}</span><!-- [disabled]="rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === 1" -->
+                  <button class="eliminar-archivo" (click)="manejarRemoverArchivo(input,$event,2)"><i class="bi bi-trash"></i></button>
                 </div>
                 <div class="sin-archivo d-flex" *ngIf="!rutaNueva.nombreOriginal || rutaNueva.nombreOriginal == null || rutaNueva.nombreOriginal == ''">
                   <span>Sin archivo seleccionado</span>
                 </div>
-              </div>
+              </div><!-- [disabled]="rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === 1" -->
               <input #input type="file" id="adjuntar" name="adjuntar" accept=".pdf"
-              (change)="guardarArchivo($event,undefined,2,5)" [disabled]="rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === 1 || !editable">
+              (change)="guardarArchivo($event,undefined,2,5)" >
             </label>
           </td>
           <td>

@@ -1,69 +1,67 @@
-.menu{
-    height: 77px;
-    background-color: #004884;
-    color: white;
+.menu {
+  height: 77px;
+  background-color: #004884;
+  color: white;
 }
-.modulos{
+.modulos {
   display: flex;
   height: 100%;
   padding: 0;
 }
-.modulo{
-    position: relative;
+.modulo {
+  position: relative;
 }
-.nombre-modulo{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    padding: 23px 18px 26px;
-    font-size: 14px;
+.nombre-modulo {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 23px 18px 26px;
+  font-size: 14px;
 }
-.modulo.activo::after, .modulo:hover::after{
-    content: "";
-    position: absolute;
-    top: 4px;
-    width: 100%;
-    border-top: 3px solid #2DB2EA;
+.modulo.activo::after,
+.modulo:hover::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  width: 100%;
+  border-top: 3px solid #2db2ea;
 }
-.modulo .submodulos{
-    display: none;
-    padding: 0;
-    position: absolute;
-    z-index: 10;
-    width: 100%;
-    left: 0;
-    top: 100%;
-    background-color: #E6EFFD;
-    color: #3366CC;
+.modulo .submodulos {
+  display: none;
+  padding: 0;
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  left: 0;
+  top: 100%;
+  background-color: #e6effd;
+  color: #3366cc;
 }
-.modulo:hover .submodulos{
-    display: block;
+.modulo:hover .submodulos {
+  display: block;
 }
-.submodulo{
-    border-bottom: 1px solid black;
-    cursor: pointer;
+.submodulo {
+  border-bottom: 1px solid black;
+  cursor: pointer;
 }
-.nombre-submodulo{
-    display: block;
-    padding: 8px 15px;
-}
-
-.paolo
-{
-    background-color: #fff !important;
-    color: #004884;
+.nombre-submodulo {
+  display: block;
+  padding: 8px 15px;
 }
 
-.logoP{
+.paolo {
+  background-color: #fff !important;
+  color: #004884;
+}
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    height: 90px;
-
+.logoP {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  height: 90px;
 }
 
 .menu-toggle {
@@ -92,27 +90,24 @@
 }
 
 /******CLASES DE PAOLO*********************************/
-.activeP
-{
-    background-color: #fff !important;
-    color: #004884;
+.activeP {
+  background-color: #fff !important;
+  color: #004884;
 }
 
-.logoP{
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    height: 90px;
-
+.logoP {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  height: 90px;
 }
 
 /* ////////////////////////////////////////////////////////////////////////////////// */
 .contenedor-titulo {
-  height: 90px;
+  height: 85px;
   background-color: #333333;
-  padding: 1.8%;
+  padding: 22px;
   /* margin-top: 45px; */
 }
 
@@ -120,7 +115,7 @@
   margin: 0%;
   font-size: 32px;
   font-weight: bold;
-  margin-left: 25px;
+  margin-left: 47px;
   color: white;
 }
 

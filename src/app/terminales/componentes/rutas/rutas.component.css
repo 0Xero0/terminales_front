@@ -25,6 +25,7 @@ th, td {
   /* border: 1px solid #ccc;  Bordes para las celdas */
   padding: 8px;  /* Espacio interno de las celdas */
   text-align: left;  /* Alineación de texto a la izquierda */
+  vertical-align: middle; /* Alineación vertical al centro */
 }
 .encabezado {
   background: #e6effd 0% 0% no-repeat padding-box;
@@ -36,6 +37,7 @@ th, td {
 .table th, .tabla, .table td{
   font-size: 14px;
   padding: 10px;
+  align-items: center;
 }
 .table th{
   color: var(--azul-oscuro);
@@ -44,6 +46,9 @@ th, td {
 .table-container {
   width: 100%;  /* El ancho del contenedor */
   overflow-x: auto;  /* Habilita el scroll horizontal */
+}
+.fila{
+  align-items: center;
 }
 
 .selected {
@@ -71,6 +76,15 @@ th, td {
   background-color: white;
   font-size: 25px;
   color: #004884;
+}
+
+.marcar-error{
+  border: 1px solid #A80521;
+}
+
+.sin-registros{
+  margin-left: 40px;
+  margin-top: 20px;
 }
 
 /*-------------------------*/

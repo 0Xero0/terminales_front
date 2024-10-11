@@ -3,6 +3,7 @@ import { Ruta } from '../modelos/ruta';
 import { Paradas } from '../modelos/paradas';
 import { Clases } from '../modelos/clases';
 import { Usuario } from 'src/app/usuarios/modelos/Usuario';
+import { TerminalesService } from '../servicios/terminales.service';
 
 @Component({
   selector: 'app-terminales',
@@ -17,17 +18,27 @@ export class TerminalesComponent implements OnInit{
   aprobado: boolean = false
 
   usuario:Usuario
+  cantidadRutas?: number
 
   rutas:Array<Ruta> = []
   paradas:Array<Paradas> = []
   clases:Array<Clases> = []
 
-  constructor(){
+  constructor(private servicioTerminales: TerminalesService){
     this.usuario = JSON.parse(localStorage.getItem('UsuarioVigia')!)
   }
 
   ngOnInit(){
+    this.obtenerCantidadRutas(this.usuario!.usuario)
     console.log(this.usuario)
+  }
+  obtenerCantidadRutas(idUsuario:any){
+    this.servicioTerminales.cantidadRutas(idUsuario).subscribe({
+      next: (respuesta: any) => {
+        //console.log(respuesta)
+        this.cantidadRutas = respuesta.totalRegistros
+      }
+    })
   }
 
   recibirHayCambios(hayCambios:boolean){

@@ -38,5 +38,11 @@ export class TerminalesService extends Autenticable {
     return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
   }
 
+  cantidadRutas(idUsuario:any){
+    const endpoint = `/api/v1/maestras/total-rutas?idUsuario=${idUsuario}`
+    return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
+  }
+
+
   /////////////////////////////////////////////////////
 }
