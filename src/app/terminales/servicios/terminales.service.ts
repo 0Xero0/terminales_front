@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Autenticable } from 'src/app/administrador/servicios/compartido/Autenticable';
+import { Paginacion } from 'src/app/compartido/modelos/Paginacion';
 import { environment } from 'src/environments/environment';
+import { Ruta } from '../modelos/ruta';
 
 @Injectable({
   providedIn: 'root'
@@ -39,10 +41,17 @@ export class TerminalesService extends Autenticable {
   }
 
   cantidadRutas(idUsuario:any){
-    const endpoint = `/api/v1/maestras/total-rutas?idUsuario=${idUsuario}`
+    const endpoint = `/api/v1/terminales/total-rutas`
     return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
   }
 
-
   /////////////////////////////////////////////////////
+
+  listarRutas(pagina: number, limite: number, filtros?: any){
+    let endpoint = `/api/v1/terminales/visualizar-rutas?pagina=${pagina}&limite=${limite}`
+    if(filtros){
+      if(filtros.termino) endpoint+=`&filtro=${filtros.termino}`;
+    }
+    return this.http.get<{ rutas: Ruta[], paginacion: Paginacion }>(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
+  }
 }
