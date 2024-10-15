@@ -5,6 +5,9 @@ import { TerminalesService } from '../../servicios/terminales.service';
 import { Paradas } from '../../modelos/paradas';
 import { Clases } from '../../modelos/clases';
 import Swal from 'sweetalert2';
+import { Paginador } from 'src/app/administrador/modelos/compartido/Paginador';
+import { Observable } from 'rxjs';
+import { Paginacion } from 'src/app/compartido/modelos/Paginacion';
 
 @Component({
   selector: 'app-rutas',
@@ -45,14 +48,19 @@ export class RutasComponent implements OnInit {
   error:boolean = false
   errorRutas:boolean = false
 
+  paginadorReportes: Paginador<any>
+  private readonly paginaInicial = 1;
+  private readonly limiteInicial = 5;
+
   constructor(private servicioArchivos: ServicioArchivos, private servicioTerminales: TerminalesService) {
     this.rutaNueva = this.inicializarRutaNueva()
+    this.paginadorReportes = new Paginador<any>(this.listarRutas)
   }
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('UsuarioVigia')!)
     this.rol = JSON.parse(localStorage.getItem('rolVigia')!);
-    //this.listarRutas();  Inicializamos con un registro vacío
+    this.paginadorReportes.inicializar(this.paginaInicial, this.limiteInicial, {})
     this.maestraDepartamentos()
     this.maestraTipoLlegadas();
   }
@@ -71,25 +79,22 @@ export class RutasComponent implements OnInit {
     };
   }
 
-  listarRutas() { //listamos las rutas que vienen de base de datos
-    const nuevoRuta: Ruta = {
-      id_ruta: '001',
-      departamento_origen: 'Cundinamarca',
-      municipio_origen: 'Bogotá',
-      centro_poblado_origen: '',
-      departamento_destino: 'Antioquia',
-      municipio_destino: 'Medellín',
-      centro_poblado_destino: '',
-      tipo_llegada: null,
-      direccion: null,
-      via: 'Cartago',
-      ruta_activa: 'null',
-      n_resolucion_bd: 156,
-      resolucion_corresponde: null,
-      n_resolucion_actual: null,
-      dir_territorial: 'Casa',
-    };
-    this.rutas.push(nuevoRuta);
+  listarRutas = (pagina: number, limite: number, filtros?:Ruta) =>{ //listamos las rutas que vienen de base de datos
+    return new Observable<Paginacion>( sub => {
+      this.servicioTerminales.listarRutas(pagina,limite,filtros).subscribe({
+        next: ( respuesta )=>{
+          this.rutas = respuesta.rutas
+          sub.next(respuesta.paginacion)
+          if(this.rutas){
+            for(let i = 0;i <= this.rutas.length; i++){//RECORREMOS LAS RUTAS
+              if(this.rutas[i].tipo_llegada_id){//COMPROBAMOS QUE EXISTA UN TIPO DE LLEGADA Y SI EXISTE
+                this.maestraDireccion(this.rutas[i].tipo_llegada_id,i,1)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
+              }
+            }
+          }
+        }
+      })
+    })
   }
   consultarInformacionRuta(id_ruta: string | number) { //Consultamos paradas y clases de la ruta seleccionada
     this.rutaConsultada = true
@@ -168,16 +173,16 @@ export class RutasComponent implements OnInit {
   }
 
   maestraDireccion(id: any, index?: any, tipo?: number) { // MAESTRA DE DIRECCIONES
-    console.log(id, index)
-    const idLlegada = id
+    //console.log(id, index)
+    const idLlegada = Number(id)
     if (id !== 'null') {
       this.servicioTerminales.maestraDirecciones(id).subscribe({
         next: (respuesta: any) => {
-          console.log(respuesta)
+          //console.log(respuesta)
           if (tipo === 1) {
-            this.rutas[index].direcciones = []
+            this.rutas[index].direcciones = []; //this.rutas[index].direccion_id = null
             this.rutas[index].direcciones = respuesta.respuestaDirecciones
-            this.rutas[index].tipo_llegada = idLlegada
+            this.rutas[index].tipo_llegada_id = idLlegada
             this.manejarCambios()
           } else if (tipo === 2) {
             this.direcciones = []; this.rutaNueva.direccion = null
@@ -188,8 +193,8 @@ export class RutasComponent implements OnInit {
       })
     } else {
       if (tipo === 1) {
-        this.rutas[index].tipo_llegada = null;
-        this.rutas[index].direccion = null
+        this.rutas[index].tipo_llegada_id = null;
+        this.rutas[index].direccion_id = null
         this.rutas[index].direcciones = []
         this.manejarCambios()
       }
@@ -221,27 +226,27 @@ export class RutasComponent implements OnInit {
   }
 
   agregarRuta() {
-    console.log(this.rutaNueva);
+    //console.log(this.rutaNueva);
     if(this.validarCampos(this.rutaNueva)){
       this.rutas.push({
         id_ruta: this.rutaNueva.id_ruta,
         departamento_origen: null,
         municipio_origen: null,
-        centro_poblado_origen: this.rutaNueva.centro_poblado_origen,
+        cp_origen: this.rutaNueva.centro_poblado_origen,
         departamento_destino: null,
         municipio_destino: null,
-        centro_poblado_destino: this.rutaNueva.centro_poblado_destino,
-        tipo_llegada: this.rutaNueva.tipo_llegada,
-        direccion: this.rutaNueva.direccion,
+        cp_destino: this.rutaNueva.centro_poblado_destino,
+        tipo_llegada_id: this.rutaNueva.tipo_llegada,
+        direccion_id: this.rutaNueva.direccion,
         via: this.rutaNueva.via,
         ruta_activa: this.rutaNueva.ruta_activa,
-        n_resolucion_bd: null,
-        resolucion_corresponde: null,
-        n_resolucion_actual: this.rutaNueva.n_resolucion_actual,
-        dir_territorial: this.rutaNueva.dir_territorial,
-        nombreDocumento: this.rutaNueva.nombreDocumento,
-        nombreOriginal: this.rutaNueva.nombreOriginal,
-        ruta: this.rutaNueva.ruta
+        resolucion: this.rutaNueva.n_resolucion_actual,
+        corresponde: null,
+        resolucion_actual: this.rutaNueva.n_resolucion_actual,
+        direccion_territorial: this.rutaNueva.dir_territorial,
+        documento: this.rutaNueva.nombreDocumento,
+        nombre_original: this.rutaNueva.nombreOriginal,
+        ruta_archivo: this.rutaNueva.ruta
       });
       this.rutaNueva = this.inicializarRutaNueva()
       this.estadoAgregarRuta(false)
@@ -259,13 +264,13 @@ export class RutasComponent implements OnInit {
   corresponde(idCorresponde: any, index: any, idRuta: any) {
     const selectElement = document.getElementById(idRuta) as HTMLSelectElement;
     selectElement.disabled = false
-    console.log(this.editable)
+    //console.log(this.editable)
     if (idCorresponde === 'null') {
-      this.rutas[index].resolucion_corresponde = null
+      this.rutas[index].corresponde = null
     } else {
-      this.rutas[index].resolucion_corresponde = Number(idCorresponde)
+      this.rutas[index].corresponde = Number(idCorresponde)
     }
-    console.log(this.rutas[index].resolucion_corresponde)
+    //console.log(this.rutas[index].corresponde)
     this.manejarCambios()
   }
 
@@ -283,9 +288,9 @@ export class RutasComponent implements OnInit {
   }
   removeFile(tipo?: number, index?: any) {
     if (tipo === 1) {
-      this.rutas[index].nombreDocumento = ''
-      this.rutas[index].nombreOriginal = ''
-      this.rutas[index].ruta = ''
+      this.rutas[index].documento = ''
+      this.rutas[index].nombre_original = ''
+      this.rutas[index].ruta_archivo = ''
     } else if (tipo === 2) {
       this.rutaNueva.nombreDocumento = ''
       this.rutaNueva.nombreOriginal = ''
@@ -307,9 +312,9 @@ export class RutasComponent implements OnInit {
           next: (archivo: any) => {
             Swal.close()
             if (tipo === 1) {
-              this.rutas[index].nombreDocumento = archivo.nombreAlmacenado
-              this.rutas[index].nombreOriginal = archivo.nombreOriginalArchivo
-              this.rutas[index].ruta = archivo.ruta
+              this.rutas[index].documento = archivo.nombreAlmacenado
+              this.rutas[index].nombre_original = archivo.nombreOriginalArchivo
+              this.rutas[index].ruta_archivo = archivo.ruta
             } else if (tipo === 2) {
               this.rutaNueva.nombreDocumento = archivo.nombreAlmacenado
               this.rutaNueva.nombreOriginal = archivo.nombreOriginalArchivo
