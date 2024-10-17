@@ -18,7 +18,7 @@
         <tr>
           <td class="fw-semibold titulo-fila">N° de Rutas</td>
           <td>
-            <ng-container>
+            <ng-container *ngIf="cantidadRutas">
               {{cantidadRutas.TotalRegistros}}
             </ng-container>
           </td>

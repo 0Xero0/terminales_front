@@ -40,6 +40,16 @@ export class TerminalesService extends Autenticable {
     return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
   }
 
+  maestraTiposVehiculos(idClasePorGrupo:any){
+    const endpoint = `/api/v1/maestras/tipo-vehiculo?idClasePorGrupo=${idClasePorGrupo}`
+    return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
+  }
+
+  maestraGrupos(){
+    const endpoint = `/api/v1/maestras/clase-grupo`
+    return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
+  }
+
   cantidadRutas(idUsuario:any){
     const endpoint = `/api/v1/terminales/total-rutas`
     return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
@@ -53,5 +63,21 @@ export class TerminalesService extends Autenticable {
       if(filtros.termino) endpoint+=`&filtro=${filtros.termino}`;
     }
     return this.http.get<{ rutas: Ruta[], paginacion: Paginacion }>(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
+  }
+
+  listarParadas(ruta_id:number, pagina: number, limite: number, filtros?: any){
+    let endpoint = `/api/v1/terminales/visualizar-paradas?rutaId=${ruta_id}&pagina=${pagina}&limite=${limite}`
+    if(filtros){
+      if(filtros.termino) endpoint+=`&filtro=${filtros.termino}`;
+    }
+    return this.http.get<{ paradas: any[], paginacion: Paginacion }>(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
+  }
+
+  listarClases(ruta_id:number, pagina: number, limite: number, filtros?: any){
+    let endpoint = `/api/v1/terminales/visualizar-clases?rutaId=${ruta_id}&pagina=${pagina}&limite=${limite}`
+    if(filtros){
+      if(filtros.termino) endpoint+=`&filtro=${filtros.termino}`;
+    }
+    return this.http.get<{ clases: any[], paginacion: Paginacion }>(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
   }
 }

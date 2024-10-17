@@ -52,7 +52,10 @@ th, td {
 }
 
 .selected {
-  background-color: #f0d78371; /* Color de fondo para el registro seleccionado */
+  /*background-color: #f0d78371;  Color de fondo para el registro seleccionado */
+  border: 2px solid #004884;
+  color: #004884;
+  font-weight: bold; /* O bien un valor numérico */
 }
 
 .campo-seleccionar {
@@ -65,8 +68,8 @@ th, td {
 .fila td:nth-child(-n+7):hover, /* Aplica el hover solo a los primeros 5 campos */
 .fila:hover td:nth-child(-n+7) {
   /* Cambia el estilo de los primeros 5 campos cuando cualquier campo tiene hover */
-  cursor: pointer; /* Cambia el cursor a una mano */
-  background-color: #f0d78371; /* Cambia este color al que desees */
+  cursor: pointer !important; /* Cambia el cursor a una mano */
+  background-color: #e6effd !important; /* Cambia este color al que desees */
 }
 .eliminar-ruta{
   display: flex;

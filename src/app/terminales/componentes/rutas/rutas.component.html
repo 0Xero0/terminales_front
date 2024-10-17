@@ -30,7 +30,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let ruta of rutas; let i = index" [class.selected]="i === rutaSeleccionada">
+        <tr class="fila" *ngFor="let ruta of rutas; let i = index" [class.selected]="i === rutaSeleccionada">
           <td (click)="seleccionarRuta(ruta, i)">
             {{ruta.id_ruta}}
           </td>
@@ -70,7 +70,7 @@
             <input [(ngModel)]="ruta.via" name="via_{{i}}" type="text" class="form-control" (change)="manejarCambios()" placeholder="-">
           </td>
           <td>
-            <select [(ngModel)]="ruta.estado" name="ruta_activa_{{i}}" class="form-select" (change)="manejarCambios()">
+            <select [(ngModel)]="ruta.estado" name="ruta_activa_{{i}}" class="form-select" (change)="estadoRuta(ruta.estado,i)">
               <option [value]='null'>Seleccione una opción</option>
               <option [value]='true'>Si</option>
               <option [value]='false'>No</option>
@@ -79,7 +79,7 @@
           <td>{{ruta.resolucion}}</td>
           <td>
             <select [(ngModel)]="ruta.corresponde" name="resolucion_corresponde_{{i}}" class="form-select" type="number"
-            (change)="corresponde(ruta.corresponde,i,ruta.id_ruta)" [disabled]="ruta.ruta_activa === 'null' || ruta.ruta_activa === '2'">
+            (change)="corresponde(ruta.corresponde,i,ruta.id_ruta)" [disabled]="!ruta.estado">
               <option [value]='null'>Seleccione una opción</option>
               <option [value]='1'>Si</option>
               <option [value]='2'>No</option>
@@ -93,7 +93,7 @@
           <td>
             <!-- <input [(ngModel)]="ruta.pdf" name="pdf_{{i}}" type="file" class="form-control"
             [disabled]="ruta.resolucion_corresponde === null || ruta.resolucion_corresponde === 1"> -->
-            <label class="input-archivo d-flex" [for]="ruta.id_ruta" [ngClass]="{'disabled': ruta.corresponde === null || ruta.corresponde === 1 || !editable}">
+            <label class="input-archivo d-flex" [for]="'Archivo'+i" [ngClass]="{'disabled': ruta.corresponde === null || ruta.corresponde === 1 || !editable}">
               <div class="boton-adjuntar d-flex align-items-center justify-content-center">Seleccionar archivo</div>
               <div class="archivos">
                 <div class=" d-flex" *ngIf="ruta.nombre_original">
@@ -105,7 +105,7 @@
                   <span>Sin archivo seleccionado</span>
                 </div>
               </div>
-              <input #input type="file" [id]="ruta.id_ruta" name="adjuntar" accept=".pdf"
+              <input #input type="file" [id]="'Archivo'+i" name="adjuntar" accept=".pdf"
               (change)="guardarArchivo($event,i,1,5)" [disabled]="ruta.corresponde === null || ruta.corresponde === 1 || !editable">
             </label>
           </td>
@@ -266,9 +266,12 @@
   </div>
 </div>
 <hr>
-<div *ngIf="rutaConsultada" style="margin-bottom: 10px;">
+<div *ngIf="paradas.length !== 0" style="margin-bottom: 10px;">
   <app-paradas
   (paradasGuardar)="recibirParadas($event)"
+  [rutaId]="rutaId"
+  [paradas]="paradas"
+  [paginadorParadas]="paginadorParadas"
   ></app-paradas>
 </div>
 <div *ngIf="rutaConsultada" style="margin-bottom: 10px;">

@@ -18,7 +18,7 @@ export class TerminalesComponent implements OnInit {
   aprobado: boolean = false
 
   usuario: Usuario
-  cantidadRutas?: any
+  cantidadRutas: any
 
   rutas: Array<Ruta> = []
   paradas: Array<Paradas> = []
@@ -35,7 +35,7 @@ export class TerminalesComponent implements OnInit {
   obtenerCantidadRutas(idUsuario: any) {
     this.servicioTerminales.cantidadRutas(idUsuario).subscribe({
       next: (respuesta: any) => {
-        //console.log(respuesta.message)
+        console.log(respuesta)
         if (respuesta.message) { this.cantidadRutas = 'No se pudo obtener un total de las rutas registradas.' }
         else { this.cantidadRutas = respuesta }
 
@@ -70,7 +70,7 @@ export class TerminalesComponent implements OnInit {
 
   recibirParada(paradas: any) {
     this.paradas = paradas
-    //console.log('Paradas: ', this.paradas)
+    console.log('Paradas: ', this.paradas)
   }
 
   recibirClases(clases: any) {

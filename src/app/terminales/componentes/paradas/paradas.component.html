@@ -11,51 +11,79 @@
           <table class="table">
             <thead class="encabezado">
               <tr>
-                <th>Número</th>
-                <th>Departamento</th>
-                <th>Municipio</th>
-                <th>Centro poblado</th>
-                <th>Tipo de llegada</th>
-                <th>Dirección</th>
+                <th style="width: 100px;"><span class="fs-14px">Número</span></th>
+                <th style="width: 200px;"><span class="fs-14px">Departamento</span></th>
+                <th style="width: 200px;"><span class="fs-14px">Municipio</span></th>
+                <th style="width: 200px;"><span class="fs-14px">Centro poblado</span></th>
+                <th style="width: 200px;"><span class="fs-14px">Tipo de llegada</span></th>
+                <th style="width: 200px;"><span class="fs-14px">Dirección</span></th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let parada of paradas; let i = index">
-                <td>001</td>
+                <td>{{parada.parada_id}}</td>
                 <td>
-                  <select [(ngModel)]="parada.departamento" name="" id="" class="form-select" (change)="maestraMunicipios(parada.departamento, i)">
+                  <select [(ngModel)]="parada.codigo_departamento" name="" [id]="'dep'+i" class="form-select"
+                    (change)="maestraMunicipios(parada.codigo_departamento, i,'municipio'+i,1)">
                     <option [value]="null">Seleccione una opción</option>
-                    <option *ngFor="let departamento of departamentos" [value]="departamento.id">{{departamento.nombre}}</option>
+                    <option *ngFor="let departamento of departamentos" [value]="departamento.codigoDepartamento">
+                      {{departamento.nombre}}</option>
                   </select>
                 </td>
                 <td>
-                  <select [(ngModel)]="parada.municipio" name="" id="" class="form-select" [disabled]="parada.departamento === null">
+                  <select [(ngModel)]="parada.codigo_municipio" name="" [id]="'municipio'+i" class="form-select"
+                    [disabled]="parada.codigo_departamento === null"
+                    (change)="maestraCP(parada.codigo_municipio,i,'cp'+i,1)">
                     <option [value]="null">Seleccione una opción</option>
-                    <option *ngFor="let municipio of municipios" [value]="municipio.id">{{municipio.nombre}}</option>
+                    <option *ngFor="let municipio of parada.municipios" [value]="municipio.codigoMunicipio">
+                      {{municipio.nombre}}</option>
                   </select>
                 </td>
                 <td>
-                  <select name="" id="" class="form-select">
-                    <option value="">Seleccione una opción</option>
+                  <select [(ngModel)]="parada.codigo_cp" name="" [id]="'cp'+i" class="form-select"
+                    [disabled]="parada.codigo_municipio === null">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option *ngFor="let centroPoblado of parada.centrosPoblados"
+                      [value]="centroPoblado.codigoCentroPoblado">{{centroPoblado.nombre}}</option>
                   </select>
                 </td>
                 <td>
-                  <select name="" id="" class="form-select">
-                    <option value="">Seleccione una opción</option>
+                  <select [(ngModel)]="parada.tipo_llegada_id" name="" [id]="'tp'+i" class="form-select"
+                    (change)="maestraDireccion(parada.tipo_llegada_id,i,1)">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option *ngFor="let tipo of tiposLlegada" [value]="tipo.id">{{tipo.descripcion}}</option>
                   </select>
                 </td>
                 <td>
-                  <select name="" id="" class="form-select">
-                    <option value="">Seleccione una opción</option>
+                  <select [(ngModel)]="parada.direccion_id" name="" [id]="'dir'+i" class="form-select"
+                    [disabled]="parada.tipo_llegada_id === null">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option *ngFor="let direccion of parada.direcciones" [value]="direccion.id">
+                      {{direccion.descripcion}}</option>
                   </select>
                 </td>
               </tr>
+              <!-- ///////////// BOTÓN PARA HABILITAR EL AGREGAR NUEVA RUTA -->
+              <tr *ngIf="!verificacionVisible">
+                <td colspan="18">
+                  <button type="button" class="boton primario relleno"><!-- (click)="estadoAgregarRuta(true)" -->
+                    Agregar ruta <i class="bi bi-plus-circle"></i>
+                  </button>
+                </td>
+              </tr>
+              <!-- //////////// AGREGAR NUEVA PARADA ///////////////////// -->
             </tbody>
           </table>
         </ng-template>
       </div>
-      <div ngbAccordionToggle>
-        <button type="button" class="boton primario relleno">Agregar Parada <i class="bi bi-plus-circle"></i></button>
+      <div class="d-flex justify-content-end" style="margin-right: 20px;">
+        <ngb-pagination [collectionSize]="paginadorParadas!.totalRegistros ?? 0" [page]="paginadorParadas!.pagina"
+          [pageSize]="paginadorParadas!.limite" (pageChange)="paginadorParadas!.cambiarPagina($event)" [maxSize]="5">
+          <ng-template ngbPaginationFirst>Prim.</ng-template>
+          <ng-template ngbPaginationLast>Ult.</ng-template>
+          <ng-template ngbPaginationPrevious>Ant.</ng-template>
+          <ng-template ngbPaginationNext>Sig.</ng-template>
+        </ngb-pagination>
       </div>
     </div>
   </div>
