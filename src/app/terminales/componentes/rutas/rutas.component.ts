@@ -32,6 +32,7 @@ export class RutasComponent implements OnInit {
   resolucionCorresponde: boolean = false
 
   rutas: Ruta[] = [];
+  rutaId: any
   rutaSeleccionada: number | null = null;  // Índice de la ruta seleccionada
   rutaConsultada: boolean = false
   rutaNueva: RutaNueva
@@ -49,6 +50,7 @@ export class RutasComponent implements OnInit {
   errorRutas:boolean = false
 
   paginadorReportes: Paginador<any>
+  paginadorParadas?: Paginador<any>
   private readonly paginaInicial = 1;
   private readonly limiteInicial = 5;
 
@@ -86,7 +88,7 @@ export class RutasComponent implements OnInit {
           this.rutas = respuesta.rutas
           sub.next(respuesta.paginacion)
           if(this.rutas){
-            for(let i = 0;i <= this.rutas.length; i++){//RECORREMOS LAS RUTAS
+            for(let i = 0;i < this.rutas.length; i++){//RECORREMOS LAS RUTAS
               if(this.rutas[i].tipo_llegada_id){//COMPROBAMOS QUE EXISTA UN TIPO DE LLEGADA Y SI EXISTE
                 this.maestraDireccion(this.rutas[i].tipo_llegada_id,i,1)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
               }
@@ -96,9 +98,26 @@ export class RutasComponent implements OnInit {
       })
     })
   }
-  consultarInformacionRuta(id_ruta: string | number) { //Consultamos paradas y clases de la ruta seleccionada
+  consultarInformacionRuta(id_ruta: number) { //Consultamos paradas y clases de la ruta seleccionada
+    console.log(id_ruta)
+    this.rutaId = id_ruta
+    this.paginadorParadas = new Paginador<any>(this.listarParadas)
+    this.paginadorParadas!.inicializar(this.paginaInicial, this.limiteInicial, {})
     this.rutaConsultada = true
   }
+  listarParadas = (pagina: number, limite: number, filtros?:Paradas) => { //listamos las paradas que vienen de base de datos
+    return new Observable<Paginacion>( sub => {
+      this.servicioTerminales.listarParadas(this.rutaId,pagina,limite,filtros).subscribe({
+        next: ( respuesta )=>{
+          this.paradas = []
+          this.paradas = respuesta.paradas
+          console.log(this.paradas)
+          sub.next(respuesta.paginacion)
+        }
+      })
+    })
+  }
+
 
   //MAESTRAS /////////////////////////////////////////////////////////////////////////////////////////////////
   maestraDepartamentos() { // MAESTRA DE DEPARTAMENTOS
@@ -217,7 +236,7 @@ export class RutasComponent implements OnInit {
     this.rutaSeleccionada = index;
 
     // Consultar la información en la base de datos
-    this.consultarInformacionRuta(ruta.id_ruta);
+    this.consultarInformacionRuta(Number(ruta.id_ruta));
   }
 
   estadoAgregarRuta(estado: boolean) {
@@ -261,16 +280,28 @@ export class RutasComponent implements OnInit {
     }
   }
 
+  estadoRuta(estado:any, index?:number){
+    if(index !== undefined){
+      if(estado === 'false'){
+        this.rutas[index].estado = false
+        this.rutas[index].corresponde = null
+        this.rutas[index].resolucion_actual = null
+        this.removeFile(1,index)
+      }else if(estado === 'true'){
+        this.rutas[index].estado = true
+      }
+      this.manejarCambios()
+    }
+  }
+
   corresponde(idCorresponde: any, index: any, idRuta: any) {
-    const selectElement = document.getElementById(idRuta) as HTMLSelectElement;
-    selectElement.disabled = false
-    //console.log(this.editable)
     if (idCorresponde === 'null') {
       this.rutas[index].corresponde = null
+      this.rutas[index].resolucion_actual = null
+      this.removeFile(1,index)
     } else {
       this.rutas[index].corresponde = Number(idCorresponde)
     }
-    //console.log(this.rutas[index].corresponde)
     this.manejarCambios()
   }
 
@@ -308,6 +339,7 @@ export class RutasComponent implements OnInit {
       Swal.showLoading(null);
       //console.log(this.tamanoValido(event.target.files[0]))
       if (this.tamanoValido(event.target.files[0], tamanoMaximoMb)) {
+        console.log(index, this.rutas)
         this.servicioArchivos.guardarArchivo(event.target.files[0], 'proveedores', this.usuario?.usuario!).subscribe({
           next: (archivo: any) => {
             Swal.close()
@@ -363,6 +395,7 @@ export class RutasComponent implements OnInit {
     this.rutasGuardar.emit(this.rutas)
     this.paradasGuardar.emit(this.paradas)
     this.clasesGuardar.emit(this.clases)
+    console.log(this.rutas)
   }
 
 }

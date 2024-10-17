@@ -1,9 +1,12 @@
 export interface Paradas {
-  id_parada?: number | null //Adicionada por si llega a necesitarse.
+  parada_id?: number | null //Adicionada por si llega a necesitarse.
   numero: string | number | null
-  departamento: number | string | null
-  municipio: number | string | null
-  centroPoblado: number | string | null
-  tipoLlegada: number | string | null
-  direccion: number | string | null
+  codigo_departamento: number | string | null
+  codigo_municipio: number | string | null
+  codigo_cp: number | string | null
+  tipo_llegada_id: number | string | null
+  direccion_id: number | string | null
+  municipios?:Array<{ id: number, codigoMunicipio: string, nombre:string }>
+  centrosPoblados?:Array<{ id: number, codigoCentroPoblado: string, nombre:string }>
+  direcciones?:Array<{ id: number, descripcion: string }>
 }
