@@ -24,7 +24,7 @@
                 <td>{{parada.parada_id}}</td>
                 <td>
                   <select [(ngModel)]="parada.codigo_departamento" name="" [id]="'dep'+i" class="form-select"
-                    (change)="maestraMunicipios(parada.codigo_departamento, i,'municipio'+i,1)">
+                    (change)="maestraMunicipios(parada.codigo_departamento,'municipio'+i,i,true)">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let departamento of departamentos" [value]="departamento.codigoDepartamento">
                       {{departamento.nombre}}</option>
@@ -33,7 +33,7 @@
                 <td>
                   <select [(ngModel)]="parada.codigo_municipio" name="" [id]="'municipio'+i" class="form-select"
                     [disabled]="parada.codigo_departamento === null"
-                    (change)="maestraCP(parada.codigo_municipio,i,'cp'+i,1)">
+                    (change)="maestraCP(parada.codigo_municipio,'cp'+i,i,true)">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let municipio of parada.municipios" [value]="municipio.codigoMunicipio">
                       {{municipio.nombre}}</option>
@@ -49,7 +49,7 @@
                 </td>
                 <td>
                   <select [(ngModel)]="parada.tipo_llegada_id" name="" [id]="'tp'+i" class="form-select"
-                    (change)="maestraDireccion(parada.tipo_llegada_id,i,1)">
+                    (change)="maestraDireccion(parada.tipo_llegada_id,parada.codigo_cp,true)">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let tipo of tiposLlegada" [value]="tipo.id">{{tipo.descripcion}}</option>
                   </select>

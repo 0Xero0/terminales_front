@@ -35,10 +35,10 @@
             {{ruta.id_ruta}}
           </td>
           <td (click)="seleccionarRuta(ruta, i)">
-            {{ruta.municipio_origen}}
+            {{ruta.departamento_origen}}
           </td>
           <td (click)="seleccionarRuta(ruta, i)">
-            {{ruta.departamento_origen}}
+            {{ruta.municipio_origen}}
           </td>
           <td (click)="seleccionarRuta(ruta, i)">
             {{ruta.cp_origen}}
@@ -54,16 +54,17 @@
           </td>
           <td><!-- SELECT TIPO DE LLEGADA -->
             <select [(ngModel)]="ruta.tipo_llegada_id" name="tipo_llegada_{{i}}" class="form-select" [class.marcar-error]="!ruta.tipo_llegada_id && errorRutas"
-            (change)="maestraDireccion(ruta.tipo_llegada_id, i, 1)">
+            (change)="maestraDireccion(ruta.tipo_llegada_id,ruta.cp_destino_codigo, i, true)">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let opt of tipoLlegada" [value]='opt.id'>{{opt.descripcion}}</option>
             </select>
           </td>
           <td><!-- SELECT DIRECCIONES -->
             <select [(ngModel)]="ruta.direccion_id" name="direccion_{{i}}" class="form-select"
-            (change)="manejarCambios()" [disabled]="ruta.tipo_llegada_id === null">
+            (change)="manejarDirecciones($event,ruta.tipo_llegada_id,ruta.cp_destino_codigo,i)" [disabled]="ruta.tipo_llegada_id === null">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let direccion of ruta.direcciones" [value]='direccion.id'>{{direccion.descripcion}}</option>
+              <option value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal -->
             </select>
           </td>
           <td style="width: 130px;">
@@ -178,7 +179,8 @@
             </select>
           </td>
           <td><!-- SELECT TIPO DE LLEGADA -->
-            <select [(ngModel)]="rutaNueva.tipo_llegada" name="tipo_llegada" class="form-select" (change)="maestraDireccion(rutaNueva.tipo_llegada,undefined,2)"
+            <select [(ngModel)]="rutaNueva.tipo_llegada" name="tipo_llegada" class="form-select"
+            (change)="maestraDireccion(rutaNueva.tipo_llegada,rutaNueva.centro_poblado_destino)"
             [class.marcar-error]="!rutaNueva.tipo_llegada && error">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let opt of tipoLlegada" [value]='opt.id'>{{opt.descripcion}}</option>
@@ -266,12 +268,10 @@
   </div>
 </div>
 <hr>
-<div *ngIf="paradas.length !== 0" style="margin-bottom: 10px;">
+<div *ngIf="rutaConsultada" style="margin-bottom: 10px;">
   <app-paradas
   (paradasGuardar)="recibirParadas($event)"
   [rutaId]="rutaId"
-  [paradas]="paradas"
-  [paginadorParadas]="paginadorParadas"
   ></app-paradas>
 </div>
 <div *ngIf="rutaConsultada" style="margin-bottom: 10px;">

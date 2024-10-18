@@ -35,8 +35,8 @@ export class TerminalesService extends Autenticable {
     return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  maestraDirecciones(idTipoLlegada:any){
-    const endpoint = `/api/v1/maestras/direcciones?codigoTipollegada=${idTipoLlegada}`
+  maestraDirecciones(idTipoLlegada:any,cp_destino_codigo:any){
+    const endpoint = `/api/v1/maestras/direcciones?codigoTipollegada=${idTipoLlegada}&codigoCp=${cp_destino_codigo}`
     return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
   }
 
@@ -55,7 +55,7 @@ export class TerminalesService extends Autenticable {
     return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  /////////////////////////////////////////////////////
+  // LISTAS ////////////////////////////////////////////////////////////////////////////////////
 
   listarRutas(pagina: number, limite: number, filtros?: any){
     let endpoint = `/api/v1/terminales/visualizar-rutas?pagina=${pagina}&limite=${limite}`
@@ -79,5 +79,12 @@ export class TerminalesService extends Autenticable {
       if(filtros.termino) endpoint+=`&filtro=${filtros.termino}`;
     }
     return this.http.get<{ clases: any[], paginacion: Paginacion }>(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
+  }
+
+  // ACCIONES ////////////////////////////////////////////////////////////////////////////////////
+
+  crearDireccion(JSONDatosDireccion:any){
+    const endpoint = `/api/v1/terminales/crear-direccion`
+    return this.http.post<any>(`${this.host}${endpoint}`, JSONDatosDireccion, { headers: this.obtenerCabeceraAutorizacion() })
   }
 }

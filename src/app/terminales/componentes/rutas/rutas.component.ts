@@ -46,11 +46,11 @@ export class RutasComponent implements OnInit {
   tipoLlegada: Array<{ id: any, descripcion: string }> = []
   direcciones: Array<{ id: any, descripcion: string }> = []
 
-  error:boolean = false
-  errorRutas:boolean = false
+  error: boolean = false
+  errorRutas: boolean = false
 
   paginadorReportes: Paginador<any>
-  paginadorParadas?: Paginador<any>
+  /* paginadorParadas?: Paginador<any> */
   private readonly paginaInicial = 1;
   private readonly limiteInicial = 5;
 
@@ -81,16 +81,16 @@ export class RutasComponent implements OnInit {
     };
   }
 
-  listarRutas = (pagina: number, limite: number, filtros?:Ruta) =>{ //listamos las rutas que vienen de base de datos
-    return new Observable<Paginacion>( sub => {
-      this.servicioTerminales.listarRutas(pagina,limite,filtros).subscribe({
-        next: ( respuesta )=>{
+  listarRutas = (pagina: number, limite: number, filtros?: Ruta) => { //listamos las rutas que vienen de base de datos
+    return new Observable<Paginacion>(sub => {
+      this.servicioTerminales.listarRutas(pagina, limite, filtros).subscribe({
+        next: (respuesta) => {
           this.rutas = respuesta.rutas
           sub.next(respuesta.paginacion)
-          if(this.rutas){
-            for(let i = 0;i < this.rutas.length; i++){//RECORREMOS LAS RUTAS
-              if(this.rutas[i].tipo_llegada_id){//COMPROBAMOS QUE EXISTA UN TIPO DE LLEGADA Y SI EXISTE
-                this.maestraDireccion(this.rutas[i].tipo_llegada_id,i,1)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
+          if (this.rutas) {
+            for (let i = 0; i < this.rutas.length; i++) {//RECORREMOS LAS RUTAS
+              if (this.rutas[i].tipo_llegada_id) {//COMPROBAMOS QUE EXISTA UN TIPO DE LLEGADA Y SI EXISTE
+                this.maestraDireccion(this.rutas[i].tipo_llegada_id, i)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
               }
             }
           }
@@ -101,21 +101,7 @@ export class RutasComponent implements OnInit {
   consultarInformacionRuta(id_ruta: number) { //Consultamos paradas y clases de la ruta seleccionada
     console.log(id_ruta)
     this.rutaId = id_ruta
-    this.paginadorParadas = new Paginador<any>(this.listarParadas)
-    this.paginadorParadas!.inicializar(this.paginaInicial, this.limiteInicial, {})
     this.rutaConsultada = true
-  }
-  listarParadas = (pagina: number, limite: number, filtros?:Paradas) => { //listamos las paradas que vienen de base de datos
-    return new Observable<Paginacion>( sub => {
-      this.servicioTerminales.listarParadas(this.rutaId,pagina,limite,filtros).subscribe({
-        next: ( respuesta )=>{
-          this.paradas = []
-          this.paradas = respuesta.paradas
-          console.log(this.paradas)
-          sub.next(respuesta.paginacion)
-        }
-      })
-    })
   }
 
 
@@ -191,19 +177,20 @@ export class RutasComponent implements OnInit {
     })
   }
 
-  maestraDireccion(id: any, index?: any, tipo?: number) { // MAESTRA DE DIRECCIONES
+  maestraDireccion(id: any, cp_destino_codigo: any, index?: any, cambio?: boolean) { // MAESTRA DE DIRECCIONES
     //console.log(id, index)
     const idLlegada = Number(id)
     if (id !== 'null') {
-      this.servicioTerminales.maestraDirecciones(id).subscribe({
+      this.servicioTerminales.maestraDirecciones(id, cp_destino_codigo).subscribe({
         next: (respuesta: any) => {
           //console.log(respuesta)
-          if (tipo === 1) {
-            this.rutas[index].direcciones = []; //this.rutas[index].direccion_id = null
+          if (index !== undefined) {
+            this.rutas[index].direcciones = [];
             this.rutas[index].direcciones = respuesta.respuestaDirecciones
             this.rutas[index].tipo_llegada_id = idLlegada
+            if (cambio) { this.rutas[index].direccion_id = null }
             this.manejarCambios()
-          } else if (tipo === 2) {
+          } else {
             this.direcciones = []; this.rutaNueva.direccion = null
             this.direcciones = respuesta.respuestaDirecciones
             this.rutaNueva.tipo_llegada = idLlegada
@@ -211,13 +198,12 @@ export class RutasComponent implements OnInit {
         }
       })
     } else {
-      if (tipo === 1) {
+      if (index !== undefined) {
         this.rutas[index].tipo_llegada_id = null;
         this.rutas[index].direccion_id = null
         this.rutas[index].direcciones = []
         this.manejarCambios()
-      }
-      if (tipo === 2) {
+      } else {
         this.rutaNueva.tipo_llegada = null;
         this.rutaNueva.direccion = null;
         this.direcciones = []
@@ -246,8 +232,8 @@ export class RutasComponent implements OnInit {
 
   agregarRuta() {
     //console.log(this.rutaNueva);
-    if(this.validarCampos(this.rutaNueva)){
-      this.rutas.push({
+    if (this.validarCampos(this.rutaNueva)) {
+      /* this.rutas.push({
         id_ruta: this.rutaNueva.id_ruta,
         departamento_origen: null,
         municipio_origen: null,
@@ -266,28 +252,96 @@ export class RutasComponent implements OnInit {
         documento: this.rutaNueva.nombreDocumento,
         nombre_original: this.rutaNueva.nombreOriginal,
         ruta_archivo: this.rutaNueva.ruta
-      });
+      }); */
       this.rutaNueva = this.inicializarRutaNueva()
       this.estadoAgregarRuta(false)
       this.manejarCambios()
-    }else{
+    } else {
       this.error = true
       Swal.fire({
-        title:'Información incompleta',
+        title: 'Información incompleta',
         icon: 'error',
         text: 'Por favor, completa la información de la nueva ruta antes de agregarla.'
       })
     }
   }
 
-  estadoRuta(estado:any, index?:number){
-    if(index !== undefined){
-      if(estado === 'false'){
+  manejarDirecciones(event: any, tipo_llegada_id: any, cp_destino: any, index?: number) {
+    console.log(tipo_llegada_id, cp_destino)
+    const valorSeleccionado = event.target.value;
+    if (valorSeleccionado === 'abrirModal') {
+      this.abrirModalConSwal(Number(tipo_llegada_id), cp_destino, index); // Si selecciona la opción de abrir el modal con Swal
+    } else {
+      if (index) {
+        this.rutas[index].direccion_id = Number(valorSeleccionado)
+        this.manejarCambios()
+      } else { }
+      this.rutaNueva.direccion = Number(valorSeleccionado)
+    }
+  }
+  abrirModalConSwal(tipo_llegada_id: number, cp_destino: string, index?: number) {
+    // Modal con SweetAlert2 que tiene 2 inputs de texto
+    Swal.fire({
+      title: 'Añadir nueva dirección',
+      html:
+        `<input type="text" id="descripcion" class="swal2-input" placeholder="Descripción o nombre">
+         <input type="text" id="direccion" class="swal2-input" placeholder="Dirección">`,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar',
+      preConfirm: () => {
+        const descripcion = (Swal.getPopup()?.querySelector('#descripcion') as HTMLInputElement).value;
+        const direccion = (Swal.getPopup()?.querySelector('#direccion') as HTMLInputElement).value;
+
+        if (!descripcion) {
+          Swal.showValidationMessage('Por favor, completa la descripción o nombre de la nueva dirección.');
+          return null;
+        }
+
+        return { descripcion, direccion };
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        let JSONDatosDireccion = {
+          despachoId: tipo_llegada_id,
+          descripcion: result.value.descripcion,
+          direccion: result.value.direccion,
+          codigoCentroPoblado: cp_destino
+        }
+        console.log(JSONDatosDireccion)
+        this.servicioTerminales.crearDireccion(JSONDatosDireccion).subscribe({
+          next: (respuesta: any) => {
+            console.log(respuesta)
+            if (index !== undefined) {
+              this.rutas[index].direcciones = respuesta.respuestaDirecciones
+              this.rutas[index].direccion_id = null
+            } else {
+              this.direcciones = respuesta.respuestaDirecciones
+              this.rutaNueva.direccion = null
+            }
+            Swal.fire('¡Guardado!', 'La nueva dirección ha sido añadida.', 'success');
+          }
+        })
+      } else if (result.isDismissed) {// Aquí manejas la acción de cancelación
+        if (index !== undefined) {
+          this.rutas[index].direccion_id = null
+        } else {
+          this.rutaNueva.direccion = null
+        }
+
+      }
+    });
+  }
+
+  estadoRuta(estado: any, index?: number) {
+    if (index !== undefined) {
+      if (estado === 'false') {
         this.rutas[index].estado = false
         this.rutas[index].corresponde = null
         this.rutas[index].resolucion_actual = null
-        this.removeFile(1,index)
-      }else if(estado === 'true'){
+        this.removeFile(1, index)
+      } else if (estado === 'true') {
         this.rutas[index].estado = true
       }
       this.manejarCambios()
@@ -298,7 +352,7 @@ export class RutasComponent implements OnInit {
     if (idCorresponde === 'null') {
       this.rutas[index].corresponde = null
       this.rutas[index].resolucion_actual = null
-      this.removeFile(1,index)
+      this.removeFile(1, index)
     } else {
       this.rutas[index].corresponde = Number(idCorresponde)
     }
@@ -380,12 +434,12 @@ export class RutasComponent implements OnInit {
     return Object.values(obj).every(value => value !== null && value !== undefined && value !== '');
   }
 
-  validarCampo(selectId:string): boolean{
+  validarCampo(selectId: string): boolean {
     const selectElement = document.getElementById(selectId) as HTMLSelectElement;
     const valor = selectElement.value
-    if(valor === null || valor === 'null' || valor === undefined || valor === ''){
+    if (valor === null || valor === 'null' || valor === undefined || valor === '') {
       return true
-    }else {
+    } else {
       return false
     }
   }
