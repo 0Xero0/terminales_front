@@ -34,3 +34,15 @@
   background-color: #ffffff;
   color: #3366cc;
 }
+
+
+.input-select-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Espacio entre el input y el select */
+}
+
+.form-control {
+  margin-bottom: 10px; /* Ajusta el margen si lo deseas */
+}
+

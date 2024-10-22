@@ -1,10 +1,12 @@
 export interface Ruta {
   id_ruta: string | number,
+  id_unico_ruta?: string | number,
   departamento_origen: string | null,
   municipio_origen: string | null,
   cp_origen: string | null,
   departamento_destino: string | null,
   municipio_destino: string | null,
+  cp_destino_codigo?: string | null,
   cp_destino: string | null,
   tipo_llegada_id: string | number | null,
   direccion_id: number | string | null,
@@ -22,11 +24,11 @@ export interface Ruta {
 }
 
 export interface RutaNueva {
-  id_ruta: string | number,
+  id_ruta?: string | number,
   centro_poblado_origen: string | null,
   centro_poblado_destino: string | null,
-  tipo_llegada: string | number | null,
-  direccion: string | null,
+  tipo_llegada: number | null,
+  direccion: string | number | null,
   via: string | undefined,
   ruta_activa: string | null,
   n_resolucion_actual: number | null,

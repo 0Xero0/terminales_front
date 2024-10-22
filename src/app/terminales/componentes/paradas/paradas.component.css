@@ -15,3 +15,89 @@
   margin-bottom: 10px;
   margin-left: 10px;
 } */
+
+/* Paginador */
+/* Asegura que el contenedor del paginador esté centrado */
+::ng-deep .pagination-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  font-weight: bold; /* Aplica negrita */
+  font-size: large;
+}
+
+/* Aplica estilo al elemento paginador */
+::ng-deep .pagination-controls .ngx-pagination {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Aplica estilo a los botones de paginación */
+::ng-deep .pagination-controls .ngx-pagination li {
+  margin: 0; /* Espaciado entre los botones */
+
+}
+
+/* Estilo para los enlaces dentro de cada botón */
+::ng-deep .pagination-controls .ngx-pagination li a {
+  color: #000000; /* Color del texto */
+  padding: 5px 10px;  /*Tamaño del botón */
+  border: 1px solid #e2e6e9; /* Borde */
+  border-right: none;
+  /*border-radius: 2px;  Bordes redondeados */
+  text-decoration: none; /* Elimina el subrayado */
+}
+
+/* Estilo cuando el usuario pasa el ratón sobre los botones */
+::ng-deep .pagination-controls .ngx-pagination li a:hover {
+  background-color: #e2e6e9; /* Cambia el color de fondo al hacer hover */
+  color: #3366cc;
+  /*border-color: #3366cc;  Cambia el color del borde */
+}
+
+/* Estilo para la página actual */
+::ng-deep .pagination-controls .ngx-pagination .current {
+  background-color: #3366cc; /* Fondo azul para la página actual */
+  color: white; /* Texto blanco */
+  border: 1px solid #3366cc; /* Borde del mismo color */
+  padding: 5px 10px; /* Mantén el padding igual */
+  /*border-radius: 2px;  Bordes redondeados */
+}
+
+/* Estilo para los botones deshabilitados */
+::ng-deep .pagination-controls .ngx-pagination .disabled {
+  color: #aaa; /* Color gris para botones deshabilitados */
+  border: 1px solid #e2e6e9;
+  /* border-radius: 2px; */
+}
+
+/* Desactiva la interacción en los botones deshabilitados */
+::ng-deep .pagination-controls .ngx-pagination .disabled a {
+  pointer-events: none; /* Evita que los botones deshabilitados sean clicables */
+}
+
+/* Estilos para los botones de navegación (Anterior y Siguiente) */
+::ng-deep .pagination-controls .ngx-pagination .pagination-previous a {
+  border-top-left-radius: 7px;  /* Radio en la esquina superior izquierda */
+  border-bottom-left-radius: 7px; /* Radio en la esquina inferior izquierda */
+}
+
+::ng-deep .pagination-controls .ngx-pagination .pagination-next a {
+  border-top-right-radius: 7px;  /* Radio en la esquina superior derecha */
+  border-bottom-right-radius: 7px; /* Radio en la esquina inferior derecha */
+  border-right: 1px solid #e2e6e9;
+}
+
+/* Estilos para el botón "Anterior" deshabilitado */
+::ng-deep .pagination-controls .ngx-pagination .pagination-previous.disabled {
+  border-top-left-radius: 7px; /* Radio en la esquina superior izquierda */
+  border-bottom-left-radius: 7px; /* Radio en la esquina inferior izquierda */
+}
+
+/* Estilos para el botón "Siguiente" deshabilitado */
+::ng-deep .pagination-controls .ngx-pagination .pagination-next.disabled {
+  border-top-right-radius: 7px; /* Radio en la esquina superior derecha */
+  border-bottom-right-radius: 7px; /* Radio en la esquina inferior derecha */
+  border-right: 1px solid #e2e6e9;
+}

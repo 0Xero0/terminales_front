@@ -186,6 +186,7 @@ body {
 footer-logo {
   max-width: 100px; /* Ajusta el tamaño del logo según lo que necesites */
   margin-bottom: 10px; /* Espacio entre el logo y el texto */
+  margin-left: 40px;
 }
 
 .margen{
