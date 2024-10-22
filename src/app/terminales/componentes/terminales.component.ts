@@ -24,6 +24,10 @@ export class TerminalesComponent implements OnInit {
   paradas: Array<Paradas> = []
   clases: Array<Clases> = []
 
+  selectedValue:any
+  inputValue:any
+  opciones: Array<any> = [{codigo:1, nombre:'opción 1'},{codigo:2, nombre:'opción 2'}]
+
   constructor(private servicioTerminales: TerminalesService) {
     this.usuario = JSON.parse(localStorage.getItem('UsuarioVigia')!)
   }

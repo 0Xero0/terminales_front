@@ -13,6 +13,7 @@ import { InputsModule } from '../inputs/inputs.module';
 import { TemplatesModule } from '../templates/templates.module';
 import { TerminalesComponent } from './componentes/terminales.component';
 import { ClasesComponent } from './componentes/clases/clases.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 
@@ -34,7 +35,8 @@ import { ClasesComponent } from './componentes/clases/clases.component';
     TemplatesModule,
     SweetAlert2Module.forRoot(),
     AlertasModule,
-    RouterModule
+    RouterModule,
+    NgxPaginationModule
   ]
 })
 export class TerminalesModule { }
