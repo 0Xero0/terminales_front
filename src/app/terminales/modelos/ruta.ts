@@ -1,5 +1,6 @@
 export interface Ruta {
   id_ruta: string | number,
+  id_unico_ruta?: string | number,
   departamento_origen: string | null,
   municipio_origen: string | null,
   cp_origen: string | null,
@@ -23,10 +24,10 @@ export interface Ruta {
 }
 
 export interface RutaNueva {
-  id_ruta: string | number,
+  id_ruta?: string | number,
   centro_poblado_origen: string | null,
   centro_poblado_destino: string | null,
-  tipo_llegada: string | number | null,
+  tipo_llegada: number | null,
   direccion: string | number | null,
   via: string | undefined,
   ruta_activa: string | null,

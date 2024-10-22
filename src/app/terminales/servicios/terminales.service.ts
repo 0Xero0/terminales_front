@@ -57,8 +57,8 @@ export class TerminalesService extends Autenticable {
 
   // LISTAS ////////////////////////////////////////////////////////////////////////////////////
 
-  listarRutas(pagina: number, limite: number, filtros?: any){
-    let endpoint = `/api/v1/terminales/visualizar-rutas?pagina=${pagina}&limite=${limite}`
+  listarRutas(pagina: number, limite: number, filtros?: any){/* ?pagina=${pagina}&limite=${limite} */
+    let endpoint = `/api/v1/terminales/visualizar-rutas`
     if(filtros){
       if(filtros.termino) endpoint+=`&filtro=${filtros.termino}`;
     }

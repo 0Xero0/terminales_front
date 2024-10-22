@@ -22,7 +22,7 @@ export class MenuComponent implements OnInit {
     private servicioLocalStorage: ServicioLocalStorage,
     private servicioAutenticacion: AutenticacionService,
     private router: Router,
-    public ServiceMenuP:MenuHeaderPService
+    public ServiceMenuP: MenuHeaderPService
   ) {
   }
 
@@ -31,37 +31,35 @@ export class MenuComponent implements OnInit {
     this.usuario = this.servicioLocalStorage.obtenerUsuario()
   }
 
-  public abrir():void{
+  public abrir(): void {
     this.desplegado = true
   }
 
-  public cerrar():void{
+  public cerrar(): void {
     this.desplegado = false
   }
 
   /*** CODIGO DE PAOLO************************************* */
-  public SeleccionarMenuP(rutaModelo:string) :boolean
-  {
+  public SeleccionarMenuP(rutaModelo: string): boolean {
     //console.log(this.ServiceMenuP.RutaModelo);
     //console.log(`/administrar${rutaModelo}`);
-    if(this.ServiceMenuP.RutaModelo===`/administrar${rutaModelo}`)
-    {
+    if (this.ServiceMenuP.RutaModelo === `/administrar${rutaModelo}`) {
       return true
     }
     return false
   }
 
-  cerrarSesion(){
+  cerrarSesion() {
 
     this.servicioAutenticacion.cerrarSesion()
     this.router.navigateByUrl('/inicio-sesion')
   }
 
-  imprimirRuta(submodulo: Submodulo){
+  imprimirRuta(submodulo: Submodulo) {
     console.log(`/administrar${submodulo.ruta}`)
   }
 
-  navegarAlSubmodulo(submodulo: Submodulo){
+  navegarAlSubmodulo(submodulo: Submodulo) {
     this.imprimirRuta(submodulo)
     this.router.navigateByUrl(`/administrar${submodulo.ruta}`)
   }

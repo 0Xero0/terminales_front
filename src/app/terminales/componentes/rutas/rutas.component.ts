@@ -40,15 +40,16 @@ export class RutasComponent implements OnInit {
 
   departamentos?: { codigoDepartamento: any, nombre: string }[] = []
   municipiosOrigen?: { codigoMunicipio: any, nombre: string }[] = []
-  centroPobladoOrigen?: { codigoCP: any, nombre: string }[] = []
+  centroPobladoOrigen?: { codigoCentroPoblado: any, nombre: string }[] = []
   municipiosDestino?: { codigoMunicipio: any, nombre: string }[] = []
-  centroPobladoDestino?: { codigoCP: any, nombre: string }[] = []
+  centroPobladoDestino?: { codigoCentroPoblado: any, nombre: string }[] = []
   tipoLlegada: Array<{ id: any, descripcion: string }> = []
   direcciones: Array<{ id: any, descripcion: string }> = []
 
   error: boolean = false
   errorRutas: boolean = false
 
+  page: number = 1; // Variable para controlar la página actual
   paginadorReportes: Paginador<any>
   /* paginadorParadas?: Paginador<any> */
   private readonly paginaInicial = 1;
@@ -69,7 +70,6 @@ export class RutasComponent implements OnInit {
 
   inicializarRutaNueva(): RutaNueva { //Inicializa vacio los parametros de la ruta nueva
     return {
-      id_ruta: '',
       centro_poblado_origen: null,
       centro_poblado_destino: null,
       tipo_llegada: null,
@@ -144,14 +144,14 @@ export class RutasComponent implements OnInit {
 
   maestraCP(event: any, nombre: string, tipo: number) { // MAESTRA DE CENTROS POBLADOS
     let codigoMunicipio
-    if (event === 'null') {
-      codigoMunicipio = event
+    if (event === 'null' || event === null) {
+      codigoMunicipio = 'null'
     } else {
       const input = event.target as HTMLSelectElement
       codigoMunicipio = input.value
     }
     const selectElement = document.getElementById(nombre) as HTMLSelectElement;
-    //console.log(codigoMunicipio)
+    console.log(codigoMunicipio)
     if (codigoMunicipio !== 'null') {
       this.servicioTerminales.maestraCentrosPoblados(codigoMunicipio).subscribe({
         next: (respuesta: any) => {
@@ -164,7 +164,14 @@ export class RutasComponent implements OnInit {
     } else {
       selectElement.disabled = true;
       if (tipo === 1) { this.centroPobladoOrigen = [], this.rutaNueva.centro_poblado_origen = null }
-      if (tipo === 2) { this.centroPobladoDestino = [], this.rutaNueva.centro_poblado_destino = null }
+      if (tipo === 2) {
+        this.centroPobladoDestino = [], this.rutaNueva.centro_poblado_destino = null
+        if(this.rutaNueva.centro_poblado_destino === null || this.rutaNueva.centro_poblado_destino === 'null'){
+          this.rutaNueva.tipo_llegada = null
+          console.log(this.rutaNueva)
+          //this.rutaNueva.direccion = null
+        }
+      }
     }
   }
 
@@ -177,16 +184,18 @@ export class RutasComponent implements OnInit {
     })
   }
 
-  maestraDireccion(id: any, cp_destino_codigo: any, index?: any, cambio?: boolean) { // MAESTRA DE DIRECCIONES
-    //console.log(id, index)
-    const idLlegada = Number(id)
-    if (id !== 'null') {
-      this.servicioTerminales.maestraDirecciones(id, cp_destino_codigo).subscribe({
+  maestraDireccion(tipo_llegada_id: any, cp_destino_codigo: any, index?: any, cambio?: boolean) { // MAESTRA DE DIRECCIONES
+    console.log(index, tipo_llegada_id)
+    const idLlegada = tipo_llegada_id
+    if (idLlegada !== 'null') {
+      this.servicioTerminales.maestraDirecciones(tipo_llegada_id, cp_destino_codigo).subscribe({
         next: (respuesta: any) => {
           //console.log(respuesta)
           if (index !== undefined) {
             this.rutas[index].direcciones = [];
-            this.rutas[index].direcciones = respuesta.respuestaDirecciones
+            if(respuesta.respuestaDirecciones.length > 0){
+              this.rutas[index].direcciones = respuesta.respuestaDirecciones
+            }else{this.rutas[index].direccion_id = null}
             this.rutas[index].tipo_llegada_id = idLlegada
             if (cambio) { this.rutas[index].direccion_id = null }
             this.manejarCambios()
@@ -204,12 +213,13 @@ export class RutasComponent implements OnInit {
         this.rutas[index].direcciones = []
         this.manejarCambios()
       } else {
-        this.rutaNueva.tipo_llegada = null;
         this.rutaNueva.direccion = null;
+        this.rutaNueva.tipo_llegada = null;
         this.direcciones = []
+        console.log( this.rutaNueva.direccion, this.rutaNueva.tipo_llegada)
       }
     }
-    //console.log(this.rutas, this.rutaNueva)
+
 
   }
 
@@ -231,10 +241,9 @@ export class RutasComponent implements OnInit {
   }
 
   agregarRuta() {
-    //console.log(this.rutaNueva);
+    console.log(this.rutaNueva);
     if (this.validarCampos(this.rutaNueva)) {
       /* this.rutas.push({
-        id_ruta: this.rutaNueva.id_ruta,
         departamento_origen: null,
         municipio_origen: null,
         cp_origen: this.rutaNueva.centro_poblado_origen,
@@ -267,10 +276,10 @@ export class RutasComponent implements OnInit {
   }
 
   manejarDirecciones(event: any, tipo_llegada_id: any, cp_destino: any, index?: number) {
-    console.log(tipo_llegada_id, cp_destino)
+    console.log(tipo_llegada_id, cp_destino, event.target.value)
     const valorSeleccionado = event.target.value;
     if (valorSeleccionado === 'abrirModal') {
-      this.abrirModalConSwal(Number(tipo_llegada_id), cp_destino, index); // Si selecciona la opción de abrir el modal con Swal
+      this.abrirModalConSwal(Number(tipo_llegada_id), cp_destino, index); // Si selecciona la opción de 'Añadir nueva dirección'
     } else {
       if (index) {
         this.rutas[index].direccion_id = Number(valorSeleccionado)
@@ -362,6 +371,14 @@ export class RutasComponent implements OnInit {
   recibirParadas(paradas: any) {
     this.paradas = paradas
     this.manejarCambios()
+  }
+
+  manejarTipoLlegadaNueva(){
+    if(this.rutaNueva.centro_poblado_destino === null || this.rutaNueva.centro_poblado_destino === 'null'){
+      //this.rutaNueva.centro_poblado_destino = null
+      this.rutaNueva.tipo_llegada = null
+      this.rutaNueva.direccion = null
+    }
   }
 
   // MANEJO DE ARCHIVOS //////////////////////////////////////////////////////////////////////////////////
