@@ -24,13 +24,12 @@ export interface Ruta {
 }
 
 export interface RutaNueva {
-  id_ruta?: string | number,
   centro_poblado_origen: string | null,
   centro_poblado_destino: string | null,
   tipo_llegada: number | null,
   direccion: string | number | null,
   via: string | undefined,
-  ruta_activa: string | null,
+  ruta_activa: any,
   n_resolucion_actual: number | null,
   dir_territorial: string | null
   nombreDocumento?:string,

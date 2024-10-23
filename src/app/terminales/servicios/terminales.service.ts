@@ -57,7 +57,7 @@ export class TerminalesService extends Autenticable {
 
   // LISTAS ////////////////////////////////////////////////////////////////////////////////////
 
-  listarRutas(pagina: number, limite: number, filtros?: any){/* ?pagina=${pagina}&limite=${limite} */
+  listarRutas(pagina?: number, limite?: number, filtros?: any){/* ?pagina=${pagina}&limite=${limite} */
     let endpoint = `/api/v1/terminales/visualizar-rutas`
     if(filtros){
       if(filtros.termino) endpoint+=`&filtro=${filtros.termino}`;
@@ -86,5 +86,10 @@ export class TerminalesService extends Autenticable {
   crearDireccion(JSONDatosDireccion:any){
     const endpoint = `/api/v1/terminales/crear-direccion`
     return this.http.post<any>(`${this.host}${endpoint}`, JSONDatosDireccion, { headers: this.obtenerCabeceraAutorizacion() })
+  }
+
+  crearRuta(JSONRutaNueva:any){
+    const endpoint = `/api/v1/terminales/guardar-ruta`
+    return this.http.post<any>(`${this.host}${endpoint}`, JSONRutaNueva, { headers: this.obtenerCabeceraAutorizacion() })
   }
 }

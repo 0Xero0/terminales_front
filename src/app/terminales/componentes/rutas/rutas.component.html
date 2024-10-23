@@ -146,7 +146,7 @@
         <!-- //////////// AGREGAR NUEVA RUTA ///////////////////// -->
         <tr *ngIf="!verificacionVisible && rutaNuevaHabilitada"><!--  -->
           <td>
-            <input [(ngModel)]="rutaNueva.id_ruta" type="text" name="id_ruta" id="" class="form-control"
+            <input type="text" name="id_ruta" id="" class="form-control"
                placeholder="-" [disabled]="true"><!-- [class.marcar-error]="!rutaNueva.id_ruta && error" -->
           </td>
           <td>
@@ -182,7 +182,7 @@
             </select>
           </td>
           <td><!-- SELECT MUNICIPIOS DESTINO -->
-            <select id="mun destino" class="form-select" (change)="maestraCP($event,'cp destino',2)" disabled
+            <select id="mun destino" class="form-select" (change)="maestraCP($event,'cp destino',2,true)" disabled
               [class.marcar-error]="validarCampo('mun destino') && error">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let opt of municipiosDestino" [value]='opt.codigoMunicipio'>{{opt.nombre}}</option>
@@ -219,10 +219,10 @@
           </td>
           <td><!-- SELECT RUTA ACTIVA -->
             <select [(ngModel)]="rutaNueva.ruta_activa" name="ruta_activa" class="form-select"
-              [class.marcar-error]="!rutaNueva.ruta_activa && error">
+              [class.marcar-error]="!rutaNueva.ruta_activa && error" (change)="estadoRuta(rutaNueva.ruta_activa,undefined)">
               <option [value]='null'>Seleccione una opción</option>
-              <option value='1'>Si</option>
-              <option value='2'>No</option>
+              <option [value]='true'>Si</option>
+              <option [value]='false'>No</option>
             </select>
           </td>
           <td><!-- [class.marcar-error]="!rutaNueva.n_resolucion_bd && error" -->
