@@ -50,20 +50,17 @@ export class RutasComponent implements OnInit {
   errorRutas: boolean = false
 
   page: number = 1; // Variable para controlar la página actual
-  paginadorReportes: Paginador<any>
-  /* paginadorParadas?: Paginador<any> */
   private readonly paginaInicial = 1;
   private readonly limiteInicial = 5;
 
   constructor(private servicioArchivos: ServicioArchivos, private servicioTerminales: TerminalesService) {
     this.rutaNueva = this.inicializarRutaNueva()
-    this.paginadorReportes = new Paginador<any>(this.listarRutas)
   }
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('UsuarioVigia')!)
     this.rol = JSON.parse(localStorage.getItem('rolVigia')!);
-    this.paginadorReportes.inicializar(this.paginaInicial, this.limiteInicial, {})
+    this.listarRutas()
     this.maestraDepartamentos()
     this.maestraTipoLlegadas();
   }
@@ -81,23 +78,21 @@ export class RutasComponent implements OnInit {
     };
   }
 
-  listarRutas = (pagina: number, limite: number, filtros?: Ruta) => { //listamos las rutas que vienen de base de datos
-    return new Observable<Paginacion>(sub => {
-      this.servicioTerminales.listarRutas(pagina, limite, filtros).subscribe({
-        next: (respuesta) => {
-          this.rutas = respuesta.rutas
-          sub.next(respuesta.paginacion)
-          if (this.rutas) {
-            for (let i = 0; i < this.rutas.length; i++) {//RECORREMOS LAS RUTAS
-              if (this.rutas[i].tipo_llegada_id) {//COMPROBAMOS QUE EXISTA UN TIPO DE LLEGADA Y SI EXISTE
-                this.maestraDireccion(this.rutas[i].tipo_llegada_id, i)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
-              }
+  listarRutas(){
+    this.servicioTerminales.listarRutas().subscribe({
+      next: (respuesta) => {
+        this.rutas = respuesta.rutas
+        if (this.rutas) {
+          for (let i = 0; i < this.rutas.length; i++) {//RECORREMOS LAS RUTAS
+            if (this.rutas[i].tipo_llegada_id) {//COMPROBAMOS QUE EXISTA UN TIPO DE LLEGADA Y SI EXISTE
+              this.maestraDireccion(this.rutas[i].tipo_llegada_id,this.rutas[i].cp_destino_codigo, i)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
             }
           }
         }
-      })
+      }
     })
   }
+
   consultarInformacionRuta(id_ruta: number) { //Consultamos paradas y clases de la ruta seleccionada
     console.log(id_ruta)
     this.rutaId = id_ruta
@@ -142,7 +137,7 @@ export class RutasComponent implements OnInit {
     }
   }
 
-  maestraCP(event: any, nombre: string, tipo: number) { // MAESTRA DE CENTROS POBLADOS
+  maestraCP(event: any, nombre: string, tipo: number,cambio?:boolean) { // MAESTRA DE CENTROS POBLADOS
     let codigoMunicipio
     if (event === 'null' || event === null) {
       codigoMunicipio = 'null'
@@ -158,17 +153,26 @@ export class RutasComponent implements OnInit {
           //console.log(respuesta)
           selectElement.disabled = false
           if (tipo === 1) { this.centroPobladoOrigen = respuesta.respuestaCentrosPoblados }
-          if (tipo === 2) { this.centroPobladoDestino = respuesta.respuestaCentrosPoblados }
+          if (tipo === 2) {
+            this.centroPobladoDestino = respuesta.respuestaCentrosPoblados
+            if(cambio){
+              this.rutaNueva.centro_poblado_destino = null
+              this.rutaNueva.tipo_llegada = null
+              this.rutaNueva.direccion = null
+            }
+          }
         }
       })
     } else {
       selectElement.disabled = true;
       if (tipo === 1) { this.centroPobladoOrigen = [], this.rutaNueva.centro_poblado_origen = null }
       if (tipo === 2) {
-        this.centroPobladoDestino = [], this.rutaNueva.centro_poblado_destino = null
+        this.centroPobladoDestino = [],
+        this.rutaNueva.centro_poblado_destino = null
+        this.rutaNueva.tipo_llegada = null
         if(this.rutaNueva.centro_poblado_destino === null || this.rutaNueva.centro_poblado_destino === 'null'){
-          this.rutaNueva.tipo_llegada = null
-          console.log(this.rutaNueva)
+
+          //console.log(this.rutaNueva)
           //this.rutaNueva.direccion = null
         }
       }
@@ -192,6 +196,7 @@ export class RutasComponent implements OnInit {
         next: (respuesta: any) => {
           //console.log(respuesta)
           if (index !== undefined) {
+            //console.log(respuesta)
             this.rutas[index].direcciones = [];
             if(respuesta.respuestaDirecciones.length > 0){
               this.rutas[index].direcciones = respuesta.respuestaDirecciones
@@ -243,25 +248,28 @@ export class RutasComponent implements OnInit {
   agregarRuta() {
     console.log(this.rutaNueva);
     if (this.validarCampos(this.rutaNueva)) {
-      /* this.rutas.push({
-        departamento_origen: null,
-        municipio_origen: null,
-        cp_origen: this.rutaNueva.centro_poblado_origen,
-        departamento_destino: null,
-        municipio_destino: null,
-        cp_destino: this.rutaNueva.centro_poblado_destino,
-        tipo_llegada_id: this.rutaNueva.tipo_llegada,
-        direccion_id: this.rutaNueva.direccion,
+      const JSONRutaNueva = {
+        centroPobladoOrigen: this.rutaNueva.centro_poblado_origen,
+        centroPobladoDestino: this.rutaNueva.centro_poblado_destino,
+        tipoLLegada: this.rutaNueva.tipo_llegada,
+        direccion: this.rutaNueva.direccion,
         via: this.rutaNueva.via,
-        ruta_activa: this.rutaNueva.ruta_activa,
-        resolucion: this.rutaNueva.n_resolucion_actual,
-        corresponde: null,
-        resolucion_actual: this.rutaNueva.n_resolucion_actual,
-        direccion_territorial: this.rutaNueva.dir_territorial,
+        rutaHabilitada: this.rutaNueva.ruta_activa,
+        corresponde:1,
+        resolucion:this.rutaNueva.n_resolucion_actual,
+        resolucionActual: this.rutaNueva.n_resolucion_actual,
+        direccionTerritorial: this.rutaNueva.dir_territorial,
         documento: this.rutaNueva.nombreDocumento,
-        nombre_original: this.rutaNueva.nombreOriginal,
-        ruta_archivo: this.rutaNueva.ruta
-      }); */
+        nombreOriginal: this.rutaNueva.nombreOriginal,
+        rutaArchivo: this.rutaNueva.ruta
+    }
+      this.servicioTerminales.crearRuta(JSONRutaNueva).subscribe({
+        next: (respuesta: any) => {
+          console.log('JSONRutaNueva: ',JSONRutaNueva)
+          console.log('respuesta: ', respuesta)
+        }
+      })
+      /* this.rutas.push(); */
       this.rutaNueva = this.inicializarRutaNueva()
       this.estadoAgregarRuta(false)
       this.manejarCambios()
@@ -354,6 +362,13 @@ export class RutasComponent implements OnInit {
         this.rutas[index].estado = true
       }
       this.manejarCambios()
+    }else{
+      if (estado === 'false') {
+        this.rutaNueva.ruta_activa = false
+      } else if (estado === 'true') {
+        this.rutaNueva.ruta_activa = true
+      }
+      //console.log(this.rutaNueva.ruta_activa)
     }
   }
 
