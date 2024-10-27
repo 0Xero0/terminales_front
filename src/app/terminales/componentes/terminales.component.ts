@@ -4,6 +4,8 @@ import { Paradas } from '../modelos/paradas';
 import { Clases } from '../modelos/clases';
 import { Usuario } from 'src/app/usuarios/modelos/Usuario';
 import { TerminalesService } from '../servicios/terminales.service';
+import { ReplaySubject } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-terminales',
@@ -24,9 +26,9 @@ export class TerminalesComponent implements OnInit {
   paradas: Array<Paradas> = []
   clases: Array<Clases> = []
 
-  selectedValue:any
-  inputValue:any
-  opciones: Array<any> = [{codigo:1, nombre:'opción 1'},{codigo:2, nombre:'opción 2'}]
+  selectedValue: any
+  inputValue: any
+  opciones: Array<any> = [{ codigo: 1, nombre: 'opción 1' }, { codigo: 2, nombre: 'opción 2' }]
 
   constructor(private servicioTerminales: TerminalesService) {
     this.usuario = JSON.parse(localStorage.getItem('UsuarioVigia')!)
@@ -53,28 +55,12 @@ export class TerminalesComponent implements OnInit {
 
   recibirRutas(rutas: Ruta[]) {
     this.rutas = rutas
-    if (this.rutas.length < 0) {
-      // Convertimos array1 a un mapa para facilitar la búsqueda por id
-      const arrayRutasMap = new Map(this.rutas.map(item => [item.id_ruta, item]));
-      // Iteramos sobre array2 para comparar y actualizar/agregar en array1
-      rutas.forEach((item2:Ruta) => {
-        const item1 = arrayRutasMap.get(item2.id_ruta);
-
-        if (item1) {
-          // Si el item ya existe en array1 (se encontró por id), lo actualizamos
-          Object.assign(item1, item2);
-        } else {
-          // Si no existe, lo agregamos al array1
-          this.rutas.push(item2);
-        }
-      });
-    }
     console.log('Rutas: ', this.rutas)
   }
 
   recibirParada(paradas: any) {
     this.paradas = paradas
-    console.log('Paradas: ', this.paradas)
+    //console.log('Paradas: ', this.paradas)
   }
 
   recibirClases(clases: any) {
@@ -82,7 +68,45 @@ export class TerminalesComponent implements OnInit {
     //console.log('Clases: ', this.clases)
   }
 
-  guardar() { }
+  guardar() {
+    let JSONTerminales:{Rutas:Array<any>} = {Rutas:[]}
+    let JSONRutas: Array<any> = []
+    for (let ruta of this.rutas) {
+      JSONRutas.push({
+        id: ruta.id,
+        idRuta: ruta.id_ruta,
+        idUnicoRuta: ruta.id_unico_ruta,
+        centroPobladoOrigen: ruta.cp_origen_codigo,
+        centroPobladoDestino: ruta.cp_destino_codigo,
+        tipoLLegada: ruta.tipo_llegada_id,
+        direccion: ruta.direccion_id,
+        via: ruta.via,
+        rutaHabilitada: ruta.estado,
+        corresponde: ruta.corresponde,
+        resolucionActual: ruta.resolucion_actual,
+        direccionTerritorial: ruta.direccion_territorial,
+        documento: ruta.documento,
+        nombreOriginal: ruta.nombre_original,
+        rutaArchivo: ruta.ruta_archivo
+
+      })
+    }
+    JSONTerminales = {Rutas:JSONRutas}
+    console.log(JSONTerminales)
+    Swal.fire({
+      icon: 'info',
+      allowOutsideClick: false,
+      text: 'Espere por favor...',
+    });
+    Swal.showLoading(null);
+    this.servicioTerminales.guardar(JSONTerminales).subscribe({
+      next: (respuesta:any) => {
+        Swal.fire({ icon: 'success', titleText: '¡Guardado exitosamente!' });
+        console.log(respuesta)
+        this.hayCambios = false
+      }
+    })
+  }
 
   enviarST() { }
 

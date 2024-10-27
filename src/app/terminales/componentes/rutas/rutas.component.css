@@ -54,7 +54,8 @@ th, td {
 
 .selected {
   /*background-color: #f0d78371;  Color de fondo para el registro seleccionado */
-  border: 2px solid #004884;
+  border: 2px solid #004884 !important;
+  background-color: #eff5fe;
   color: #004884;
   font-weight: bold; /* O bien un valor numérico */
 }
@@ -66,7 +67,7 @@ th, td {
   background-color: #f0d78371; /* Cambia el color de fondo al pasar el puntero */
 }
 
-.fila td:nth-child(-n+7):hover, /* Aplica el hover solo a los primeros 5 campos */
+.fila td:nth-child(-n+7):hover, /* Aplica el hover solo a los primeros 7 campos */
 .fila:hover td:nth-child(-n+7) {
   /* Cambia el estilo de los primeros 5 campos cuando cualquier campo tiene hover */
   cursor: pointer !important; /* Cambia el cursor a una mano */
@@ -83,7 +84,7 @@ th, td {
 }
 
 .marcar-error{
-  border: 1px solid #A80521;
+  border: 2px solid #A80521 !important;
 }
 
 .sin-registros{
@@ -181,7 +182,7 @@ input[type="file"]{
   align-items: center;
   outline: none;
   border: none;
-  background-color: white;
+  background-color: transparent;
   font-size: 20px;
 }
 

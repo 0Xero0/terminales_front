@@ -17,12 +17,14 @@
                 <th style="width: 200px;"><span class="fs-14px">Centro poblado</span></th>
                 <th style="width: 200px;"><span class="fs-14px">Tipo de llegada</span></th>
                 <th style="width: 200px;"><span class="fs-14px">Dirección</span></th>
+                <th style="width: 60px;" *ngIf="!verificacionVisible"></th>
+                <th style="width: 60px;" *ngIf="!verificacionVisible"></th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let parada of paradas; let i = index">
+              <tr *ngFor="let parada of paradas | paginate: { itemsPerPage: 5, currentPage: pageParadas, id:'Paradas' }; let i = index">
                 <td>{{parada.parada_id}}</td>
-                <td>
+                <td><!-- SELECT DEPARTAMENTOS -->
                   <select [(ngModel)]="parada.codigo_departamento" name="" [id]="'dep'+i" class="form-select"
                     (change)="maestraMunicipios(parada.codigo_departamento,'municipio'+i,i,true)">
                     <option [value]="null">Seleccione una opción</option>
@@ -30,45 +32,113 @@
                       {{departamento.nombre}}</option>
                   </select>
                 </td>
-                <td>
+                <td><!-- SELECT MUNICIPIOS -->
                   <select [(ngModel)]="parada.codigo_municipio" name="" [id]="'municipio'+i" class="form-select"
                     [disabled]="parada.codigo_departamento === null"
-                    (change)="maestraCP(parada.codigo_municipio,'cp'+i,i,true)">
+                    (change)="maestraCP(parada.codigo_municipio,i,true)">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let municipio of parada.municipios" [value]="municipio.codigoMunicipio">
                       {{municipio.nombre}}</option>
                   </select>
                 </td>
-                <td>
+                <td><!-- SELECT CENTRO POBLADO -->
                   <select [(ngModel)]="parada.codigo_cp" name="" [id]="'cp'+i" class="form-select"
-                    [disabled]="parada.codigo_municipio === null">
+                    [disabled]="parada.codigo_municipio === null" (change)="manejarTipoLlegada(parada.codigo_cp,i)">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let centroPoblado of parada.centrosPoblados"
                       [value]="centroPoblado.codigoCentroPoblado">{{centroPoblado.nombre}}</option>
                   </select>
                 </td>
-                <td>
+                <td><!-- SELECT TIPO DE LLEGADA -->
                   <select [(ngModel)]="parada.tipo_llegada_id" name="" [id]="'tp'+i" class="form-select"
-                    (change)="maestraDireccion(parada.tipo_llegada_id,parada.codigo_cp,true)">
+                    (change)="maestraDireccion(parada.tipo_llegada_id,parada.codigo_cp,i,true)"
+                    [disabled]="parada.codigo_cp === null">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let tipo of tiposLlegada" [value]="tipo.id">{{tipo.descripcion}}</option>
                   </select>
                 </td>
-                <td>
+                <td><!-- SELECT DIRECCIONES -->
                   <select [(ngModel)]="parada.direccion_id" name="" [id]="'dir'+i" class="form-select"
-                    [disabled]="parada.tipo_llegada_id === null">
+                    [disabled]="parada.tipo_llegada_id === null"
+                    (change)="manejarDirecciones($event,parada.tipo_llegada_id,parada.codigo_cp,i)">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let direccion of parada.direcciones" [value]="direccion.id">
                       {{direccion.descripcion}}</option>
+                    <option value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal -->
                   </select>
+                </td>
+                <td *ngIf="!verificacionVisible"></td>
+                <td *ngIf="!verificacionVisible"></td>
+              </tr>
+              <tr *ngIf="paradas.length <= 0">
+                <td colspan="9">
+                  <h6 class="sin-registros"> -- No hay Paradas para mostrar. --</h6>
                 </td>
               </tr>
               <!-- ///////////// BOTÓN PARA HABILITAR EL AGREGAR NUEVA RUTA -->
               <tr *ngIf="!verificacionVisible">
                 <td colspan="18">
-                  <button type="button" class="boton primario relleno"><!-- (click)="estadoAgregarRuta(true)" -->
-                    Agregar ruta <i class="bi bi-plus-circle"></i>
+                  <button type="button" class="boton primario relleno" (click)="estadoAgregarParada(true)">
+                    Agregar parada <i class="bi bi-plus-circle"></i>
                   </button>
+                </td>
+              </tr>
+              <!-- //////////// AGREGAR NUEVA PARADA ///////////////////// -->
+              <tr *ngIf="!verificacionVisible && paradaNuevaHabilitada">
+                <td>{{nuevaParada!.parada_id}}</td>
+                <td><!-- SELECT DEPARTAMENTOS -->
+                  <select [(ngModel)]="nuevaParada.codigo_departamento" name="" id="depN" class="form-select"
+                    (change)="maestraMunicipios(nuevaParada!.codigo_departamento,'municipioN',undefined,true)"
+                    [class.marcar-error]="!nuevaParada.codigo_departamento && error">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option *ngFor="let departamento of departamentos" [value]="departamento.codigoDepartamento">
+                      {{departamento.nombre}}</option>
+                  </select>
+                </td>
+                <td><!-- SELECT MUNICIPIOS -->
+                  <select [(ngModel)]="nuevaParada!.codigo_municipio" name="" [id]="'municipioN'" class="form-select"
+                    [disabled]="nuevaParada.codigo_departamento === null || nuevaParada.codigo_departamento === 'null'"
+                    (change)="maestraCP(nuevaParada!.codigo_municipio,undefined,true)"
+                    [class.marcar-error]="!nuevaParada.codigo_municipio && error">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option *ngFor="let municipio of municipios" [value]="municipio.codigoMunicipio">
+                      {{municipio.nombre}}</option>
+                  </select>
+                </td>
+                <td><!-- SELECT CENTRO POBLADO -->
+                  <select [(ngModel)]="nuevaParada!.codigo_cp" name="" [id]="'cpN'" class="form-select"
+                    [disabled]="nuevaParada.codigo_municipio === null" [class.marcar-error]="!nuevaParada.codigo_cp && error"
+                    (change)="manejarTipoLlegada(nuevaParada.codigo_cp,undefined)">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option *ngFor="let centroPoblado of centrosPoblados" [value]="centroPoblado.codigoCentroPoblado">
+                      {{centroPoblado.nombre}}</option>
+                  </select>
+                </td>
+                <td><!-- SELECT TIPO DE LLEGADA -->
+                  <select [(ngModel)]="nuevaParada!.tipo_llegada_id" name="" [id]="'tpN'" class="form-select"
+                    [disabled]="nuevaParada.codigo_cp === null" [class.marcar-error]="!nuevaParada.tipo_llegada_id && error"
+                    (change)="maestraDireccion(nuevaParada!.tipo_llegada_id,nuevaParada!.codigo_cp,undefined,true)">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option *ngFor="let tipo of tiposLlegada" [value]="tipo.id">{{tipo.descripcion}}</option>
+                  </select>
+                </td>
+                <td><!-- SELECT DIRECCIONES -->
+                  <select [(ngModel)]="nuevaParada!.direccion_id" name="" [id]="'dirN'" class="form-select"
+                    [disabled]="nuevaParada!.tipo_llegada_id === null" [class.marcar-error]="!nuevaParada.direccion_id && error"
+                    (change)="manejarDirecciones($event,nuevaParada.tipo_llegada_id,nuevaParada.codigo_cp)">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option *ngFor="let direccion of direcciones" [value]="direccion.id">{{direccion.descripcion}}
+                    </option>
+                    <option value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal -->
+                  </select>
+                </td>
+                <td>
+                  <button (click)="agregarNuevaParada()" type="button" class="eliminar-ruta fw-semibold"><i
+                      class="bi bi-floppy"></i></button>
+                </td>
+                <td>
+                  <button (click)="estadoAgregarParada(false)" type="button" class="eliminar-ruta fw-semibold"><i
+                      class="bi bi-trash"></i></button>
                 </td>
               </tr>
               <!-- //////////// AGREGAR NUEVA PARADA ///////////////////// -->
@@ -77,13 +147,17 @@
         </ng-template>
       </div>
       <div class="d-flex justify-content-end" style="margin-right: 20px;">
-        <ngb-pagination [collectionSize]="paginadorParadas!.totalRegistros ?? 0" [page]="paginadorParadas!.pagina"
+        <!-- Paginador -->
+        <pagination-controls class="pagination-controls" (pageChange)="pageParadas = $event" previousLabel="Ant."
+          nextLabel="Sig." [maxSize]="7" [directionLinks]="true" [autoHide]="false" #paginador2 id="Paradas">
+        </pagination-controls>
+        <!-- <ngb-pagination [collectionSize]="paginadorParadas!.totalRegistros ?? 0" [page]="paginadorParadas!.pagina"
           [pageSize]="paginadorParadas!.limite" (pageChange)="paginadorParadas!.cambiarPagina($event)" [maxSize]="5">
           <ng-template ngbPaginationFirst>Prim.</ng-template>
           <ng-template ngbPaginationLast>Ult.</ng-template>
           <ng-template ngbPaginationPrevious>Ant.</ng-template>
           <ng-template ngbPaginationNext>Sig.</ng-template>
-        </ngb-pagination>
+        </ngb-pagination> -->
       </div>
     </div>
   </div>

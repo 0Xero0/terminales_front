@@ -11,6 +11,25 @@
   font-weight: 600;
 }
 
+.eliminar-ruta{
+  display: flex;
+  align-items: center;
+  outline: none;
+  border: none;
+  background-color: white;
+  font-size: 25px;
+  color: #004884;
+}
+
+.marcar-error{
+  border: 2px solid #A80521 !important;
+}
+
+.sin-registros{
+  margin-left: 40px;
+  margin-top: 20px;
+}
+
 /* .boton-agregar{
   margin-bottom: 10px;
   margin-left: 10px;
