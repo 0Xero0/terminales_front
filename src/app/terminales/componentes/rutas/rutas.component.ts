@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { Paginador } from 'src/app/administrador/modelos/compartido/Paginador';
 import { Observable } from 'rxjs';
 import { Paginacion } from 'src/app/compartido/modelos/Paginacion';
+import { validarCampos } from '../validadores/validar-campos';
 
 @Component({
   selector: 'app-rutas',
@@ -49,9 +50,9 @@ export class RutasComponent implements OnInit {
   error: boolean = false
   errorRutas: boolean = false
 
-  page: number = 1; // Variable para controlar la página actual
-  private readonly paginaInicial = 1;
-  private readonly limiteInicial = 5;
+  termino: any
+
+  pageRutas: number = 1; // Variable para controlar la página actual
 
   constructor(private servicioArchivos: ServicioArchivos, private servicioTerminales: TerminalesService) {
     this.rutaNueva = this.inicializarRutaNueva()
@@ -78,14 +79,14 @@ export class RutasComponent implements OnInit {
     };
   }
 
-  listarRutas(){
+  listarRutas() {
     this.servicioTerminales.listarRutas().subscribe({
       next: (respuesta) => {
         this.rutas = respuesta.rutas
         if (this.rutas) {
           for (let i = 0; i < this.rutas.length; i++) {//RECORREMOS LAS RUTAS
             if (this.rutas[i].tipo_llegada_id) {//COMPROBAMOS QUE EXISTA UN TIPO DE LLEGADA Y SI EXISTE
-              this.maestraDireccion(this.rutas[i].tipo_llegada_id,this.rutas[i].cp_destino_codigo, i)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
+              this.maestraDireccion(this.rutas[i].tipo_llegada_id, this.rutas[i].cp_destino_codigo, i)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
             }
           }
         }
@@ -137,7 +138,7 @@ export class RutasComponent implements OnInit {
     }
   }
 
-  maestraCP(event: any, nombre: string, tipo: number,cambio?:boolean) { // MAESTRA DE CENTROS POBLADOS
+  maestraCP(event: any, nombre: string, tipo: number, cambio?: boolean) { // MAESTRA DE CENTROS POBLADOS
     let codigoMunicipio
     if (event === 'null' || event === null) {
       codigoMunicipio = 'null'
@@ -155,7 +156,7 @@ export class RutasComponent implements OnInit {
           if (tipo === 1) { this.centroPobladoOrigen = respuesta.respuestaCentrosPoblados }
           if (tipo === 2) {
             this.centroPobladoDestino = respuesta.respuestaCentrosPoblados
-            if(cambio){
+            if (cambio) {
               this.rutaNueva.centro_poblado_destino = null
               this.rutaNueva.tipo_llegada = null
               this.rutaNueva.direccion = null
@@ -168,9 +169,9 @@ export class RutasComponent implements OnInit {
       if (tipo === 1) { this.centroPobladoOrigen = [], this.rutaNueva.centro_poblado_origen = null }
       if (tipo === 2) {
         this.centroPobladoDestino = [],
-        this.rutaNueva.centro_poblado_destino = null
+          this.rutaNueva.centro_poblado_destino = null
         this.rutaNueva.tipo_llegada = null
-        if(this.rutaNueva.centro_poblado_destino === null || this.rutaNueva.centro_poblado_destino === 'null'){
+        if (this.rutaNueva.centro_poblado_destino === null || this.rutaNueva.centro_poblado_destino === 'null') {
 
           //console.log(this.rutaNueva)
           //this.rutaNueva.direccion = null
@@ -189,7 +190,7 @@ export class RutasComponent implements OnInit {
   }
 
   maestraDireccion(tipo_llegada_id: any, cp_destino_codigo: any, index?: any, cambio?: boolean) { // MAESTRA DE DIRECCIONES
-    console.log(index, tipo_llegada_id)
+    //console.log(index, tipo_llegada_id)
     const idLlegada = tipo_llegada_id
     if (idLlegada !== 'null') {
       this.servicioTerminales.maestraDirecciones(tipo_llegada_id, cp_destino_codigo).subscribe({
@@ -198,12 +199,14 @@ export class RutasComponent implements OnInit {
           if (index !== undefined) {
             //console.log(respuesta)
             this.rutas[index].direcciones = [];
-            if(respuesta.respuestaDirecciones.length > 0){
+            if (respuesta.respuestaDirecciones.length > 0) {
               this.rutas[index].direcciones = respuesta.respuestaDirecciones
-            }else{this.rutas[index].direccion_id = null}
+            } else { this.rutas[index].direccion_id = null }
             this.rutas[index].tipo_llegada_id = idLlegada
-            if (cambio) { this.rutas[index].direccion_id = null }
-            this.manejarCambios()
+            if (cambio) {
+              this.rutas[index].direccion_id = null
+              this.manejarCambios()
+            }
           } else {
             this.direcciones = []; this.rutaNueva.direccion = null
             this.direcciones = respuesta.respuestaDirecciones
@@ -216,12 +219,12 @@ export class RutasComponent implements OnInit {
         this.rutas[index].tipo_llegada_id = null;
         this.rutas[index].direccion_id = null
         this.rutas[index].direcciones = []
-        this.manejarCambios()
+        if (cambio) { this.manejarCambios() }
       } else {
         this.rutaNueva.direccion = null;
         this.rutaNueva.tipo_llegada = null;
         this.direcciones = []
-        console.log( this.rutaNueva.direccion, this.rutaNueva.tipo_llegada)
+        console.log(this.rutaNueva.direccion, this.rutaNueva.tipo_llegada)
       }
     }
 
@@ -237,7 +240,7 @@ export class RutasComponent implements OnInit {
     this.rutaSeleccionada = index;
 
     // Consultar la información en la base de datos
-    this.consultarInformacionRuta(Number(ruta.id_ruta));
+    this.consultarInformacionRuta(Number(ruta.id_unico_ruta));
   }
 
   estadoAgregarRuta(estado: boolean) {
@@ -247,7 +250,7 @@ export class RutasComponent implements OnInit {
 
   agregarRuta() {
     console.log(this.rutaNueva);
-    if (this.validarCampos(this.rutaNueva)) {
+    if (validarCampos(this.rutaNueva)) {
       const JSONRutaNueva = {
         centroPobladoOrigen: this.rutaNueva.centro_poblado_origen,
         centroPobladoDestino: this.rutaNueva.centro_poblado_destino,
@@ -255,18 +258,19 @@ export class RutasComponent implements OnInit {
         direccion: this.rutaNueva.direccion,
         via: this.rutaNueva.via,
         rutaHabilitada: this.rutaNueva.ruta_activa,
-        corresponde:1,
-        resolucion:this.rutaNueva.n_resolucion_actual,
+        corresponde: 1,
+        resolucion: this.rutaNueva.n_resolucion_actual,
         resolucionActual: this.rutaNueva.n_resolucion_actual,
         direccionTerritorial: this.rutaNueva.dir_territorial,
         documento: this.rutaNueva.nombreDocumento,
         nombreOriginal: this.rutaNueva.nombreOriginal,
         rutaArchivo: this.rutaNueva.ruta
-    }
+      }
       this.servicioTerminales.crearRuta(JSONRutaNueva).subscribe({
         next: (respuesta: any) => {
-          console.log('JSONRutaNueva: ',JSONRutaNueva)
+          console.log('JSONRutaNueva: ', JSONRutaNueva)
           console.log('respuesta: ', respuesta)
+          this.listarRutas()
         }
       })
       /* this.rutas.push(); */
@@ -292,8 +296,10 @@ export class RutasComponent implements OnInit {
       if (index) {
         this.rutas[index].direccion_id = Number(valorSeleccionado)
         this.manejarCambios()
-      } else { }
-      this.rutaNueva.direccion = Number(valorSeleccionado)
+      } else {
+        this.rutaNueva.direccion = Number(valorSeleccionado)
+      }
+
     }
   }
   abrirModalConSwal(tipo_llegada_id: number, cp_destino: string, index?: number) {
@@ -362,7 +368,7 @@ export class RutasComponent implements OnInit {
         this.rutas[index].estado = true
       }
       this.manejarCambios()
-    }else{
+    } else {
       if (estado === 'false') {
         this.rutaNueva.ruta_activa = false
       } else if (estado === 'true') {
@@ -379,6 +385,9 @@ export class RutasComponent implements OnInit {
       this.removeFile(1, index)
     } else {
       this.rutas[index].corresponde = Number(idCorresponde)
+      if (Number(idCorresponde) === 1) {
+        this.rutas[index].resolucion_actual = this.rutas[index].resolucion
+      }
     }
     this.manejarCambios()
   }
@@ -388,12 +397,18 @@ export class RutasComponent implements OnInit {
     this.manejarCambios()
   }
 
-  manejarTipoLlegadaNueva(){
-    if(this.rutaNueva.centro_poblado_destino === null || this.rutaNueva.centro_poblado_destino === 'null'){
+  manejarTipoLlegadaNueva() {
+    if (this.rutaNueva.centro_poblado_destino === null || this.rutaNueva.centro_poblado_destino === 'null') {
       //this.rutaNueva.centro_poblado_destino = null
       this.rutaNueva.tipo_llegada = null
       this.rutaNueva.direccion = null
     }
+  }
+
+  filtrar() {
+    const encontrado = this.rutas.find(ruta => ruta.id_unico_ruta === this.termino);
+    if (encontrado) { this.rutas = encontrado ? [encontrado] : [] }
+
   }
 
   // MANEJO DE ARCHIVOS //////////////////////////////////////////////////////////////////////////////////
@@ -447,9 +462,9 @@ export class RutasComponent implements OnInit {
     this.manejarCambios()
   }
 
-  descargarArchivo(nombreOriginal: string, nombre: string, ruta: string) { // PENDIENTE POR PONER A FUNCIONAR
+  descargarArchivo(nombreOriginal: string, nombre?: string, ruta?: string) { // PENDIENTE POR PONER A FUNCIONAR
     //console.log(nombre, ruta)
-    this.servicioArchivos.descargarArchivo(nombre, ruta, nombreOriginal)
+    this.servicioArchivos.descargarArchivo(nombre!, ruta!, nombreOriginal)
   }
 
   // VALIDACIONES Y CAMBIOS ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -459,11 +474,6 @@ export class RutasComponent implements OnInit {
     } else {
       return true
     }
-  }
-
-  validarCampos(obj: any): boolean {
-    // Verificamos que todos los valores del objeto sean distintos de null, undefined y no estén vacíos
-    return Object.values(obj).every(value => value !== null && value !== undefined && value !== '');
   }
 
   validarCampo(selectId: string): boolean {
@@ -481,7 +491,7 @@ export class RutasComponent implements OnInit {
     this.rutasGuardar.emit(this.rutas)
     this.paradasGuardar.emit(this.paradas)
     this.clasesGuardar.emit(this.clases)
-    console.log(this.rutas)
+    //console.log(this.rutas)
   }
 
 }

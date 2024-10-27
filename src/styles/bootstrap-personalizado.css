@@ -192,3 +192,14 @@ footer-logo {
 .margen{
   margin-left: 20px !important;
 }
+
+a {
+  color: rgb(0, 102, 255);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a:hover {
+  color: darkblue;
+  text-decoration: underline;
+}

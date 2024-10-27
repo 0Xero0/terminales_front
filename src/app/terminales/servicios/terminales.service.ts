@@ -65,8 +65,8 @@ export class TerminalesService extends Autenticable {
     return this.http.get<{ rutas: Ruta[], paginacion: Paginacion }>(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  listarParadas(ruta_id:number, pagina: number, limite: number, filtros?: any){
-    let endpoint = `/api/v1/terminales/visualizar-paradas?rutaId=${ruta_id}&pagina=${pagina}&limite=${limite}`
+  listarParadas(ruta_id:number, pagina?: number, limite?: number, filtros?: any){
+    let endpoint = `/api/v1/terminales/visualizar-paradas?rutaId=${ruta_id}`
     if(filtros){
       if(filtros.termino) endpoint+=`&filtro=${filtros.termino}`;
     }
@@ -74,7 +74,7 @@ export class TerminalesService extends Autenticable {
   }
 
   listarClases(ruta_id:number, pagina: number, limite: number, filtros?: any){
-    let endpoint = `/api/v1/terminales/visualizar-clases?rutaId=${ruta_id}&pagina=${pagina}&limite=${limite}`
+    let endpoint = `/api/v1/terminales/visualizar-clases?rutaId=${ruta_id}`
     if(filtros){
       if(filtros.termino) endpoint+=`&filtro=${filtros.termino}`;
     }
@@ -91,5 +91,15 @@ export class TerminalesService extends Autenticable {
   crearRuta(JSONRutaNueva:any){
     const endpoint = `/api/v1/terminales/guardar-ruta`
     return this.http.post<any>(`${this.host}${endpoint}`, JSONRutaNueva, { headers: this.obtenerCabeceraAutorizacion() })
+  }
+
+  crearParada(JSONParadaNueva:any){
+    const endpoint = `/api/v1/terminales/guardar-parada`
+    return this.http.post<any>(`${this.host}${endpoint}`, JSONParadaNueva, { headers: this.obtenerCabeceraAutorizacion() })
+  }
+
+  guardar(JSONTerminales:any){
+    const endpoint = `/api/v1/terminales/guardar`
+    return this.http.patch<any>(`${this.host}${endpoint}`, JSONTerminales, { headers: this.obtenerCabeceraAutorizacion() })
   }
 }

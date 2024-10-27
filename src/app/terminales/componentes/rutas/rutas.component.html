@@ -1,3 +1,8 @@
+<hr>
+<div class="d-flex">
+  <input type="text" [(ngModel)]="termino" class="form-control" placeholder="Buscar" (ngOnChange)="filtrar()">
+  {{termino}}
+</div>
 <div class="titulo-ruta">
   <label for="">Rutas</label>
 </div>
@@ -30,7 +35,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="fila" *ngFor="let ruta of rutas | paginate: { itemsPerPage: 5, currentPage: page }; let i = index"
+        <tr class="fila" *ngFor="let ruta of rutas | paginate: { itemsPerPage: 5, currentPage: pageRutas, id:'Ruta' }; let i = index"
           [class.selected]="i === rutaSeleccionada">
           <td (click)="seleccionarRuta(ruta, i)">
             {{ruta.id_unico_ruta}}
@@ -53,7 +58,8 @@
           <td (click)="seleccionarRuta(ruta, i)">
             {{ruta.cp_destino}}
           </td>
-          <td><!-- SELECT TIPO DE LLEGADA -->
+          <td ><!-- (click)="seleccionarRuta(ruta, i)"SELECT TIPO DE LLEGADA -->
+            <!-- {{ruta.tipo_llegada}} -->
             <select [(ngModel)]="ruta.tipo_llegada_id" name="tipo_llegada_{{i}}" class="form-select"
               [class.marcar-error]="!ruta.tipo_llegada_id && errorRutas"
               (change)="maestraDireccion(ruta.tipo_llegada_id,ruta.cp_destino_codigo, i, true)">
@@ -61,19 +67,21 @@
               <option *ngFor="let opt of tipoLlegada" [value]='opt.id'>{{opt.descripcion}}</option>
             </select>
           </td>
-          <td><!-- SELECT DIRECCIONES -->
+          <td ><!-- (click)="seleccionarRuta(ruta, i)"SELECT DIRECCIONES -->
+            <!-- {{ruta.direccion}} -->
             <select [(ngModel)]="ruta.direccion_id" name="direccion_{{i}}" class="form-select"
               (change)="manejarDirecciones($event,ruta.tipo_llegada_id,ruta.cp_destino_codigo,i)"
               [disabled]="ruta.tipo_llegada_id === null">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let direccion of ruta.direcciones" [value]='direccion.id'>{{direccion.descripcion}}
               </option>
-              <option value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal -->
+              <option value="abrirModal">Añadir nueva dirección</option> Opción para abrir el modal
             </select>
           </td>
-          <td style="width: 130px;">
-            <input [(ngModel)]="ruta.via" name="via_{{i}}" type="text" class="form-control" (change)="manejarCambios()"
-              placeholder="-">
+          <td  style="width: 130px;"><!-- (click)="seleccionarRuta(ruta, i)" VIA -->
+            {{ruta.via}}
+            <!-- <input [(ngModel)]="ruta.via" name="via_{{i}}" type="text" class="form-control" (change)="manejarCambios()"
+              placeholder="-"> -->
           </td>
           <td>
             <select [(ngModel)]="ruta.estado" name="ruta_activa_{{i}}" class="form-select"
@@ -94,13 +102,10 @@
           </td>
           <td>
             <input [(ngModel)]="ruta.resolucion_actual" name="n_resolucion_actual_{{i}}" type="text"
-              class="form-control" [disabled]="ruta.corresponde === null || ruta.corresponde === 1"
-              placeholder="-">
+              class="form-control" [disabled]="ruta.corresponde === null || ruta.corresponde === 1" placeholder="-">
           </td>
           <td>{{ruta.direccion_territorial}}</td>
           <td>
-            <!-- <input [(ngModel)]="ruta.pdf" name="pdf_{{i}}" type="file" class="form-control"
-            [disabled]="ruta.resolucion_corresponde === null || ruta.resolucion_corresponde === 1"> -->
             <label class="input-archivo d-flex" [for]="'Archivo'+i"
               [ngClass]="{'disabled': ruta.corresponde === null || ruta.corresponde === 1 || !editable}">
               <div class="boton-adjuntar d-flex align-items-center justify-content-center">Seleccionar archivo</div>
@@ -120,6 +125,10 @@
                 (change)="guardarArchivo($event,i,1,5)"
                 [disabled]="ruta.corresponde === null || ruta.corresponde === 1 || !editable">
             </label>
+            <a href="" *ngIf="ruta.nombre_original" class="a"
+              (click)="descargarArchivo(ruta.nombre_original,ruta.documento,ruta.ruta_archivo)">
+              Descargar {{ruta.nombre_original}}
+            </a>
           </td>
           <td *ngIf="verificacionVisible">
             <input type="checkbox">
@@ -146,8 +155,8 @@
         <!-- //////////// AGREGAR NUEVA RUTA ///////////////////// -->
         <tr *ngIf="!verificacionVisible && rutaNuevaHabilitada"><!--  -->
           <td>
-            <input type="text" name="id_ruta" id="" class="form-control"
-               placeholder="-" [disabled]="true"><!-- [class.marcar-error]="!rutaNueva.id_ruta && error" -->
+            <input type="text" name="id_ruta" id="" class="form-control" placeholder="-"
+              [disabled]="true"><!-- [class.marcar-error]="!rutaNueva.id_ruta && error" -->
           </td>
           <td>
             <!-- SELECT DEPARTAMENTOS ORIGEN -->
@@ -219,7 +228,8 @@
           </td>
           <td><!-- SELECT RUTA ACTIVA -->
             <select [(ngModel)]="rutaNueva.ruta_activa" name="ruta_activa" class="form-select"
-              [class.marcar-error]="!rutaNueva.ruta_activa && error" (change)="estadoRuta(rutaNueva.ruta_activa,undefined)">
+              [class.marcar-error]="!rutaNueva.ruta_activa && error"
+              (change)="estadoRuta(rutaNueva.ruta_activa,undefined)">
               <option [value]='null'>Seleccione una opción</option>
               <option [value]='true'>Si</option>
               <option [value]='false'>No</option>
@@ -238,7 +248,7 @@
           </td>
           <td><!-- INPUT NUMERO RESOLUCION -->
             <!-- [disabled]="rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === '1'" -->
-            <input [(ngModel)]="rutaNueva.n_resolucion_actual" name="n_resolucion_actual" type="number"
+            <input [(ngModel)]="rutaNueva.n_resolucion_actual" name="n_resolucion_actual" type="text"
               class="form-control" [class.marcar-error]="!rutaNueva.n_resolucion_actual && error"
               placeholder="N° de la resolución">
           </td>
@@ -247,15 +257,13 @@
               [class.marcar-error]="!rutaNueva.dir_territorial && error" placeholder="Dirección territorial">
           </td>
           <td><!-- INPUT ARCHIVO -->
-            <!-- <input [(ngModel)]="rutaNueva.pdf" name="pdf" type="file" class="form-control"
-            [disabled]="rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === 1"> // [ngClass]="{'disabled':rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === '1'}"-->
             <label [class.marcar-error]="!rutaNueva.nombreOriginal && error" class="input-archivo d-flex"
               for="adjuntar">
               <div class="boton-adjuntar d-flex align-items-center justify-content-center">Seleccionar archivo</div>
               <div class="archivos">
                 <div class="archivo d-flex" *ngIf="rutaNueva.nombreOriginal">
                   <span class="nombre-archivo">{{ rutaNueva.nombreOriginal
-                    }}</span><!-- [disabled]="rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === 1" -->
+                    }}</span>
                   <button class="eliminar-archivo" (click)="manejarRemoverArchivo(input,$event,2)"><i
                       class="bi bi-trash"></i></button>
                 </div>
@@ -264,10 +272,13 @@
                   <span>Sin archivo seleccionado</span>
                 </div>
               </div>
-              <!-- [disabled]="rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === 1" -->
               <input #input type="file" id="adjuntar" name="adjuntar" accept=".pdf"
                 (change)="guardarArchivo($event,undefined,2,5)">
             </label>
+            <a href="" *ngIf="rutaNueva.nombreOriginal" class="a"
+              (click)="descargarArchivo(rutaNueva.nombreOriginal,rutaNueva.nombreDocumento,rutaNueva.ruta)">
+              Descargar {{rutaNueva.nombreOriginal}}
+            </a>
           </td>
           <td>
             <button (click)="agregarRuta()" type="button" class="eliminar-ruta fw-semibold"><i
@@ -288,14 +299,8 @@
   </div>
   <div class="d-flex justify-content-end" style="margin-right: 20px;">
     <!-- Paginador -->
-    <pagination-controls
-      class="pagination-controls"
-      (pageChange)="page = $event"
-      previousLabel="Ant."
-      nextLabel="Sig."
-      [maxSize]="7"
-      [directionLinks]="true"
-      [autoHide]="false">
+    <pagination-controls class="pagination-controls" (pageChange)="pageRutas = $event" previousLabel="Ant." nextLabel="Sig."
+      [maxSize]="7" [directionLinks]="true" [autoHide]="false" #paginador1 id="Ruta">
     </pagination-controls>
     <!--  <ngb-pagination [collectionSize]="paginadorReportes.totalRegistros ?? 0" [page]="paginadorReportes.pagina"
       [pageSize]="paginadorReportes.limite" (pageChange)="paginadorReportes.cambiarPagina($event)" [maxSize]="5">
