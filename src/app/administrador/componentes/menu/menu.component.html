@@ -3,11 +3,10 @@
     <li class="">
       <img src="assets/img/menu/logo.png" class="logoP">
     </li>
-    <li [routerLinkActive]="'paolo'" [ngClass]="{'modulo':true, 'paolo':SeleccionarMenuP(modulo.ruta) }" *ngFor="let modulo of this.rol.modulos ">
-      <span
-      [ngClass]="{'nombre-modulo':true}"
-      routerLink="/administrar{{modulo.ruta}}"
-      >{{modulo.nombre}}</span>
+    <li [routerLinkActive]="'paolo'" [ngClass]="{'modulo':true, 'paolo':SeleccionarMenuP(modulo.ruta) }"
+      *ngFor="let modulo of this.rol.modulos ">
+      <span class="nombre-modulo" routerLink="/administrar{{modulo.ruta}}"
+        (click)="nombreModuloSeleccionado = modulo.nombre">{{modulo.nombre}}</span>
       <ul class="submodulos" *ngIf="modulo.submodulos">
         <li class="submodulo" *ngFor="let submodulo of modulo.submodulos" (click)="navegarAlSubmodulo(submodulo)">
           <span class="nombre-submodulo ">{{ submodulo.nombre }}</span>
@@ -66,4 +65,13 @@
 </div>
 <div class="linea"></div>
 
-<script></script>
+<nav class="custom-breadcrumb" style="--bs-breadcrumb-divider: '>'; margin-left: 67px;" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a [routerLink]="getPrimeraRutaModulo()" (click)="seleccionarModulo(nombrePrimerModulo)">Inicio</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {{ nombreModuloSeleccionado === 'Inicio' ? 'Inicio' : nombreModuloSeleccionado }}
+    </li>
+  </ol>
+</nav>

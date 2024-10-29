@@ -1,57 +1,68 @@
 <ng-template #modal let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title fs-14px  fw-bolder">¿Olvidó su contraseña?</h4>
-      <button type="button" class="btn-close"  aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  <div class="modal-header">
+    <div class="text-center">
+      <img draggable="false" class="img-fluid logo-supertransporte mb-3" src="assets/img/cabecera/supertransporte.jpg"
+        alt="ministerio-de-transporte">
+      <h4 class="modal-title w-100 text-center" style="font-size: 32px; font-weight: bold; ">¿Olvidó su contraseña?</h4>
     </div>
-    <div class="alert alerta-contraseña alert-dismissible fade show" role="alert">
-      <label class="fs-14px">
-          <span class="fw-bold">Ingrese su usuario y correo electrónico principal</span>
-          registrado en el Sistema de Supervisión al transporte VIGÍA, para iniciar con el proceso de recuperar contraseña.</label>
-    </div>
-    <div class="modal-body">
-      <form  class="d-flex flex-column flex-gap-10" [formGroup]="this.formulario">
-        <div class="row">
-          <div class="col-6">
-            <fieldset>
-              <label for="usuario" class="fw-semibold">Usuario</label>
-              <input class="form-control" formControlName="usuario" type="text" required>
-              <span class="validacion"
-                    *ngIf="this.formulario.controls['usuario'].errors &&
-                    this.formulario.controls['usuario'].dirty && this.formulario.controls['usuario'].errors['required']">
-                    Ingrese su usuario
-                </span>
-              <span class="validacion"
-                    *ngIf="this.formulario.controls['usuario'].errors &&
-                    this.formulario.controls['usuario'].dirty && this.formulario.controls['usuario'].errors['pattern']">
-                    Debe tener almenos 6 dígitos.
-                </span>
-            </fieldset>
-          </div>
-          <div class="col-6">
-            <fieldset>
-              <label for="correo" class="fw-semibold">Correo electrónico  </label>
-              <input class="form-control" formControlName="correo" type="email" required>
-              <span class="validacion"
-              *ngIf="this.formulario.controls['correo'].errors &&
-              this.formulario.controls['correo'].dirty && this.formulario.controls['correo'].errors['required']">
-              Ingrese su correo electronico
-          </span>
-          <span class="validacion"
-              *ngIf="this.formulario.controls['correo'].errors &&
-              this.formulario.controls['correo'].dirty && this.formulario.controls['correo'].errors['email']">
-              Ingrese un correo valido
-          </span>
-            </fieldset>
-          </div>
+    <button type="button" class="btn-close-personalizado" aria-label="Close"
+      (click)="modal.dismiss('Cross click')">X</button>
+  </div>
+  <div class="alert alerta-contraseña alert-dismissible fade show" role="alert">
+    <label class="fs-14px-personal">
+      <span class="fw-bold">Ingrese su usuario y correo electrónico principal</span>
+      registrado en el Sistema de Supervisión al transporte VIGÍA, para iniciar con el proceso de recuperar
+      contraseña.</label>
+  </div>
+  <div class="modal-body">
+    <form class="d-flex flex-column flex-gap-10" [formGroup]="this.formulario">
+      <div class="row">
+        <div class="col-6">
+          <fieldset>
+            <label for="usuario" class="fw-semibold">Usuario</label>
+            <input class="form-control" formControlName="usuario" type="text" required placeholder="Ingrese su usuario">
+            <span class="validacion" *ngIf="this.formulario.controls['usuario'].errors &&
+                  this.formulario.controls['usuario'].dirty && this.formulario.controls['usuario'].errors['required']">
+              Ingrese su usuario
+            </span>
+            <span class="validacion" *ngIf="this.formulario.controls['usuario'].errors &&
+                  this.formulario.controls['usuario'].dirty && this.formulario.controls['usuario'].errors['pattern']">
+              Debe tener almenos 6 dígitos.
+            </span>
+          </fieldset>
         </div>
-      </form>
+        <div class="col-6">
+          <fieldset>
+            <label for="correo" class="fw-semibold">Correo electrónico </label>
+            <input class="form-control" formControlName="correo" type="email" required
+              placeholder="Ingrese su correo electrónico">
+            <span class="validacion" *ngIf="this.formulario.controls['correo'].errors &&
+            this.formulario.controls['correo'].dirty && this.formulario.controls['correo'].errors['required']">
+              Ingrese su correo electronico
+            </span>
+            <span class="validacion" *ngIf="this.formulario.controls['correo'].errors &&
+            this.formulario.controls['correo'].dirty && this.formulario.controls['correo'].errors['email']">
+              Ingrese un correo valido
+            </span>
+          </fieldset>
+        </div>
+      </div>
+    </form>
+  </div>
+  <button type="button" class="boton primario relleno fw-semibold mb-3 d-block mx-auto"
+    (click)="recuperacion()">Enviar</button>
+  <div class="modal-footer d-flex"></div>
+  <div class="container text-center mb-5">
+    <h3 class="fw-bold">Video Tutorial: Cómo establecer o recuperar contraseña en el aplicativo TERMINALES</h3>
+    <div class="d-flex justify-content-center mt-3">
+      <div class="embed-responsive embed-responsive-16by9" style=" border: 5px solid #707070;">
+        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/4zJH7N8OgV4" allowfullscreen></iframe>
+      </div>
     </div>
-    <div class="modal-footer d-flex">
-      <button type="button" class="boton primario relleno ms-auto fw-semibold" (click)="recuperacion()">Enviar</button>
-    </div>
-  </ng-template>
+  </div>
+</ng-template>
 
-  <swal #popupExitoso></swal>
-  <swal #fallido></swal>
+<swal #popupExitoso></swal>
+<swal #fallido></swal>
 
-  <app-popup #popup></app-popup>
+<app-popup #popup></app-popup>
