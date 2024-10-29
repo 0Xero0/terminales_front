@@ -1,34 +1,35 @@
-.fondo{
+.fondo {
   height: 989px;
   max-height: 2160px;
 }
 
-.fondo-imagen{
+.fondo-imagen {
   background-image: url(../../../../assets/img/PNG/fondo1_oscuro.png);
   background-repeat: no-repeat;
-  background-position:center top;
+  background-position: center top;
   background-attachment: fixed;
   background-size: cover;
   height: 400px;
 }
 
-.texto-login{
+.texto-login {
   position: relative;
   top: -23%;
 }
 
-.rectangulo{
-  height: 119px;
+.rectangulo {
+  height: 65px;
   background: #004884 0% 0% no-repeat padding-box;
   opacity: 1;
 }
 
-a,a:hover{
+a,
+a:hover {
   text-decoration: none;
-  color: #3366CC;
+  color: #3366cc;
 }
 
-.informacion{
+.informacion {
   display: flex;
   flex-direction: column;
   justify-content: flex-start; /* Alinea los elementos al inicio del contenedor */
@@ -38,12 +39,13 @@ a,a:hover{
   margin: 70px;
 }
 
-hr{
+hr {
   width: 300px;
   border: 1px solid #707070;
+  margin-left: 35px;
 }
 
-.texto-blanco{
+.texto-blanco {
   color: #ffffff;
   margin-top: 500px;
 }
@@ -52,15 +54,16 @@ hr{
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 420px;
-  height: 700px;
+  width: 400px;
+  height: 600px;
   margin-top: 200px;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
   opacity: 1;
 }
 
 .contenedor-inicio-sesion .card-body {
   width: 100%;
+  height: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -71,56 +74,119 @@ hr{
   padding-bottom: 40px;
 }
 
-.form-control{
+.form-control {
   width: 350px;
 }
 
 #contenedor-enlaces span {
-  color: #3366CC;
+  color: #3366cc;
 }
 
-#contenedor-enlaces{
-margin: 0 auto;
-padding: 2px !important;
+#contenedor-enlaces {
+  margin: 0 auto;
+  padding: 2px !important;
 }
 
-.card-body{
+.card-body {
   height: 650px;
   border-radius: 5px;
   box-shadow: 0px 3px 6px #00000029;
 }
 
-.logo-ministerio img{
+.logo-ministerio img {
   height: 50px;
 }
 .logo-supertransporte {
+  margin-top: -16px;
   height: 100px;
 }
 
-
-.input-error{
+.input-error {
   border-color: red;
 }
 
 .titulo-personalizado {
   text-transform: uppercase; /* Convierte el texto a mayúsculas */
   color: white; /* Color del texto */
-  text-shadow:
-    -1px -1px 0 var(--azul-oscuro),
-    1px -1px 0 var(--azul-oscuro),
-    -1px 1px 0 var(--azul-oscuro),
-    1px 1px 0 var(--azul-oscuro); /* Bordes azules */
+  text-shadow: -1px -1px 0 var(--azul-oscuro), 1px -1px 0 var(--azul-oscuro),
+    -1px 1px 0 var(--azul-oscuro), 1px 1px 0 var(--azul-oscuro); /* Bordes azules */
   /*font-weight: bold; /* Opcional: hace el texto más grueso */
   font-size: 2em; /* Ajusta el tamaño del texto según tus necesidades */
 }
 
-.boton{
+.boton {
   width: 160px;
   height: 43px;
 }
 
 @media (max-width: 1366px) {
   .fondo-imagen {
-    background-attachment:scroll;
+    background-attachment: scroll;
   }
+}
+
+.texto-sesion {
+  width: 301px;
+  height: 39px;
+  text-align: center;
+  font: normal normal bold 32px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #004884;
+  opacity: 1;
+  margin-top: 20px;
+  margin-bottom: -25px;
+  margin-left: 2px;
+}
+.contenedor-formulario {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Alinea los inputs a la izquierda */
+  margin-top: 20px; /* Espacio superior */
+}
+
+.mb-2 {
+  margin-bottom: -0.5rem !important;
+  margin-left: 36px;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+}
+
+.form-control {
+  width: 300px;
+  margin-left: 36px;
+  margin-right: 36px;
+  font-family: "Work Sans", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0px;
+  color: #2e2b2b;
+  opacity: 1;
+}
+.validacion {
+  /* width: 100%; */
+  color: #ac0404;
+  font-size: 12px;
+  margin-left: 36px;
+}
+
+.mb-4 {
+  margin-bottom: 0.5rem !important;
+}
+
+.boton.primario.relleno {
+  background-color: var(--azul);
+  color: white;
+  margin-right: 39px;
+}
+
+.texto-obligatorio {
+  text-align: center;
+  letter-spacing: 0px;
+  color: #acacac;
+  opacity: 1;
+  margin-top: 23px;
+  margin-bottom: -15px;
+  font-size: 14px;
+  font-family: "Work Sans", sans-serif;
 }

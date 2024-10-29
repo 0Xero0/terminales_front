@@ -1,5 +1,42 @@
-.alerta-contraseña{
-width:100%;
-background-color: #A8D8ED;
-border-radius: 0%;
+.alerta-contraseña {
+  width: 100%;
+  background: #e6effd 0% 0% no-repeat padding-box;
+  opacity: 1;
+  border-radius: 0%;
+}
+.titulo-modal-centrado {
+  text-align: center;
+}
+
+.logo-supertransporte {
+  width: 164px;
+  height: 62px;
+  margin: 0 auto;
+  /* margin-top: 0; */
+  margin-left: 230px;
+}
+
+.modal-title {
+  text-align: center;
+  margin-left: 142px;
+  margin-right: auto;
+  font: normal normal bold 32px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #3366cc;
+  opacity: 1;
+}
+
+.modal-header .btn-close-personalizado {
+  padding: calc(var(--bs-modal-header-padding-y) * 0.5)
+    calc(var(--bs-modal-header-padding-x) * 0.5);
+
+  margin-top: -82px;
+  margin-right: -12px;
+  width: -4px;
+  height: 39px;
+}
+.fs-14px-personal {
+  font-size: 14px !important;
+  margin-left: 103px;
+  margin-right: 47px;
 }

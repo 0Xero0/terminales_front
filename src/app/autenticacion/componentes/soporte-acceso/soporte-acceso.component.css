@@ -1,37 +1,200 @@
-.contenedor-formulario{
-    margin-top: var(--alto-barra-navegacion);
-    width: 100%;
-    max-width: 750px;
+.fondo {
+  height: 1289px;
+  max-height: 2160px;
+
+  position: relative;
 }
 
-/* Cabecera */
+.fondo-imagen {
+  background-image: url(../../../../assets/img/PNG/fondo1_oscuro.png);
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-attachment: fixed;
+  background-size: cover;
+  height: 400px;
+}
 
-.navbar{
-    position: fixed;
-    height: var(--alto-barra-navegacion);
-    top: 0;
-    left: 0;
-    z-index: var(--z-index-barra-navegacion);
-    box-shadow: 0px 3px 6px #00000029;
-    background-color: var(--azul-cabecera);
+.texto-login {
+  position: relative;
+  top: -23%;
+}
+
+.rectangulo {
+  height: 65px;
+  background: #004884 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+
+a,
+a:hover {
+  text-decoration: none;
+  color: #3366cc;
+}
+
+.informacion {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Alinea los elementos al inicio del contenedor */
+  width: 553px;
+  height: 700px;
+  text-align: start;
+  margin: 70px;
+}
+
+hr {
+  width: 300px;
+  border: 1px solid #707070;
+}
+
+.texto-blanco {
+  color: #ffffff;
+  margin-top: 500px;
+}
+
+.contenedor-inicio-sesion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 900px;
+  min-height: 950px;
+  margin-top: 200px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  opacity: 1;
+  z-index: 1000;
+}
+
+.contenedor-inicio-sesion .card-body {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  gap: 5px;
+  padding: 0 40px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+#contenedor-enlaces span {
+  color: #3366cc;
+}
+
+#contenedor-enlaces {
+  margin: 0 auto;
+  padding: 2px !important;
+}
+
+.card-body {
+  height: 650px;
+  border-radius: 0px;
+  box-shadow: 0px 3px 6px #00000029;
+}
+
+.logo-ministerio img {
+  height: 50px;
+}
+.logo-supertransporte {
+  margin-top: -16px;
+  height: 100px;
+}
+
+.input-error {
+  border-color: red;
+}
+
+.titulo-personalizado {
+  text-transform: uppercase; /* Convierte el texto a mayúsculas */
+  color: white; /* Color del texto */
+  text-shadow: -1px -1px 0 var(--azul-oscuro), 1px -1px 0 var(--azul-oscuro),
+    -1px 1px 0 var(--azul-oscuro), 1px 1px 0 var(--azul-oscuro); /* Bordes azules */
+  /*font-weight: bold; /* Opcional: hace el texto más grueso */
+  font-size: 2em; /* Ajusta el tamaño del texto según tus necesidades */
+}
+
+.boton {
+  width: 160px;
+  height: 43px;
+}
+
+@media (max-width: 1366px) {
+  .fondo-imagen {
+    background-attachment: scroll;
   }
-  .items:hover{
-  cursor: pointer;
-  }
-  .selector{
-  color:var(--azul-cabecera);
-  }
-  .selector:hover{
-  background-color:transparent;
-  color:#01b3ff;
-  }
-  .material-symbols-outlined{
+}
+
+.texto-sesion {
+  width: 301px;
+  height: 39px;
+  text-align: center;
+  font: normal normal bold 32px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #004884;
+  opacity: 1;
+  margin-top: 20px;
+  margin-bottom: -25px;
+  margin-left: 2px;
+}
+.contenedor-formulario {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Alinea los inputs a la izquierda */
+  margin-top: 20px; /* Espacio superior */
+}
+
+.mb-2 {
+  margin-bottom: -0.5rem !important;
+  margin-left: 36px;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+}
+
+.form-control {
+  min-width: 300px;
+  font-family: "Work Sans", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0px;
+  color: #2e2b2b;
+  opacity: 1;
+}
+.validacion {
+  /* width: 100%; */
+  color: #ac0404;
+  font-size: 12px;
+  margin-left: 36px;
+}
+
+.mb-4 {
+  margin-bottom: 0.5rem !important;
+}
+
+.boton.primario.relleno {
+  background-color: var(--azul);
   color: white;
-  }
-  .icono-usuario{
-    width: 35px;
-    height: 35px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  margin-right: 39px;
+}
+
+.texto-obligatorio {
+  text-align: center;
+  letter-spacing: 0px;
+  color: #acacac;
+  opacity: 1;
+  margin-top: 23px;
+  margin-bottom: -15px;
+  font-size: 14px;
+  font-family: "Work Sans", sans-serif;
+}
+.card {
+  border-radius: 0px !important;
+}
+.alto-textarea {
+  height: 200px;
+}
+
+.pagina {
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 77px;
+}
