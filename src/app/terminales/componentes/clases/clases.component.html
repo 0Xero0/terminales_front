@@ -11,38 +11,99 @@
           <table class="table">
             <thead class="encabezado">
               <tr>
-                <th>Clase</th>
-                <th>Tipo de vehículo</th>
-                <th>Activa</th>
+                <th style="width: 190px;">Clase</th>
+                <th style="width: 500px;">Tipo de vehículo</th>
+                <th style="width: 500px;">Activa</th>
+                <th *ngIf="!verificacionVisible"></th>
+                <th *ngIf="!verificacionVisible"></th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>GRUPO A</td>
+              <tr
+                *ngFor="let clase of clases | paginate: { itemsPerPage: 5, currentPage: pageClases, id:'Clases' };let i = index">
+                <td>{{clase.clase}}</td>
                 <td>
-                  <select name="" id="" class="form-select">
-                    <option value="">Seleccione una opción</option>
+                  <select [(ngModel)]="clase.tipo_vehiculo_id" name="" [id]="'tipoVehiculo'+i" class="form-select"
+                    (change)="manejarTipoVehiculo(clase.tipo_vehiculo_id,i)">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option *ngFor="let Tipo of clase.tipoVehiculo" [value]="Tipo.id">{{Tipo.descripcion}}</option>
                   </select>
                 </td>
                 <td>
-                  <select name="" id="" class="form-select">
+                  <select [(ngModel)]="clase.estado" name="" [id]="'estado'+i" class="form-select"
+                  (change)="manejarEstado(i)">
                     <option [value]="null">Seleccione una opción</option>
-                    <option [value]="1">Si</option>
-                    <option [value]="2">No</option>
+                    <option [value]="true">Si</option>
+                    <option [value]="false">No</option>
                   </select>
+                </td>
+                <td *ngIf="!verificacionVisible"></td>
+                <td *ngIf="!verificacionVisible"></td>
+              </tr>
+              <tr *ngIf="clases.length <= 0">
+                <td colspan="18">
+                  <h6 class="sin-registros"> -- No hay Clases para mostrar. --</h6>
+                </td>
+              </tr>
+              <!-- BOTÓN AGREGAR NUEVA PARADA -->
+              <tr *ngIf="!verificacionVisible">
+                <td colspan="5">
+                  <div class="row boton-agregar">
+                    <label for="" style="font-size: small;">
+                      Dado el caso que haga falta información, debe agregarla.
+                    </label>
+                  </div>
+                  <div class="boton-agregar">
+                    <button type="button" class="boton primario relleno" (click)="estadoAgregarClase(true)">
+                      Agregar Clase <i class="bi bi-plus-circle"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <!-- //////////// AGREGAR NUEVA CLASE ///////////////////// -->
+              <tr *ngIf="!verificacionVisible && claseNuevaHabilitada">
+                <td>
+                  <select [(ngModel)]="nuevaClase.clase_id" name="" id="grupo" class="form-select"
+                    (change)="maestraTipoVehiculo(nuevaClase.clase_id,undefined)"
+                    [class.marcar-error]="!nuevaClase.clase_id && error">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option *ngFor="let grupo of grupos" [value]="grupo.id">{{grupo.descripcion}}</option>
+                  </select>
+                </td>
+                <td>
+                  <select [(ngModel)]="nuevaClase.tipo_vehiculo_id" name="" id="tipoVehiculo" class="form-select"
+                    [disabled]="nuevaClase.clase_id === 'null' || nuevaClase.clase_id === null"
+                    [class.marcar-error]="!nuevaClase.tipo_vehiculo_id && error">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option *ngFor="let Tipo of tiposVehiculos" [value]="Tipo.id">{{Tipo.descripcion}}</option>
+                  </select>
+                </td>
+                <td>
+                  <select [(ngModel)]="nuevaClase.estado" name="" id="estado" class="form-select"
+                    (change)="manejarEstado(undefined)" [class.marcar-error]="!nuevaClase.estado && error">
+                    <option [value]='null'>Seleccione una opción</option>
+                    <option [value]='true'>Si</option>
+                    <option [value]='false'>No</option>
+                  </select>
+                </td>
+                <td *ngIf="!verificacionVisible">
+                  <button (click)="agregarNuevaClase()" type="button" class="eliminar-ruta fw-semibold"><i
+                      class="bi bi-floppy"></i></button>
+                </td>
+                <td *ngIf="!verificacionVisible">
+                  <button (click)="estadoAgregarClase(false)" type="button" class="eliminar-ruta fw-semibold"><i
+                      class="bi bi-trash"></i></button>
                 </td>
               </tr>
             </tbody>
           </table>
         </ng-template>
       </div>
-      <div ngbAccordionToggle>
-        <div class="row boton-agregar">
-          <label for="">Dado el caso que haga falta información, debe agregarla.</label>
-        </div>
-        <div class="boton-agregar">
-          <button type="button" class="boton primario relleno">Agregar Clase <i class="bi bi-plus-circle"></i></button>
-        </div>
+      <div class="d-flex justify-content-end" style="margin-right: 20px;">
+        <!-- Paginador -->
+        <pagination-controls class="pagination-controls" (pageChange)="pageClases = $event" previousLabel="Ant."
+          nextLabel="Sig." [maxSize]="7" [directionLinks]="true" [autoHide]="false" #paginador3 id="Clases">
+        </pagination-controls>
       </div>
     </div>
   </div>

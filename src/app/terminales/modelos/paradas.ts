@@ -1,5 +1,6 @@
 export interface Paradas {
   parada_id?: number | null //Adicionada por si llega a necesitarse.
+  ruta_id?: any
   numero?: string | number | null
   codigo_departamento: number | string | null
   codigo_municipio: number | string | null

@@ -6,6 +6,7 @@ import { Usuario } from 'src/app/usuarios/modelos/Usuario';
 import { TerminalesService } from '../servicios/terminales.service';
 import { ReplaySubject } from 'rxjs';
 import Swal from 'sweetalert2';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-terminales',
@@ -60,17 +61,23 @@ export class TerminalesComponent implements OnInit {
 
   recibirParada(paradas: any) {
     this.paradas = paradas
-    //console.log('Paradas: ', this.paradas)
+    console.log('Paradas: ', this.paradas)
   }
 
   recibirClases(clases: any) {
     this.clases = clases
-    //console.log('Clases: ', this.clases)
+    console.log('Clases: ', this.clases)
   }
 
   guardar() {
-    let JSONTerminales:{Rutas:Array<any>} = {Rutas:[]}
+    let JSONTerminales: {
+      Rutas: Array<any>, Paradas: Array<any>, Clases: Array<any>
+    } = {
+      Rutas: [], Paradas: [], Clases: []
+    }
     let JSONRutas: Array<any> = []
+    let JSONParadas: Array<any> = []
+    let JSONClases: Array<any> = []
     for (let ruta of this.rutas) {
       JSONRutas.push({
         id: ruta.id,
@@ -91,7 +98,28 @@ export class TerminalesComponent implements OnInit {
 
       })
     }
-    JSONTerminales = {Rutas:JSONRutas}
+    if (this.paradas.length > 0) {
+      for (let parada of this.paradas) {
+        JSONParadas.push({
+          idParada: parada.parada_id,
+          idRuta: parada.ruta_id,
+          centroPobladoId: parada.codigo_cp,
+          direccionId: parada.direccion_id,
+          estado: true
+        })
+      }
+    }
+    if (this.clases.length > 0) {
+      for (let clase of this.clases) {
+        JSONClases.push({
+          id: clase.id_ruta_vehiculos,
+          idRuta: clase.ruta_id,
+          idClaseVehiculo: clase.tipo_vehiculo_id,
+          estado: clase.estado
+        })
+      }
+    }
+    JSONTerminales = { Rutas: JSONRutas, Paradas: JSONParadas, Clases: JSONClases }
     console.log(JSONTerminales)
     Swal.fire({
       icon: 'info',
@@ -100,10 +128,17 @@ export class TerminalesComponent implements OnInit {
     });
     Swal.showLoading(null);
     this.servicioTerminales.guardar(JSONTerminales).subscribe({
-      next: (respuesta:any) => {
+      next: (respuesta: any) => {
         Swal.fire({ icon: 'success', titleText: '¡Guardado exitosamente!' });
-        console.log(respuesta)
+        //console.log(respuesta)
         this.hayCambios = false
+      },
+      error: (error: HttpErrorResponse) => {
+        if (error.status == 400) {
+          Swal.fire('¡Fallo al guardar!', 'Por favor, vuelva a intentarlo más tarde.', 'error');
+        }else{
+          Swal.fire('¡Error desconocido!', 'Por favor, vuelva a intentarlo más tarde.', 'error');
+        }
       }
     })
   }

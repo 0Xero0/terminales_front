@@ -31,7 +31,9 @@
     <button type="button" class="boton primario relleno" [disabled]="hayCambios">Enviar a ST</button>
     <button type="button" class="boton primario relleno" style="margin-left: 300px;" [disabled]="!hayCambios"
     (click)="guardar()">Guardar</button>
-    <button type="button" class="boton primario delineado" style="margin-left: 300px;">Volver</button>
+    <button type="button" class="boton primario delineado" style="margin-left: 300px;" *ngIf="verificacionVisible">
+      Volver
+    </button>
   </div>
   <!--  -->
   <app-rutas

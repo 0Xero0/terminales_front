@@ -73,7 +73,7 @@ export class TerminalesService extends Autenticable {
     return this.http.get<{ paradas: any[], paginacion: Paginacion }>(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  listarClases(ruta_id:number, pagina: number, limite: number, filtros?: any){
+  listarClases(ruta_id:number, pagina?: number, limite?: number, filtros?: any){
     let endpoint = `/api/v1/terminales/visualizar-clases?rutaId=${ruta_id}`
     if(filtros){
       if(filtros.termino) endpoint+=`&filtro=${filtros.termino}`;
@@ -96,6 +96,11 @@ export class TerminalesService extends Autenticable {
   crearParada(JSONParadaNueva:any){
     const endpoint = `/api/v1/terminales/guardar-parada`
     return this.http.post<any>(`${this.host}${endpoint}`, JSONParadaNueva, { headers: this.obtenerCabeceraAutorizacion() })
+  }
+
+  crearClase(JSONClaseNueva:any){
+    const endpoint = `/api/v1/terminales/guardar-clase`
+    return this.http.post<any>(`${this.host}${endpoint}`, JSONClaseNueva, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
   guardar(JSONTerminales:any){
