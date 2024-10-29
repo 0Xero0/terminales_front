@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import { Paginador } from 'src/app/administrador/modelos/compartido/Paginador';
 import { Observable } from 'rxjs';
 import { Paginacion } from 'src/app/compartido/modelos/Paginacion';
-import { validarCampos } from '../validadores/validar-campos';
+import { validarCampos } from '../../validadores/validar-campos';
 
 @Component({
   selector: 'app-rutas',
@@ -95,7 +95,7 @@ export class RutasComponent implements OnInit {
   }
 
   consultarInformacionRuta(id_ruta: number) { //Consultamos paradas y clases de la ruta seleccionada
-    console.log(id_ruta)
+    //console.log(id_ruta)
     this.rutaId = id_ruta
     this.rutaConsultada = true
   }
@@ -245,6 +245,7 @@ export class RutasComponent implements OnInit {
 
   estadoAgregarRuta(estado: boolean) {
     this.rutaNuevaHabilitada = estado
+    if(!estado) this.error = estado
     this.rutaNueva = this.inicializarRutaNueva()
   }
 
@@ -268,9 +269,12 @@ export class RutasComponent implements OnInit {
       }
       this.servicioTerminales.crearRuta(JSONRutaNueva).subscribe({
         next: (respuesta: any) => {
-          console.log('JSONRutaNueva: ', JSONRutaNueva)
-          console.log('respuesta: ', respuesta)
+          //console.log('JSONRutaNueva: ', JSONRutaNueva)
+          //console.log('respuesta: ', respuesta)
           this.listarRutas()
+          this.rutaId = null
+          this.rutaSeleccionada = null
+          this.rutaConsultada = false
         }
       })
       /* this.rutas.push(); */
@@ -288,12 +292,12 @@ export class RutasComponent implements OnInit {
   }
 
   manejarDirecciones(event: any, tipo_llegada_id: any, cp_destino: any, index?: number) {
-    console.log(tipo_llegada_id, cp_destino, event.target.value)
+    console.log(tipo_llegada_id, cp_destino, event.target.value,index)
     const valorSeleccionado = event.target.value;
     if (valorSeleccionado === 'abrirModal') {
       this.abrirModalConSwal(Number(tipo_llegada_id), cp_destino, index); // Si selecciona la opción de 'Añadir nueva dirección'
     } else {
-      if (index) {
+      if (index !== undefined) {
         this.rutas[index].direccion_id = Number(valorSeleccionado)
         this.manejarCambios()
       } else {
@@ -393,7 +397,13 @@ export class RutasComponent implements OnInit {
   }
 
   recibirParadas(paradas: any) {
+    this.paradas = []
     this.paradas = paradas
+    this.manejarCambios()
+  }
+  recibirClases(clases: any) {
+    this.clases = []
+    this.clases = clases
     this.manejarCambios()
   }
 
@@ -491,7 +501,6 @@ export class RutasComponent implements OnInit {
     this.rutasGuardar.emit(this.rutas)
     this.paradasGuardar.emit(this.paradas)
     this.clasesGuardar.emit(this.clases)
-    //console.log(this.rutas)
   }
 
 }

@@ -2,10 +2,8 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { Paradas } from '../../modelos/paradas';
 import { TerminalesService } from '../../servicios/terminales.service';
 import { Paginador } from 'src/app/administrador/modelos/compartido/Paginador';
-import { Observable } from 'rxjs';
-import { Paginacion } from 'src/app/compartido/modelos/Paginacion';
 import Swal from 'sweetalert2';
-import { validarCampos } from '../validadores/validar-campos';
+import { validarCampos } from '../../validadores/validar-campos';
 
 @Component({
   selector: 'app-paradas',
@@ -17,13 +15,13 @@ export class ParadasComponent implements OnInit, OnChanges {
   @Output() paradasGuardar: EventEmitter<Array<Paradas>> = new EventEmitter<Array<Paradas>>();
   @Input() rutaId?: any
   @Input() paginadorParadas?: Paginador<any>
-  @Input() paradas:Array<Paradas> = []
   @Input() verificacionVisible?: boolean
   @Input() verificacionEditable?: boolean
   @Input() editable?: boolean
   @Input() aprobado?: boolean
-  nuevaParada:Paradas
-  paradaNuevaHabilitada:boolean = false
+  paradas: Array<Paradas> = []
+  nuevaParada: Paradas
+  paradaNuevaHabilitada: boolean = false
 
   tiposLlegada: Array<{ id: number, descripcion: string }> = []
   direcciones: Array<{ id: number, descripcion: string }> = []
@@ -36,7 +34,7 @@ export class ParadasComponent implements OnInit, OnChanges {
 
   pageParadas: number = 1; // Variable para controlar la página actual
 
-  constructor(private servicioTerminales: TerminalesService){
+  constructor(private servicioTerminales: TerminalesService) {
     this.nuevaParada = this.inicializarParadaNueva()
   }
 
@@ -48,6 +46,7 @@ export class ParadasComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['rutaId']) {
+      this.paradas = []
       this.listarParadas();
       //console.log('El array ha cambiado:', this.paradas);
     }
@@ -55,7 +54,7 @@ export class ParadasComponent implements OnInit, OnChanges {
 
   inicializarParadaNueva(): Paradas { //Inicializa vacio los parametros de la ruta nueva
     return {
-      parada_id:null,
+      parada_id: null,
       codigo_departamento: null,
       codigo_municipio: null,
       codigo_cp: null,
@@ -63,33 +62,36 @@ export class ParadasComponent implements OnInit, OnChanges {
       tipo_llegada_id: null
     };
   }
-  listarParadas(){ //listamos las paradas que vienen de base de datos
+  listarParadas() { //listamos las paradas que vienen de base de datos
     this.servicioTerminales.listarParadas(this.rutaId).subscribe({
-      next: ( respuesta )=>{
-        this.paradas = []
+      next: (respuesta) => {
         this.paradas = respuesta.paradas
-        this.maestrasParadas(this.paradas)
+        for (let parada of this.paradas) {
+          parada.ruta_id = this.rutaId
+        }
+        this.maestrasParadas()
+        this.paradasGuardar.emit(this.paradas)
         //console.log(this.paradas)
       }
     })
   }
 
   //MAESTRAS /////////////////////////////////////////////////////////////////////////////////////////////////
-  maestrasParadas(paradas:any){ //listamos las rutas que vienen de base de datos
-    if(paradas){
-      for(let i = 0;i < this.paradas.length; i++){//RECORREMOS LAS RUTAS
-        if(this.paradas[i].codigo_departamento){//COMPROBAMOS QUE EXISTA UN DEPARTAMENTO Y SI EXISTE
-          this.maestraMunicipios(this.paradas[i].codigo_departamento,'municipio'+i,i)//CONSULTAMOS EL MUNICIPIO CORRESPONDIENTE
+  maestrasParadas() { //listamos las rutas que vienen de base de datos
+    if (this.paradas.length > 0) {
+      for (let i = 0; i < this.paradas.length; i++) {//RECORREMOS LAS RUTAS
+        if (this.paradas[i].codigo_departamento) {//COMPROBAMOS QUE EXISTA UN DEPARTAMENTO Y SI EXISTE
+          this.maestraMunicipios(this.paradas[i].codigo_departamento, 'municipio' + i, i)//CONSULTAMOS EL MUNICIPIO CORRESPONDIENTE
         }
-        if(this.paradas[i].codigo_municipio){//COMPROBAMOS QUE EXISTA UN MUNICIPIO Y SI EXISTE
-          this.maestraCP(this.paradas[i].codigo_municipio,i)//CONSULTAMOS EL CENTRO POBLADO CORRESPONDIENTE
+        if (this.paradas[i].codigo_municipio) {//COMPROBAMOS QUE EXISTA UN MUNICIPIO Y SI EXISTE
+          this.maestraCP(this.paradas[i].codigo_municipio, i)//CONSULTAMOS EL CENTRO POBLADO CORRESPONDIENTE
         }
-        if(this.paradas[i].tipo_llegada_id){//COMPROBAMOS QUE EXISTA UN TIPO DE LLEGADA Y SI EXISTE
-          this.maestraDireccion(this.paradas[i].tipo_llegada_id,this.paradas[i].codigo_cp,i)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
+        if (this.paradas[i].tipo_llegada_id) {//COMPROBAMOS QUE EXISTA UN TIPO DE LLEGADA Y SI EXISTE
+          this.maestraDireccion(this.paradas[i].tipo_llegada_id, this.paradas[i].codigo_cp, i)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
         }
       }
     }
-    console.log(this.paradas)
+    //console.log(this.paradas)
   }
 
   maestraDepartamentos() { // MAESTRA DE DEPARTAMENTOS
@@ -97,12 +99,12 @@ export class ParadasComponent implements OnInit, OnChanges {
       next: (respuesta: any) => {
         //console.log(respuesta)
         this.departamentos = respuesta.respuestaDepartamentos
-        console.log(this.departamentos)
+        //console.log(this.departamentos)
       }
     })
   }
 
-  maestraMunicipios(codigo_departamento: any, nombre: string,index?:number, cambio?: boolean) { // MAESTRA DE MUNICIPIOS
+  maestraMunicipios(codigo_departamento: any, nombre: string, index?: number, cambio?: boolean) { // MAESTRA DE MUNICIPIOS
     const id_departamento = codigo_departamento
     const selectElement = document.getElementById(nombre) as HTMLSelectElement;
     //console.log(id_departamento)
@@ -115,13 +117,14 @@ export class ParadasComponent implements OnInit, OnChanges {
             this.paradas[index].municipios = [];
             this.paradas[index].municipios = municipios.respuestaMunicipios
             this.paradas[index].codigo_departamento = id_departamento
-            if(cambio){
+            if (cambio) {
               this.paradas[index].codigo_municipio = null
               this.maestraCP('null', index, cambio)
               this.paradas[index].direccion_id = null
+              this.manejarCambios()
             }
-            this.manejarCambios()
-          }else{
+
+          } else {
             this.municipios = []
             this.municipios = municipios.respuestaMunicipios
             this.nuevaParada.codigo_municipio = null
@@ -136,15 +139,15 @@ export class ParadasComponent implements OnInit, OnChanges {
         this.paradas[index].codigo_municipio = null
         this.maestraCP('null', index, cambio)
         this.paradas[index].codigo_departamento = null
-      }else{
+      } else {
         this.municipios = []
         this.nuevaParada.codigo_municipio = null
-        this.maestraCP('null',undefined, cambio)
+        this.maestraCP('null', undefined, cambio)
       }
     }
   }
 
-  maestraCP(codigo_municipio: any,index?:number, cambio?: boolean) { // MAESTRA DE CENTROS POBLADOS
+  maestraCP(codigo_municipio: any, index?: number, cambio?: boolean) { // MAESTRA DE CENTROS POBLADOS
     let codigoMunicipio = codigo_municipio
     //console.log(codigoMunicipio)
     if (codigoMunicipio !== 'null') {
@@ -155,12 +158,12 @@ export class ParadasComponent implements OnInit, OnChanges {
             this.paradas[index].centrosPoblados = [];
             this.paradas[index].centrosPoblados = respuesta.respuestaCentrosPoblados
             this.paradas[index].codigo_municipio = codigoMunicipio
-            if(cambio){
+            if (cambio) {
               this.paradas[index].codigo_cp = null
               this.paradas[index].tipo_llegada_id = null
+              this.manejarCambios()
             }
-            this.manejarCambios()
-          }else{
+          } else {
             this.centrosPoblados = []
             this.centrosPoblados = respuesta.respuestaCentrosPoblados
             this.nuevaParada.codigo_cp = null
@@ -174,8 +177,8 @@ export class ParadasComponent implements OnInit, OnChanges {
         this.paradas[index].centrosPoblados = [];
         this.paradas[index].codigo_cp = null
         this.paradas[index].tipo_llegada_id = null
-        this.manejarCambios()
-      }else{
+        if(cambio)this.manejarCambios()
+      } else {
         this.centrosPoblados = [];
         this.nuevaParada!.codigo_cp = null
         this.nuevaParada.tipo_llegada_id = null
@@ -192,7 +195,7 @@ export class ParadasComponent implements OnInit, OnChanges {
     })
   }
 
-  maestraDireccion(id: any,codigo_cp:any, index?: any, cambio?: boolean) { // MAESTRA DE DIRECCIONES
+  maestraDireccion(id: any, codigo_cp: any, index?: any, cambio?: boolean) { // MAESTRA DE DIRECCIONES
     //console.log(id, codigo_cp)
     const idLlegada = Number(id)
     if (id !== 'null') {
@@ -203,8 +206,10 @@ export class ParadasComponent implements OnInit, OnChanges {
             this.paradas[index].direcciones = []; //this.rutas[index].direccion_id = null
             this.paradas[index].direcciones = respuesta.respuestaDirecciones
             this.paradas[index].tipo_llegada_id = idLlegada
-            if(cambio) this.paradas[index].direccion_id = null
-            this.manejarCambios()
+            if (cambio) {
+              this.paradas[index].direccion_id = null
+              this.manejarCambios()
+            }
           } else {
             this.direcciones = []; this.nuevaParada!.direccion_id = null
             this.direcciones = respuesta.respuestaDirecciones
@@ -217,8 +222,8 @@ export class ParadasComponent implements OnInit, OnChanges {
         this.paradas[index].tipo_llegada_id = null;
         this.paradas[index].direccion_id = null
         this.paradas[index].direcciones = []
-        this.manejarCambios()
-      }else{
+        if(cambio)this.manejarCambios()
+      } else {
         this.nuevaParada.tipo_llegada_id = null;
         this.nuevaParada.direccion_id = null;
         this.direcciones = []
@@ -228,29 +233,32 @@ export class ParadasComponent implements OnInit, OnChanges {
   }
 
   ///////////// ACCIONES //////////////////////////////////////////////////////////////////////////////////
-  estadoAgregarParada(estado:boolean){
+  estadoAgregarParada(estado: boolean) {
     this.paradaNuevaHabilitada = estado
+    this.nuevaParada = this.inicializarParadaNueva()
+    if(!estado) this.error = estado
   }
 
-  agregarNuevaParada(){
+  agregarNuevaParada() {
     const JSONParadaNueva = {
       idRuta: this.rutaId,
       centroPobladoId: this.nuevaParada.codigo_cp,
       direccionId: this.nuevaParada.direccion_id,
-      estado: true
+      estado: true
     }
-    if(validarCampos(JSONParadaNueva)){
+    if (validarCampos(JSONParadaNueva)) {
       this.servicioTerminales.crearParada(JSONParadaNueva).subscribe({
         next: (respuesta: any) => {
-          console.log('JSONParadaNueva: ', JSONParadaNueva)
-          console.log('respuesta: ', respuesta)
+          //console.log('JSONParadaNueva: ', JSONParadaNueva)
+          //console.log('respuesta: ', respuesta)
           this.listarParadas()
+          this.nuevaParada = this.inicializarParadaNueva()
+          this.estadoAgregarParada(false)
+          this.manejarCambios()
         }
       })
-      this.nuevaParada = this.inicializarParadaNueva()
-      this.estadoAgregarParada(false)
-      this.manejarCambios()
-    }else{
+
+    } else {
       this.error = true
       Swal.fire({
         title: 'Información incompleta',
@@ -260,19 +268,20 @@ export class ParadasComponent implements OnInit, OnChanges {
     }
   }
 
-  manejarTipoLlegada(codigo_cp:any,index?:any){
-    if(index !== undefined){
+  manejarTipoLlegada(codigo_cp: any, index?: any) {
+    if (index !== undefined) {
       this.paradas[index].tipo_llegada_id = null
       this.paradas[index].direccion_id = null
       this.paradas[index].direcciones = []
-      if(codigo_cp === 'null'){
+      if (codigo_cp === 'null') {
         this.paradas[index].codigo_cp = null
       }
-    }else{
+      this.manejarCambios()
+    } else {
       this.nuevaParada.tipo_llegada_id = null
       this.nuevaParada.direccion_id = null
       this.direcciones = []
-      if(codigo_cp === 'null'){
+      if (codigo_cp === 'null') {
         this.nuevaParada.codigo_cp = null
       }
     }
@@ -348,7 +357,7 @@ export class ParadasComponent implements OnInit, OnChanges {
     });
   }
 
-// VALIDACIONES Y CAMBIOS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // VALIDACIONES Y CAMBIOS ////////////////////////////////////////////////////////////////////////////////////////////////////////
   validarCampo(selectId: string): boolean {
     const selectElement = document.getElementById(selectId) as HTMLSelectElement;
     const valor = selectElement.value

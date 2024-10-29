@@ -1,8 +1,8 @@
-<hr>
+<!-- <hr>
 <div class="d-flex">
   <input type="text" [(ngModel)]="termino" class="form-control" placeholder="Buscar" (ngOnChange)="filtrar()">
   {{termino}}
-</div>
+</div> -->
 <div class="titulo-ruta">
   <label for="">Rutas</label>
 </div>
@@ -216,7 +216,7 @@
           <td><!-- SELECT DIRECCIONES -->
             <select [(ngModel)]="rutaNueva.direccion" name="direccion" class="form-select"
               [disabled]="rutaNueva.tipo_llegada === null" [class.marcar-error]="!rutaNueva.direccion && error"
-              (change)="manejarDirecciones($event,rutaNueva.tipo_llegada,rutaNueva.centro_poblado_destino)">
+              (change)="manejarDirecciones($event,rutaNueva.tipo_llegada,rutaNueva.centro_poblado_destino,undefined)">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let direccion of direcciones" [value]='direccion.id'>{{direccion.descripcion}}</option>
               <option value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal -->
@@ -316,5 +316,5 @@
   <app-paradas (paradasGuardar)="recibirParadas($event)" [rutaId]="rutaId"></app-paradas>
 </div>
 <div *ngIf="rutaConsultada" style="margin-bottom: 10px;">
-  <app-clases></app-clases>
+  <app-clases (clasesGuardar)="recibirClases($event)" [rutaId]="rutaId"></app-clases>
 </div>
