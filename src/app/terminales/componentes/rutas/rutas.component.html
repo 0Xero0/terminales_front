@@ -144,14 +144,7 @@
             <h6 class="sin-registros"> -- No hay rutas para mostrar. --</h6>
           </td>
         </tr>
-        <!-- ///////////// BOTÓN PARA HABILITAR EL AGREGAR NUEVA RUTA -->
-        <tr *ngIf="!verificacionVisible">
-          <td colspan="18">
-            <button type="button" class="boton primario relleno" (click)="estadoAgregarRuta(true)">
-              Agregar ruta <i class="bi bi-plus-circle"></i>
-            </button>
-          </td>
-        </tr>
+
         <!-- //////////// AGREGAR NUEVA RUTA ///////////////////// -->
         <tr *ngIf="!verificacionVisible && rutaNuevaHabilitada"><!--  -->
           <td>
@@ -287,6 +280,14 @@
           <td>
             <button (click)="estadoAgregarRuta(false)" type="button" class="eliminar-ruta fw-semibold"><i
                 class="bi bi-trash"></i></button>
+          </td>
+        </tr>
+        <!-- ///////////// BOTÓN PARA HABILITAR EL AGREGAR NUEVA RUTA -->
+        <tr *ngIf="!verificacionVisible">
+          <td colspan="18">
+            <button type="button" class="boton primario relleno" (click)="estadoAgregarRuta(true)">
+              Agregar ruta <i class="bi bi-plus-circle"></i>
+            </button>
           </td>
         </tr>
       </tbody>
