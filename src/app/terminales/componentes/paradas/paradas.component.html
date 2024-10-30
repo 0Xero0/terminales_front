@@ -75,14 +75,7 @@
                   <h6 class="sin-registros"> -- No hay Paradas para mostrar. --</h6>
                 </td>
               </tr>
-              <!-- ///////////// BOTÓN PARA HABILITAR EL AGREGAR NUEVA RUTA -->
-              <tr *ngIf="!verificacionVisible">
-                <td colspan="18">
-                  <button type="button" class="boton primario relleno" (click)="estadoAgregarParada(true)">
-                    Agregar parada <i class="bi bi-plus-circle"></i>
-                  </button>
-                </td>
-              </tr>
+
               <!-- //////////// AGREGAR NUEVA PARADA ///////////////////// -->
               <tr *ngIf="!verificacionVisible && paradaNuevaHabilitada">
                 <td>{{nuevaParada!.parada_id}}</td>
@@ -141,7 +134,14 @@
                       class="bi bi-trash"></i></button>
                 </td>
               </tr>
-              <!-- //////////// AGREGAR NUEVA PARADA ///////////////////// -->
+               <!-- ///////////// BOTÓN PARA HABILITAR EL AGREGAR NUEVA RUTA -->
+               <tr *ngIf="!verificacionVisible">
+                <td colspan="18">
+                  <button type="button" class="boton primario relleno" (click)="estadoAgregarParada(true)">
+                    Agregar parada <i class="bi bi-plus-circle"></i>
+                  </button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </ng-template>

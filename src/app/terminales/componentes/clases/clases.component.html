@@ -14,8 +14,8 @@
                 <th style="width: 190px;">Clase</th>
                 <th style="width: 500px;">Tipo de vehículo</th>
                 <th style="width: 500px;">Activa</th>
-                <th *ngIf="!verificacionVisible"></th>
-                <th *ngIf="!verificacionVisible"></th>
+                <th style="width: 70px;" *ngIf="!verificacionVisible"></th>
+                <th style="width: 70px;" *ngIf="!verificacionVisible"></th>
               </tr>
             </thead>
             <tbody>
@@ -45,21 +45,7 @@
                   <h6 class="sin-registros"> -- No hay Clases para mostrar. --</h6>
                 </td>
               </tr>
-              <!-- BOTÓN AGREGAR NUEVA PARADA -->
-              <tr *ngIf="!verificacionVisible">
-                <td colspan="5">
-                  <div class="row boton-agregar">
-                    <label for="" style="font-size: small;">
-                      Dado el caso que haga falta información, debe agregarla.
-                    </label>
-                  </div>
-                  <div class="boton-agregar">
-                    <button type="button" class="boton primario relleno" (click)="estadoAgregarClase(true)">
-                      Agregar Clase <i class="bi bi-plus-circle"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
+
               <!-- //////////// AGREGAR NUEVA CLASE ///////////////////// -->
               <tr *ngIf="!verificacionVisible && claseNuevaHabilitada">
                 <td>
@@ -93,6 +79,21 @@
                 <td *ngIf="!verificacionVisible">
                   <button (click)="estadoAgregarClase(false)" type="button" class="eliminar-ruta fw-semibold"><i
                       class="bi bi-trash"></i></button>
+                </td>
+              </tr>
+              <!-- BOTÓN AGREGAR NUEVA PARADA -->
+              <tr *ngIf="!verificacionVisible">
+                <td colspan="5">
+                  <div class="row boton-agregar">
+                    <label for="" style="font-size: small;">
+                      Dado el caso que haga falta información, debe agregarla.
+                    </label>
+                  </div>
+                  <div class="boton-agregar">
+                    <button type="button" class="boton primario relleno" (click)="estadoAgregarClase(true)">
+                      Agregar Clase <i class="bi bi-plus-circle"></i>
+                    </button>
+                  </div>
                 </td>
               </tr>
             </tbody>
