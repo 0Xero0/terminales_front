@@ -2,12 +2,15 @@
   <div ngbAccordionItem [collapsed]="true">
     <h2 ngbAccordionHeader>
       <button ngbAccordionButton class="fw-semibold texto-primario">
-        CLASES
+        CLASES*
       </button>
     </h2>
     <div ngbAccordionCollapse>
       <div ngbAccordionBody>
         <ng-template>
+          <label for="" style="color: brown; margin-left: 10px; font-size: small;" *ngIf="clases.length <= 0">
+            Debe registrar al menos una clase
+          </label>
           <table class="table">
             <thead class="encabezado">
               <tr>

@@ -28,9 +28,13 @@
   </div>
   <!-- //////////////SECCION BOTONES /////////////////////////////////////////// -->
   <div class="d-flex mt-4">
-    <button type="button" class="boton primario relleno" [disabled]="hayCambios">Enviar a ST</button>
-    <button type="button" class="boton primario relleno" style="margin-left: 300px;" [disabled]="!hayCambios"
-    (click)="guardar()">Guardar</button>
+    <button type="button" class="boton primario relleno" [disabled]="hayCambios || aprobado" (click)="enviarST()">
+      Enviar a ST
+    </button>
+    <button type="button" class="boton primario relleno" style="margin-left: 300px;" [disabled]="!hayCambios || aprobado"
+      (click)="guardar()">
+      Guardar
+    </button>
     <button type="button" class="boton primario delineado" style="margin-left: 300px;" *ngIf="verificacionVisible">
       Volver
     </button>
@@ -40,10 +44,12 @@
     [verificacionVisible]="verificacionVisible"
     [verificacionEditable]="verificacionEditable"
     [editable]="editable"
+    [faltantes]="faltantes"
+    [aprobado]="aprobado"
+    (numeroRutas)="recibirNumeroRutas($event)"
     (hayCambios)="recibirHayCambios($event)"
     (rutasGuardar)="recibirRutas($event)"
     (paradasGuardar)="recibirParada($event)"
-    (clasesGuardar)="recibirClases($event)"
-  >
+    (clasesGuardar)="recibirClases($event)">
   </app-rutas>
 </div>

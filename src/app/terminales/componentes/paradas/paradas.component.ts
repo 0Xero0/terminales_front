@@ -247,17 +247,28 @@ export class ParadasComponent implements OnInit, OnChanges {
       estado: true
     }
     if (validarCampos(JSONParadaNueva)) {
-      this.servicioTerminales.crearParada(JSONParadaNueva).subscribe({
-        next: (respuesta: any) => {
-          //console.log('JSONParadaNueva: ', JSONParadaNueva)
-          //console.log('respuesta: ', respuesta)
-          this.listarParadas()
-          this.nuevaParada = this.inicializarParadaNueva()
-          this.estadoAgregarParada(false)
-          this.manejarCambios()
+      Swal.fire({
+        titleText: "¿Está seguro que quiere agregar una parada nueva?",
+        text: "Después de agregar una parada nueva, no podrá eliminarla.",
+        confirmButtonText: "Agregar",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.servicioTerminales.crearParada(JSONParadaNueva).subscribe({
+            next: (respuesta: any) => {
+              this.listarParadas()
+              this.nuevaParada = this.inicializarParadaNueva()
+              this.estadoAgregarParada(false)
+              this.manejarCambios()
+              Swal.fire('¡Parada crada!', 'La nueva parada ha sido añadida.', 'success');
+            }
+          })
+        } else if (result.isDismissed) {
+          Swal.close()
         }
       })
-
     } else {
       this.error = true
       Swal.fire({

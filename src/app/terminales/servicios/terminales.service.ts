@@ -107,4 +107,9 @@ export class TerminalesService extends Autenticable {
     const endpoint = `/api/v1/terminales/guardar`
     return this.http.patch<any>(`${this.host}${endpoint}`, JSONTerminales, { headers: this.obtenerCabeceraAutorizacion() })
   }
+
+  enviarST(){
+    const endpoint = `/api/v1/terminales/enviar-st`
+    return this.http.post<any>(`${this.host}${endpoint}`, {}, { headers: this.obtenerCabeceraAutorizacion() })
+  }
 }

@@ -26,6 +26,7 @@ export class TerminalesComponent implements OnInit {
   rutas: Array<Ruta> = []
   paradas: Array<Paradas> = []
   clases: Array<Clases> = []
+  faltantes: Array<number> = []
 
   selectedValue: any
   inputValue: any
@@ -36,10 +37,10 @@ export class TerminalesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.obtenerCantidadRutas(this.usuario!.id)
+    //this.obtenerCantidadRutas(this.usuario!.id)
     //console.log(this.usuario)
   }
-  obtenerCantidadRutas(idUsuario: any) {
+  /* obtenerCantidadRutas(idUsuario: any) {
     this.servicioTerminales.cantidadRutas(idUsuario).subscribe({
       next: (respuesta: any) => {
         console.log(respuesta)
@@ -48,6 +49,9 @@ export class TerminalesComponent implements OnInit {
 
       }
     })
+  } */
+  recibirNumeroRutas(numeroRutas:number){
+    this.cantidadRutas = numeroRutas
   }
 
   recibirHayCambios(hayCambios: boolean) {
@@ -120,7 +124,7 @@ export class TerminalesComponent implements OnInit {
       }
     }
     JSONTerminales = { Rutas: JSONRutas, Paradas: JSONParadas, Clases: JSONClases }
-    console.log(JSONTerminales)
+    //console.log(JSONTerminales)
     Swal.fire({
       icon: 'info',
       allowOutsideClick: false,
@@ -143,7 +147,37 @@ export class TerminalesComponent implements OnInit {
     })
   }
 
-  enviarST() { }
+  enviarST() {
+    Swal.fire({
+      icon: 'info',
+      allowOutsideClick: false,
+      text: 'Espere por favor...',
+    });
+    Swal.showLoading(null);
+    this.servicioTerminales.enviarST().subscribe({
+      next: (respuesta: any) => {
+        this.faltantes = respuesta.faltantes
+        this.aprobado = respuesta.aprobado
+        if(this.faltantes.length <= 0){
+          Swal.fire('¡Envio exitoso!', 'Enviado a la Superintendencia de transporte.', 'success');
+        }
+        else{
+          Swal.fire('¡Errores encontrados!', 'Por favor, corrija antes de vlver a enviar.', 'error');
+          for(let ruta of this.rutas){
+            if(this.faltantes?.includes(ruta.id)) ruta.errorRutas = true
+            //console.log(ruta.errorRutas)
+          }
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        if (error.status == 400) {
+          Swal.fire('¡Fallo al enviar a ST!', 'Por favor, vuelva a intentarlo más tarde.', 'error');
+        }else{
+          Swal.fire('¡Error desconocido!', 'Por favor, vuelva a intentarlo más tarde.', 'error');
+        }
+      }
+    })
+  }
 
   volver() {
 
