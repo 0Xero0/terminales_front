@@ -186,9 +186,7 @@ hr {
   font-size: 14px;
   font-family: "Work Sans", sans-serif;
 }
-.card {
-  border-radius: 0px !important;
-}
+
 .alto-textarea {
   height: 200px;
 }
