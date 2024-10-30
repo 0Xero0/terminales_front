@@ -5,9 +5,6 @@ import { TerminalesService } from '../../servicios/terminales.service';
 import { Paradas } from '../../modelos/paradas';
 import { Clases } from '../../modelos/clases';
 import Swal from 'sweetalert2';
-import { Paginador } from 'src/app/administrador/modelos/compartido/Paginador';
-import { Observable } from 'rxjs';
-import { Paginacion } from 'src/app/compartido/modelos/Paginacion';
 import { validarCampos } from '../../validadores/validar-campos';
 
 @Component({
@@ -20,11 +17,13 @@ export class RutasComponent implements OnInit {
   @Output() rutasGuardar: EventEmitter<Array<Ruta>> = new EventEmitter<Array<Ruta>>();
   @Output() paradasGuardar: EventEmitter<Array<Paradas>> = new EventEmitter<Array<Paradas>>();
   @Output() clasesGuardar: EventEmitter<Array<Clases>> = new EventEmitter<Array<Clases>>();
+  @Output() numeroRutas: EventEmitter<number> = new EventEmitter<number>();
   @Input() verificacionVisible?: boolean
   @Input() verificacionEditable?: boolean
   @Input() editable?: boolean
   @Input() aprobado?: boolean
-  usuario?: { usuario: string, nombre: string };
+  @Input() faltantes?: Array<number>
+  usuario?: { id: number, usuario: string, nombre: string };
   rol?: { id: number, nombre: string }
 
   paradas: Paradas[] = []
@@ -64,6 +63,15 @@ export class RutasComponent implements OnInit {
     this.listarRutas()
     this.maestraDepartamentos()
     this.maestraTipoLlegadas();
+    this.obtenerCantidadRutas(this.usuario!.id)
+  }
+
+  obtenerCantidadRutas(idUsuario: any) {
+    this.servicioTerminales.cantidadRutas(idUsuario).subscribe({
+      next: (respuesta: any) => {
+        this.numeroRutas.emit(respuesta)
+      }
+    })
   }
 
   inicializarRutaNueva(): RutaNueva { //Inicializa vacio los parametros de la ruta nueva
@@ -89,6 +97,7 @@ export class RutasComponent implements OnInit {
               this.maestraDireccion(this.rutas[i].tipo_llegada_id, this.rutas[i].cp_destino_codigo, i)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
             }
           }
+          this.rutasGuardar.emit(this.rutas)
         }
       }
     })
@@ -205,6 +214,7 @@ export class RutasComponent implements OnInit {
             this.rutas[index].tipo_llegada_id = idLlegada
             if (cambio) {
               this.rutas[index].direccion_id = null
+              this.rutas[index].errorRutas = false
               this.manejarCambios()
             }
           } else {
@@ -245,7 +255,7 @@ export class RutasComponent implements OnInit {
 
   estadoAgregarRuta(estado: boolean) {
     this.rutaNuevaHabilitada = estado
-    if(!estado) this.error = estado
+    if (!estado) this.error = estado
     this.rutaNueva = this.inicializarRutaNueva()
   }
 
@@ -267,20 +277,32 @@ export class RutasComponent implements OnInit {
         nombreOriginal: this.rutaNueva.nombreOriginal,
         rutaArchivo: this.rutaNueva.ruta
       }
-      this.servicioTerminales.crearRuta(JSONRutaNueva).subscribe({
-        next: (respuesta: any) => {
-          //console.log('JSONRutaNueva: ', JSONRutaNueva)
-          //console.log('respuesta: ', respuesta)
-          this.listarRutas()
-          this.rutaId = null
-          this.rutaSeleccionada = null
-          this.rutaConsultada = false
+      Swal.fire({
+        titleText: "¿Está seguro que quiere agregar una ruta nueva?",
+        text: "Después de agregar una ruta nueva, no podrá eliminarla.",
+        confirmButtonText: "Agregar",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.servicioTerminales.crearRuta(JSONRutaNueva).subscribe({
+            next: (respuesta: any) => {
+              this.listarRutas()
+              this.rutaId = null
+              this.rutaSeleccionada = null
+              this.rutaConsultada = false
+              this.obtenerCantidadRutas(this.usuario!.id)
+              this.rutaNueva = this.inicializarRutaNueva()
+              this.estadoAgregarRuta(false)
+              this.manejarCambios()
+              Swal.fire('¡Ruta crada!', 'La nueva ruta ha sido añadida.', 'success');
+            }
+          })
+        } else if (result.isDismissed) {
+          Swal.close()
         }
       })
-      /* this.rutas.push(); */
-      this.rutaNueva = this.inicializarRutaNueva()
-      this.estadoAgregarRuta(false)
-      this.manejarCambios()
     } else {
       this.error = true
       Swal.fire({
@@ -292,13 +314,14 @@ export class RutasComponent implements OnInit {
   }
 
   manejarDirecciones(event: any, tipo_llegada_id: any, cp_destino: any, index?: number) {
-    console.log(tipo_llegada_id, cp_destino, event.target.value,index)
+    console.log(tipo_llegada_id, cp_destino, event.target.value, index)
     const valorSeleccionado = event.target.value;
     if (valorSeleccionado === 'abrirModal') {
       this.abrirModalConSwal(Number(tipo_llegada_id), cp_destino, index); // Si selecciona la opción de 'Añadir nueva dirección'
     } else {
       if (index !== undefined) {
         this.rutas[index].direccion_id = Number(valorSeleccionado)
+        this.rutas[index].errorRutas = false
         this.manejarCambios()
       } else {
         this.rutaNueva.direccion = Number(valorSeleccionado)
@@ -371,6 +394,7 @@ export class RutasComponent implements OnInit {
       } else if (estado === 'true') {
         this.rutas[index].estado = true
       }
+      this.rutas[index].errorRutas = false
       this.manejarCambios()
     } else {
       if (estado === 'false') {
@@ -393,6 +417,7 @@ export class RutasComponent implements OnInit {
         this.rutas[index].resolucion_actual = this.rutas[index].resolucion
       }
     }
+    this.rutas[index].errorRutas = false
     this.manejarCambios()
   }
 
@@ -418,7 +443,6 @@ export class RutasComponent implements OnInit {
   filtrar() {
     const encontrado = this.rutas.find(ruta => ruta.id_unico_ruta === this.termino);
     if (encontrado) { this.rutas = encontrado ? [encontrado] : [] }
-
   }
 
   // MANEJO DE ARCHIVOS //////////////////////////////////////////////////////////////////////////////////
@@ -440,7 +464,7 @@ export class RutasComponent implements OnInit {
     }
   }
 
-  guardarArchivo(event: any, index: any, tipo: number, tamanoMaximoMb: number) {
+  guardarArchivo(event: any, index: any, tipo: number, tamanoMaximoMb: number, cambio?: boolean) {
     if (event) {
       Swal.fire({
         icon: 'info',
@@ -458,6 +482,7 @@ export class RutasComponent implements OnInit {
               this.rutas[index].documento = archivo.nombreAlmacenado
               this.rutas[index].nombre_original = archivo.nombreOriginalArchivo
               this.rutas[index].ruta_archivo = archivo.ruta
+              this.manejarCambios()
             } else if (tipo === 2) {
               this.rutaNueva.nombreDocumento = archivo.nombreAlmacenado
               this.rutaNueva.nombreOriginal = archivo.nombreOriginalArchivo
@@ -469,7 +494,7 @@ export class RutasComponent implements OnInit {
         Swal.fire({ icon: 'error', titleText: '¡Error alcargar el archivo!', text: 'El tamaño máximo del archivo debe ser de hasta 5Mb.' });
       }
     }
-    this.manejarCambios()
+
   }
 
   descargarArchivo(nombreOriginal: string, nombre?: string, ruta?: string) { // PENDIENTE POR PONER A FUNCIONAR
@@ -494,6 +519,17 @@ export class RutasComponent implements OnInit {
     } else {
       return false
     }
+  }
+
+  compararFaltantes(id: number, index?: any): boolean {
+    // Recorrer cada faltante devuelto al enviar al ST
+    for (const faltante of this.faltantes!) {
+      // Verificar si el faltante es igual al ID de ubicación de la ruta en BD
+      if (faltante === id) {
+        return true; // Devuelve true en cuanto encuentra una coincidencia
+      }
+    }
+    return false; // Si no encuentra coincidencias, devuelve false
   }
 
   manejarCambios() {

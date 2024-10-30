@@ -120,15 +120,26 @@ export class ClasesComponent implements OnInit, OnChanges {
       estado: this.nuevaClase.estado
     }
     if (validarCampos(JSONClaseNueva)) {
-      this.servicioTerminales.crearClase(JSONClaseNueva).subscribe({
-        next: (respuesta: any) => {
-          //console.log('JSONParadaNueva: ', JSONClaseNueva)
-          //console.log('respuesta: ', respuesta)
-          Swal.fire('¡Clase crada!', 'La nueva clase ha sido añadida.', 'success');
-          this.listarClases()
-          this.nuevaClase = this.inicializarClaseNueva()
-          this.estadoAgregarClase(false)
-          this.manejarCambios()
+      Swal.fire({
+        titleText: "¿Está seguro que quiere agregar una clase nueva?",
+        text: "Después de agregar una clase nueva, no podrá eliminarla.",
+        confirmButtonText: "Agregar",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.servicioTerminales.crearClase(JSONClaseNueva).subscribe({
+            next: (respuesta: any) => {
+              this.listarClases()
+              this.nuevaClase = this.inicializarClaseNueva()
+              this.estadoAgregarClase(false)
+              this.manejarCambios()
+              Swal.fire('¡Clase crada!', 'La nueva clase ha sido añadida.', 'success');
+            }
+          })
+        } else if (result.isDismissed) {
+          Swal.close()
         }
       })
     } else {

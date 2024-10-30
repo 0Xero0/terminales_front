@@ -25,6 +25,7 @@ export interface Ruta {
   ruta_archivo?:string,
   direcciones?:Array<{ id: number, descripcion: string }>
   estado?:boolean
+  errorRutas?:boolean | null
 }
 
 export interface RutaNueva {
