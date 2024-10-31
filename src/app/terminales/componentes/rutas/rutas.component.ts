@@ -61,7 +61,7 @@ export class RutasComponent implements OnInit {
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('UsuarioVigia')!)
     this.rol = JSON.parse(localStorage.getItem('rolVigia')!);
-    this.listarRutas()
+    //this.listarRutas()
     this.maestraDepartamentos()
     this.maestraTipoLlegadas();
     this.obtenerCantidadRutas(this.usuario!.id)
