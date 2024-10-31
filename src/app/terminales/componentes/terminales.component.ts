@@ -7,6 +7,7 @@ import { TerminalesService } from '../servicios/terminales.service';
 import { ReplaySubject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
+import { RutasComponent } from './rutas/rutas.component';
 
 @Component({
   selector: 'app-terminales',
@@ -19,6 +20,7 @@ export class TerminalesComponent implements OnInit {
   verificacionEditable: boolean = false
   editable: boolean = true
   aprobado: boolean = false
+  todoGuardado: boolean = false
 
   usuario: Usuario
   cantidadRutas: any
@@ -120,6 +122,7 @@ export class TerminalesComponent implements OnInit {
         Swal.fire({ icon: 'success', titleText: '¡Guardado exitosamente!' });
         //console.log(respuesta)
         this.hayCambios = false
+        this.todoGuardado = true
       },
       error: (error: HttpErrorResponse) => {
         if (error.status == 400) {
