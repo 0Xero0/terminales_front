@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Ruta, RutaNueva } from '../../modelos/ruta';
 import { ServicioArchivos } from 'src/app/archivos/servicios/archivos.service';
 import { TerminalesService } from '../../servicios/terminales.service';
@@ -22,6 +22,7 @@ export class RutasComponent implements OnInit {
   @Input() verificacionEditable?: boolean
   @Input() editable?: boolean
   @Input() aprobado?: boolean
+  @Input() todoGuardado?: boolean
   @Input() faltantes?: Array<number>
   usuario?: { id: number, usuario: string, nombre: string };
   rol?: { id: number, nombre: string }
@@ -64,6 +65,13 @@ export class RutasComponent implements OnInit {
     this.maestraDepartamentos()
     this.maestraTipoLlegadas();
     this.obtenerCantidadRutas(this.usuario!.id)
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['todoGuardado']) {
+      this.rutas = []
+      this.listarRutas();
+    }
   }
 
   obtenerCantidadRutas(idUsuario: any) {
@@ -248,7 +256,7 @@ export class RutasComponent implements OnInit {
 
     // Marcar el registro actual como seleccionado
     this.rutaSeleccionada = index;
-
+    this.rutaNuevaHabilitada = false
     // Consultar la información en la base de datos
     this.consultarInformacionRuta(Number(ruta.id_unico_ruta));
   }
@@ -257,26 +265,29 @@ export class RutasComponent implements OnInit {
     this.rutaNuevaHabilitada = estado
     if (!estado) this.error = estado
     this.rutaNueva = this.inicializarRutaNueva()
+    this.rutaId = null
+    this.rutaSeleccionada = null
+    this.rutaConsultada = false
   }
 
   agregarRuta() {
     console.log(this.rutaNueva);
-    if (validarCampos(this.rutaNueva)) {
-      const JSONRutaNueva = {
-        centroPobladoOrigen: this.rutaNueva.centro_poblado_origen,
-        centroPobladoDestino: this.rutaNueva.centro_poblado_destino,
-        tipoLLegada: this.rutaNueva.tipo_llegada,
-        direccion: this.rutaNueva.direccion,
-        via: this.rutaNueva.via,
-        rutaHabilitada: true,
-        corresponde: 1,
-        resolucion: this.rutaNueva.n_resolucion_actual,
-        resolucionActual: this.rutaNueva.n_resolucion_actual,
-        direccionTerritorial: this.rutaNueva.dir_territorial,
-        documento: this.rutaNueva.nombreDocumento,
-        nombreOriginal: this.rutaNueva.nombreOriginal,
-        rutaArchivo: this.rutaNueva.ruta
-      }
+    const JSONRutaNueva = {
+      centroPobladoOrigen: this.rutaNueva.centro_poblado_origen,
+      centroPobladoDestino: this.rutaNueva.centro_poblado_destino,
+      tipoLLegada: this.rutaNueva.tipo_llegada,
+      direccion: this.rutaNueva.direccion,
+      via: this.rutaNueva.via,
+      rutaHabilitada: true,
+      corresponde: 1,
+      resolucion: this.rutaNueva.n_resolucion_actual,
+      resolucionActual: this.rutaNueva.n_resolucion_actual,
+      direccionTerritorial: this.rutaNueva.dir_territorial,
+      documento: this.rutaNueva.nombreDocumento,
+      nombreOriginal: this.rutaNueva.nombreOriginal,
+      rutaArchivo: this.rutaNueva.ruta
+    }
+    if (validarCampos(JSONRutaNueva)) {
       Swal.fire({
         titleText: "¿Está seguro que quiere agregar una ruta nueva?",
         text: "Después de agregar una ruta nueva, no podrá eliminarla.",
@@ -289,9 +300,6 @@ export class RutasComponent implements OnInit {
           this.servicioTerminales.crearRuta(JSONRutaNueva).subscribe({
             next: (respuesta: any) => {
               this.listarRutas()
-              this.rutaId = null
-              this.rutaSeleccionada = null
-              this.rutaConsultada = false
               this.obtenerCantidadRutas(this.usuario!.id)
               this.rutaNueva = this.inicializarRutaNueva()
               this.estadoAgregarRuta(false)
