@@ -220,11 +220,11 @@
             <input [(ngModel)]="rutaNueva.via" name="via" type="text" class="form-control"
               [class.marcar-error]="!rutaNueva.via && error" placeholder="Vía">
           </td>
-          <td><!-- SELECT RUTA ACTIVA -->
+          <td><!-- SELECT RUTA ACTIVA [class.marcar-error]="!rutaNueva.ruta_activa && error" -->
             <select [(ngModel)]="rutaNueva.ruta_activa" name="ruta_activa" class="form-select"
-              [class.marcar-error]="!rutaNueva.ruta_activa && error"
+              [disabled]="true"
               (change)="estadoRuta(rutaNueva.ruta_activa,undefined)">
-              <option [value]='null'>Seleccione una opción</option>
+              <option [value]='null'>-</option>
               <option [value]='true'>Si</option>
               <option [value]='false'>No</option>
             </select>

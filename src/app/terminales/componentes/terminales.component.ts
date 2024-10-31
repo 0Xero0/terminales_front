@@ -28,28 +28,12 @@ export class TerminalesComponent implements OnInit {
   clases: Array<Clases> = []
   faltantes: Array<number> = []
 
-  selectedValue: any
-  inputValue: any
-  opciones: Array<any> = [{ codigo: 1, nombre: 'opción 1' }, { codigo: 2, nombre: 'opción 2' }]
-
   constructor(private servicioTerminales: TerminalesService) {
     this.usuario = JSON.parse(localStorage.getItem('UsuarioVigia')!)
   }
 
-  ngOnInit() {
-    //this.obtenerCantidadRutas(this.usuario!.id)
-    //console.log(this.usuario)
-  }
-  /* obtenerCantidadRutas(idUsuario: any) {
-    this.servicioTerminales.cantidadRutas(idUsuario).subscribe({
-      next: (respuesta: any) => {
-        console.log(respuesta)
-        if (respuesta.message) { this.cantidadRutas = 'No se pudo obtener un total de las rutas registradas.' }
-        else { this.cantidadRutas = respuesta }
+  ngOnInit() {}
 
-      }
-    })
-  } */
   recibirNumeroRutas(numeroRutas:number){
     this.cantidadRutas = numeroRutas
   }

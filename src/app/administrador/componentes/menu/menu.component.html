@@ -13,11 +13,12 @@
         </li>
       </ul>
     </li>
-    <li class="modulo">
+    <li class="modulo moduloseguridad" style="margin-left: 16px;">
       <span class="nombre-modulo">Seguridad</span>
-      <ul class="submodulos">
-        <li class="submodulo" (click)="cerrarSesion()">
-          <span class="nombre-submodulo">Salir</span>
+      <ul class=" submodulosseguridad">
+        <li class="submoduloseguridad " (click)="cerrarSesion()">
+          <span *ngIf="inicioVigia2" class="nombre-submodulo nombre-submoduloseguridad">Volver</span>
+          <span *ngIf="inicioSesion" class="nombre-submodulo nombre-submoduloseguridad">Salir</span>
         </li>
       </ul>
     </li>
@@ -65,7 +66,7 @@
 </div>
 <div class="linea"></div>
 
-<nav class="custom-breadcrumb" style="--bs-breadcrumb-divider: '>'; margin-left: 67px;" aria-label="breadcrumb">
+<!-- <nav class="custom-breadcrumb" style="--bs-breadcrumb-divider: '>'; margin-left: 67px;" aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
       <a [routerLink]="getPrimeraRutaModulo()" (click)="seleccionarModulo(nombrePrimerModulo)">Inicio</a>
@@ -74,4 +75,4 @@
       {{ nombreModuloSeleccionado === 'Inicio' ? 'Inicio' : nombreModuloSeleccionado }}
     </li>
   </ol>
-</nav>
+</nav> -->

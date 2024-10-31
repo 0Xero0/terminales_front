@@ -268,7 +268,7 @@ export class RutasComponent implements OnInit {
         tipoLLegada: this.rutaNueva.tipo_llegada,
         direccion: this.rutaNueva.direccion,
         via: this.rutaNueva.via,
-        rutaHabilitada: this.rutaNueva.ruta_activa,
+        rutaHabilitada: true,
         corresponde: 1,
         resolucion: this.rutaNueva.n_resolucion_actual,
         resolucionActual: this.rutaNueva.n_resolucion_actual,

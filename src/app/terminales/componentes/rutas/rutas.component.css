@@ -135,12 +135,12 @@ input[type="file"]{
 
 .input-archivo .boton-adjuntar{
   box-sizing: border-box;
-  width: 85px;
+  width: 180px;
   padding: 5px 10px;
   border: 1px solid var(--azul);
   color: #ffff;
   background-color: var(--azul);
-  border-radius: 3px 0 0 3px;
+  border-radius: 3px 0 0 3px;
   font-size: 11px;
   font-weight: 600;
 }

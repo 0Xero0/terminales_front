@@ -19,9 +19,9 @@ export class InicioVigia2Component {
 
   token: string | null = null
 
-  constructor(private servicioAutenticacion: AutenticacionService,private enrutador: Router, private route: ActivatedRoute) {}
+  constructor(private servicioAutenticacion: AutenticacionService, private enrutador: Router, private route: ActivatedRoute) { }
 
-  ngOnInit(): void{
+  ngOnInit(): void {
     // Obtener el token de la URL
     this.route.queryParamMap.subscribe(params => {
       this.token = params.get('token');
@@ -38,6 +38,7 @@ export class InicioVigia2Component {
         this.servicioAutenticacion.inicioVigia2(this.token).subscribe({
           next: (respuesta: IniciarSesionRespuesta) => {
             Swal.close()
+            localStorage.setItem('inicio-vigia2', JSON.stringify(true))
             this.servicioAutenticacion.guardarInformacionInicioSesion(
               respuesta.token,
               respuesta.rol,
@@ -46,14 +47,14 @@ export class InicioVigia2Component {
             if (respuesta.claveTemporal === true) {
               this.enrutador.navigateByUrl('/actualizar-contrasena')
             } else {
-              if(respuesta.rol.modulos.length > 0){
-                if(!respuesta.rol.modulos[0].ruta && respuesta.rol.modulos[0].submodulos.length > 0){
+              if (respuesta.rol.modulos.length > 0) {
+                if (!respuesta.rol.modulos[0].ruta && respuesta.rol.modulos[0].submodulos.length > 0) {
                   this.enrutador.navigateByUrl(`/administrar${respuesta.rol.modulos[0].submodulos[0].ruta}`);
-                }else{
+                } else {
                   this.enrutador.navigateByUrl(`/administrar${respuesta.rol.modulos[0].ruta}`);
                 }
               }
-              else{
+              else {
                 this.enrutador.navigateByUrl(`/administrar`);
               }
             }

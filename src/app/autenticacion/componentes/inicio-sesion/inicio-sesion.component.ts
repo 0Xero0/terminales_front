@@ -43,25 +43,26 @@ export class InicioSesionComponent implements OnInit {
       text: 'Espere por favor...',
     });
     Swal.showLoading(null);
-    this.servicioAutenticacion.iniciarSesion(this.formulario.controls['usuario'].value.toString(),this.formulario.controls['clave'].value,
+    this.servicioAutenticacion.iniciarSesion(this.formulario.controls['usuario'].value.toString(), this.formulario.controls['clave'].value,
     ).subscribe({
       next: (respuesta: IniciarSesionRespuesta) => {
         Swal.close()
-        localStorage.setItem('tokenVigia',respuesta.token)
-        this.servicioAutenticacion.guardarInformacionInicioSesion(respuesta.token,respuesta.rol,respuesta.usuario,respuesta.aplicativos)
+        localStorage.setItem('tokenVigia', respuesta.token)
+        localStorage.setItem('inicio-sesion', JSON.stringify(true))
+        this.servicioAutenticacion.guardarInformacionInicioSesion(respuesta.token, respuesta.rol, respuesta.usuario, respuesta.aplicativos)
         if (respuesta.claveTemporal === true) {
           this.enrutador.navigateByUrl('/actualizar-contrasena')
         } else {
-          if(respuesta.rol.modulos.length > 0){
-            if(!respuesta.rol.modulos[0]?.ruta && respuesta.rol.modulos[0]?.submodulos?.length > 0){
+          if (respuesta.rol.modulos.length > 0) {
+            if (!respuesta.rol.modulos[0]?.ruta && respuesta.rol.modulos[0]?.submodulos?.length > 0) {
               //console.log("Entro 1")
               this.enrutador.navigateByUrl(`/administrar${respuesta.rol.modulos[0].submodulos[0].ruta}`);
-            }else{
+            } else {
               //console.log("Entro 2")
               this.enrutador.navigateByUrl(`/administrar${respuesta.rol.modulos[0].ruta}`);
             }
           }
-          else{
+          else {
             this.enrutador.navigateByUrl(`/administrar`);
           }
         }
@@ -75,8 +76,8 @@ export class InicioSesionComponent implements OnInit {
         if (error.status == 400) {
           this.popup.abrirPopupFallido('Error al iniciar sesión', error.error.message)
         }
-        if(!error.status){
-          this.popup.abrirPopupFallido('Error al iniciar sesión','Posiblemente esté presentando dificultades de conexión')
+        if (!error.status) {
+          this.popup.abrirPopupFallido('Error al iniciar sesión', 'Posiblemente esté presentando dificultades de conexión')
         }
       }
     })
