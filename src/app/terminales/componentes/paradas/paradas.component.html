@@ -60,7 +60,7 @@
                 <td><!-- SELECT DIRECCIONES -->
                   <select [(ngModel)]="parada.direccion_id" name="" [id]="'dir'+i" class="form-select"
                     [disabled]="parada.tipo_llegada_id === null"
-                    (change)="manejarDirecciones($event,parada.tipo_llegada_id,parada.codigo_cp,i)">
+                    (change)="[manejarDirecciones($event,parada.tipo_llegada_id,parada.codigo_cp,i),manejarCambios()]">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let direccion of parada.direcciones" [value]="direccion.id">
                       {{direccion.descripcion}}</option>

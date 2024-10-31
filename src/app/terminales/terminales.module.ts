@@ -14,6 +14,7 @@ import { TemplatesModule } from '../templates/templates.module';
 import { TerminalesComponent } from './componentes/terminales.component';
 import { ClasesComponent } from './componentes/clases/clases.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { ListadoComponent } from './componentes/listado/listado.component';
 
 
 
@@ -22,7 +23,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     TerminalesComponent,
     RutasComponent,
     ParadasComponent,
-    ClasesComponent
+    ClasesComponent,
+    ListadoComponent
   ],
   imports: [
     CommonModule,
