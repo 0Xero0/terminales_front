@@ -438,12 +438,14 @@ export class RutasComponent implements OnInit {
   recibirParadas(paradas: any) {
     this.paradas = []
     this.paradas = paradas
-    this.manejarCambios()
+    this.paradasGuardar.emit(this.paradas)
+    //this.manejarCambios()
   }
   recibirClases(clases: any) {
     this.clases = []
     this.clases = clases
-    this.manejarCambios()
+    this.clasesGuardar.emit(this.clases)
+    //this.manejarCambios()
   }
 
   manejarTipoLlegadaNueva() {

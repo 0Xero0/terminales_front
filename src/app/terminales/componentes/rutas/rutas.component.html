@@ -77,7 +77,7 @@
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let direccion of ruta.direcciones" [value]='direccion.id'>{{direccion.descripcion}}
               </option>
-              <option value="abrirModal">Añadir nueva dirección</option> Opción para abrir el modal
+              <option value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal -->
             </select>
           </td>
           <td style="width: 130px;"><!-- (click)="seleccionarRuta(ruta, i)" VIA -->
@@ -130,7 +130,7 @@
                 (change)="guardarArchivo($event,i,1,5)"
                 [disabled]="ruta.corresponde === null || ruta.corresponde === 1 || editable">
             </label>
-            <a href="" *ngIf="ruta.nombre_original" class="a"
+            <a *ngIf="ruta.nombre_original" class="a"
               (click)="descargarArchivo(ruta.nombre_original,ruta.documento,ruta.ruta_archivo)">
               Descargar {{ruta.nombre_original}}
             </a>
@@ -271,7 +271,7 @@
               <input #input type="file" id="adjuntar" name="adjuntar" accept=".pdf"
                 (change)="guardarArchivo($event,undefined,2,5)">
             </label>
-            <a href="" *ngIf="rutaNueva.nombreOriginal" class="a"
+            <a *ngIf="rutaNueva.nombreOriginal" class="a"
               (click)="descargarArchivo(rutaNueva.nombreOriginal,rutaNueva.nombreDocumento,rutaNueva.ruta)">
               Descargar {{rutaNueva.nombreOriginal}}
             </a>
