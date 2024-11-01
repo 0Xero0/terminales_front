@@ -28,10 +28,10 @@
   </div>
   <!-- //////////////SECCION BOTONES /////////////////////////////////////////// -->
   <div class="d-flex mt-4">
-    <button type="button" class="boton primario relleno" [disabled]="hayCambios || aprobado" (click)="enviarST()">
+    <button type="button" class="boton primario relleno" [disabled]="hayCambios && editable" (click)="enviarST()">
       Enviar a ST
     </button>
-    <button type="button" class="boton primario relleno" style="margin-left: 300px;" [disabled]="!hayCambios || aprobado"
+    <button type="button" class="boton primario relleno" style="margin-left: 300px;" [disabled]="!hayCambios && editable"
       (click)="guardar()">
       Guardar
     </button>
@@ -41,12 +41,12 @@
   </div>
   <!--  -->
   <app-rutas
-    [verificacionVisible]="verificacionVisible"
-    [verificacionEditable]="verificacionEditable"
-    [editable]="editable"
     [faltantes]="faltantes"
     [aprobado]="aprobado"
     [todoGuardado]="todoGuardado"
+    (verificacionVisibleEmit)="recivirVerificacionVisible($event)"
+    (verificacionEditableEmit)="recivirVerificacionEditable($event)"
+    (editableEmit)="recibirEditable($event)"
     (numeroRutas)="recibirNumeroRutas($event)"
     (hayCambios)="recibirHayCambios($event)"
     (rutasGuardar)="recibirRutas($event)"

@@ -27,14 +27,14 @@
                 <td>{{clase.clase}}</td>
                 <td>
                   <select [(ngModel)]="clase.tipo_vehiculo_id" name="" [id]="'tipoVehiculo'+i" class="form-select"
-                    (change)="[manejarTipoVehiculo(clase.tipo_vehiculo_id,i),this.manejarCambios()]">
+                    (change)="[manejarTipoVehiculo(clase.tipo_vehiculo_id,i),this.manejarCambios()]" [disabled]="editable">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let Tipo of clase.tipoVehiculo" [value]="Tipo.id">{{Tipo.descripcion}}</option>
                   </select>
                 </td>
                 <td>
                   <select [(ngModel)]="clase.estado" name="" [id]="'estado'+i" class="form-select"
-                  (change)="[manejarEstado(i),this.manejarCambios()]">
+                  (change)="[manejarEstado(i),this.manejarCambios()]" [disabled]="editable">
                     <option [value]="null">Seleccione una opción</option>
                     <option [value]="true">Si</option>
                     <option [value]="false">No</option>
@@ -85,7 +85,7 @@
                 </td>
               </tr>
               <!-- BOTÓN AGREGAR NUEVA PARADA -->
-              <tr *ngIf="!verificacionVisible">
+              <tr *ngIf="!editable">
                 <td colspan="5">
                   <div class="row boton-agregar">
                     <label for="" style="font-size: small;">

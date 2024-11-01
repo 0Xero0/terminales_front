@@ -13,9 +13,9 @@ export class ClasesComponent implements OnInit, OnChanges {
   @Output() hayCambios: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() clasesGuardar: EventEmitter<Array<Clases>> = new EventEmitter<Array<Clases>>();
   @Input() rutaId?: any
-  @Input() verificacionVisible?: boolean
+  @Input() verificacionVisible: boolean = false
   @Input() verificacionEditable?: boolean
-  @Input() editable?: boolean
+  @Input() editable: boolean = false
   @Input() aprobado?: boolean
   clases: Array<Clases> = []
   nuevaClase: Clases

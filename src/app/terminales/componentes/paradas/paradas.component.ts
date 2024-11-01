@@ -17,7 +17,7 @@ export class ParadasComponent implements OnInit, OnChanges {
   @Input() paginadorParadas?: Paginador<any>
   @Input() verificacionVisible?: boolean
   @Input() verificacionEditable?: boolean
-  @Input() editable?: boolean
+  @Input() editable: boolean = false
   @Input() aprobado?: boolean
   paradas: Array<Paradas> = []
   nuevaParada: Paradas

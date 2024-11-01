@@ -18,12 +18,15 @@ export class RutasComponent implements OnInit {
   @Output() paradasGuardar: EventEmitter<Array<Paradas>> = new EventEmitter<Array<Paradas>>();
   @Output() clasesGuardar: EventEmitter<Array<Clases>> = new EventEmitter<Array<Clases>>();
   @Output() numeroRutas: EventEmitter<number> = new EventEmitter<number>();
-  @Input() verificacionVisible?: boolean
-  @Input() verificacionEditable?: boolean
-  @Input() editable?: boolean
+  @Output() verificacionVisibleEmit: EventEmitter <boolean> =  new EventEmitter<boolean>();
+  @Output() verificacionEditableEmit: EventEmitter <boolean> =  new EventEmitter<boolean>();
+  @Output() editableEmit: EventEmitter <boolean> =  new EventEmitter<boolean>();
   @Input() aprobado?: boolean
   @Input() todoGuardado?: boolean
   @Input() faltantes?: Array<number>
+  verificacionVisible: boolean = false
+  verificacionEditable: boolean = false
+  editable: boolean = false
   usuario?: { id: number, usuario: string, nombre: string };
   rol?: { id: number, nombre: string }
 
@@ -97,8 +100,11 @@ export class RutasComponent implements OnInit {
 
   listarRutas() {
     this.servicioTerminales.listarRutas().subscribe({
-      next: (respuesta) => {
+      next: (respuesta:any) => {
         this.rutas = respuesta.rutas
+        this.editable = !respuesta.editable
+        this.verificacionEditable = !respuesta.verificacionEditable
+        this.verificacionVisible = respuesta.verificacionVisible
         if (this.rutas) {
           for (let i = 0; i < this.rutas.length; i++) {//RECORREMOS LAS RUTAS
             if (this.rutas[i].tipo_llegada_id) {//COMPROBAMOS QUE EXISTA UN TIPO DE LLEGADA Y SI EXISTE

@@ -34,9 +34,9 @@ export class TerminalesComponent implements OnInit {
     this.usuario = JSON.parse(localStorage.getItem('UsuarioVigia')!)
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
-  recibirNumeroRutas(numeroRutas:number){
+  recibirNumeroRutas(numeroRutas: number) {
     this.cantidadRutas = numeroRutas
   }
 
@@ -46,17 +46,29 @@ export class TerminalesComponent implements OnInit {
 
   recibirRutas(rutas: Ruta[]) {
     this.rutas = rutas
-    console.log('Rutas: ', this.rutas)
+    //console.log('Rutas: ', this.rutas)
   }
 
   recibirParada(paradas: any) {
     this.paradas = paradas
-    console.log('Paradas: ', this.paradas)
+    //console.log('Paradas: ', this.paradas)
   }
 
   recibirClases(clases: any) {
     this.clases = clases
-    console.log('Clases: ', this.clases)
+    //console.log('Clases: ', this.clases)
+  }
+
+  recivirVerificacionVisible(verificacionVisible: boolean) {
+    this.verificacionVisible = verificacionVisible
+  }
+
+  recivirVerificacionEditable(verificacionEditable: boolean) {
+    this.verificacionEditable = verificacionEditable
+  }
+
+  recibirEditable(editable: boolean) {
+    this.editable = editable
   }
 
   guardar() {
@@ -127,7 +139,7 @@ export class TerminalesComponent implements OnInit {
       error: (error: HttpErrorResponse) => {
         if (error.status == 400) {
           Swal.fire('¡Fallo al guardar!', 'Por favor, vuelva a intentarlo más tarde.', 'error');
-        }else{
+        } else {
           Swal.fire('¡Error desconocido!', 'Por favor, vuelva a intentarlo más tarde.', 'error');
         }
       }
@@ -144,14 +156,15 @@ export class TerminalesComponent implements OnInit {
     this.servicioTerminales.enviarST().subscribe({
       next: (respuesta: any) => {
         this.faltantes = respuesta.faltantes
-        this.aprobado = respuesta.aprobado
-        if(this.faltantes.length <= 0){
+        this.todoGuardado= respuesta.aprobado
+
+        if (this.faltantes.length <= 0) {
           Swal.fire('¡Envio exitoso!', 'Enviado a la Superintendencia de transporte.', 'success');
         }
-        else{
+        else {
           Swal.fire('¡Errores encontrados!', 'Por favor, corrija antes de vlver a enviar.', 'error');
-          for(let ruta of this.rutas){
-            if(this.faltantes?.includes(ruta.id)) ruta.errorRutas = true
+          for (let ruta of this.rutas) {
+            if (this.faltantes?.includes(ruta.id)) ruta.errorRutas = true
             //console.log(ruta.errorRutas)
           }
         }
@@ -159,7 +172,7 @@ export class TerminalesComponent implements OnInit {
       error: (error: HttpErrorResponse) => {
         if (error.status == 400) {
           Swal.fire('¡Fallo al enviar a ST!', 'Por favor, vuelva a intentarlo más tarde.', 'error');
-        }else{
+        } else {
           Swal.fire('¡Error desconocido!', 'Por favor, vuelva a intentarlo más tarde.', 'error');
         }
       }
