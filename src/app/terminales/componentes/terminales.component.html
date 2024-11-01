@@ -11,7 +11,7 @@
           <td class="fw-semibold titulo-fila" style="width: 150px !important;">Razón social</td>
           <td>
             <ng-container>
-              {{usuario.nombre}}
+              {{usuario?.nombre}}
             </ng-container>
           </td>
         </tr>
@@ -27,7 +27,7 @@
     </table>
   </div>
   <!-- //////////////SECCION BOTONES /////////////////////////////////////////// -->
-  <div class="d-flex mt-4">
+  <div class="d-flex mt-4" *ngIf="rol?.id === 3">
     <button type="button" class="boton primario relleno" [disabled]="hayCambios || editable" (click)="enviarST()">
       Enviar a ST
     </button>
@@ -35,7 +35,16 @@
       (click)="guardar()">
       Guardar
     </button>
-    <button type="button" class="boton primario delineado" style="margin-left: 300px;" *ngIf="verificacionVisible">
+  </div>
+  <div class="d-flex mt-4" *ngIf="rol?.id !== 3">
+    <button type="button" class="boton primario relleno" [disabled]="hayCambios || editable" (click)="enviarST()">
+      Enviar a ST
+    </button>
+    <button type="button" class="boton primario relleno" style="margin-left: 300px;" [disabled]="!hayCambios || editable"
+      (click)="guardar()">
+      Guardar
+    </button>
+    <button type="button" class="boton primario delineado" style="margin-left: 300px;">
       Volver
     </button>
   </div>

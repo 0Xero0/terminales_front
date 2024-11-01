@@ -2,12 +2,14 @@ import { Component, Input, OnInit, Output } from '@angular/core';
 import { Ruta } from '../modelos/ruta';
 import { Paradas } from '../modelos/paradas';
 import { Clases } from '../modelos/clases';
-import { Usuario } from 'src/app/usuarios/modelos/Usuario';
 import { TerminalesService } from '../servicios/terminales.service';
 import { ReplaySubject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RutasComponent } from './rutas/rutas.component';
+import { Rol } from 'src/app/autenticacion/modelos/Rol';
+import { ServicioLocalStorage } from 'src/app/administrador/servicios/local-storage.service';
+import { Usuario } from 'src/app/autenticacion/modelos/IniciarSesionRespuesta';
 
 @Component({
   selector: 'app-terminales',
@@ -22,7 +24,8 @@ export class TerminalesComponent implements OnInit {
   aprobado: boolean = false
   todoGuardado: boolean = false
 
-  usuario: Usuario
+  usuario: Usuario | null
+  rol: Rol | null
   cantidadRutas: any
 
   rutas: Array<Ruta> = []
@@ -30,8 +33,9 @@ export class TerminalesComponent implements OnInit {
   clases: Array<Clases> = []
   faltantes: Array<number> = []
 
-  constructor(private servicioTerminales: TerminalesService) {
-    this.usuario = JSON.parse(localStorage.getItem('UsuarioVigia')!)
+  constructor(private servicioTerminales: TerminalesService, servicioLocalStorage: ServicioLocalStorage) {
+    this.usuario = servicioLocalStorage.obtenerUsuario()
+    this.rol = servicioLocalStorage.obtenerRol()
   }
 
   ngOnInit() { }
