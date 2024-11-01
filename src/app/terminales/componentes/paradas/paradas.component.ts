@@ -81,13 +81,13 @@ export class ParadasComponent implements OnInit, OnChanges {
     if (this.paradas.length > 0) {
       for (let i = 0; i < this.paradas.length; i++) {//RECORREMOS LAS RUTAS
         if (this.paradas[i].codigo_departamento) {//COMPROBAMOS QUE EXISTA UN DEPARTAMENTO Y SI EXISTE
-          this.maestraMunicipios(this.paradas[i].codigo_departamento, 'municipio' + i, i)//CONSULTAMOS EL MUNICIPIO CORRESPONDIENTE
+          this.maestraMunicipios(this.paradas[i].codigo_departamento, 'municipio' + i, i,undefined,this.paradas[i].parada_id)//CONSULTAMOS EL MUNICIPIO CORRESPONDIENTE
         }
         if (this.paradas[i].codigo_municipio) {//COMPROBAMOS QUE EXISTA UN MUNICIPIO Y SI EXISTE
-          this.maestraCP(this.paradas[i].codigo_municipio, i)//CONSULTAMOS EL CENTRO POBLADO CORRESPONDIENTE
+          this.maestraCP(this.paradas[i].codigo_municipio, i,undefined,this.paradas[i].parada_id)//CONSULTAMOS EL CENTRO POBLADO CORRESPONDIENTE
         }
         if (this.paradas[i].tipo_llegada_id) {//COMPROBAMOS QUE EXISTA UN TIPO DE LLEGADA Y SI EXISTE
-          this.maestraDireccion(this.paradas[i].tipo_llegada_id, this.paradas[i].codigo_cp, i)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
+          this.maestraDireccion(this.paradas[i].tipo_llegada_id, this.paradas[i].codigo_cp, i, undefined, this.paradas[i].parada_id)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
         }
       }
     }
@@ -104,7 +104,7 @@ export class ParadasComponent implements OnInit, OnChanges {
     })
   }
 
-  maestraMunicipios(codigo_departamento: any, nombre: string, index?: number, cambio?: boolean) { // MAESTRA DE MUNICIPIOS
+  maestraMunicipios(codigo_departamento: any, nombre: string, index?: number, cambio?: boolean,paradaId?:any) { // MAESTRA DE MUNICIPIOS
     const id_departamento = codigo_departamento
     const selectElement = document.getElementById(nombre) as HTMLSelectElement;
     //console.log(id_departamento)
@@ -114,16 +114,23 @@ export class ParadasComponent implements OnInit, OnChanges {
           console.log(id_departamento)
           //selectElement.disabled = false
           if (index !== undefined) {
-            this.paradas[index].municipios = [];
-            this.paradas[index].municipios = municipios.respuestaMunicipios
-            this.paradas[index].codigo_departamento = id_departamento
-            if (cambio) {
-              this.paradas[index].codigo_municipio = null
-              this.maestraCP('null', index, cambio)
-              this.paradas[index].direccion_id = null
-              this.manejarCambios()
+            for(let parada of this.paradas){
+              if(parada.parada_id === paradaId){
+                parada.municipios = []
+                parada.codigo_departamento = id_departamento
+                if(municipios.respuestaMunicipios.length > 0){
+                  parada.municipios = municipios.respuestaMunicipios
+                }else{
+                  parada.codigo_municipio = null
+                }
+                if(cambio){
+                  parada.codigo_municipio = null
+                  this.maestraCP('null', index, cambio,parada.parada_id)
+                  parada.direccion_id = null
+                  this.manejarCambios()
+                }
+              }
             }
-
           } else {
             this.municipios = []
             this.municipios = municipios.respuestaMunicipios
@@ -135,10 +142,14 @@ export class ParadasComponent implements OnInit, OnChanges {
     } else {
       //selectElement.disabled = true;
       if (index !== undefined) {
-        this.paradas[index].municipios = [];
-        this.paradas[index].codigo_municipio = null
-        this.maestraCP('null', index, cambio)
-        this.paradas[index].codigo_departamento = null
+        for(let parada of this.paradas){
+          if(parada.parada_id === paradaId){
+            parada.municipios = []
+            parada.codigo_municipio = null
+            this.maestraCP('null', index, cambio,parada.parada_id)
+            parada.codigo_departamento = null
+          }
+        }
       } else {
         this.municipios = []
         this.nuevaParada.codigo_municipio = null
@@ -147,21 +158,29 @@ export class ParadasComponent implements OnInit, OnChanges {
     }
   }
 
-  maestraCP(codigo_municipio: any, index?: number, cambio?: boolean) { // MAESTRA DE CENTROS POBLADOS
-    let codigoMunicipio = codigo_municipio
+  maestraCP(codigo_municipio: any, index?: number, cambio?: boolean, paradaId?:any) { // MAESTRA DE CENTROS POBLADOS
+    const codigoMunicipio = codigo_municipio
     //console.log(codigoMunicipio)
     if (codigoMunicipio !== 'null') {
       this.servicioTerminales.maestraCentrosPoblados(codigoMunicipio).subscribe({
         next: (respuesta: any) => {
           //console.log(respuesta)
           if (index !== undefined) {
-            this.paradas[index].centrosPoblados = [];
-            this.paradas[index].centrosPoblados = respuesta.respuestaCentrosPoblados
-            this.paradas[index].codigo_municipio = codigoMunicipio
-            if (cambio) {
-              this.paradas[index].codigo_cp = null
-              this.paradas[index].tipo_llegada_id = null
-              this.manejarCambios()
+            for(let parada of this.paradas){
+              if(parada.parada_id === paradaId){
+                parada.centrosPoblados = []
+                parada.codigo_municipio = codigoMunicipio
+                if(respuesta.respuestaCentrosPoblados.length > 0){
+                  parada.centrosPoblados = respuesta.respuestaCentrosPoblados
+                }else{
+                  parada.codigo_cp = null
+                }
+                if(cambio){
+                  parada.codigo_cp = null
+                  parada.tipo_llegada_id = null
+                  this.manejarCambios()
+                }
+              }
             }
           } else {
             this.centrosPoblados = []
@@ -174,10 +193,14 @@ export class ParadasComponent implements OnInit, OnChanges {
     } else {
       //selectElement.disabled = true;
       if (index !== undefined) {
-        this.paradas[index].centrosPoblados = [];
-        this.paradas[index].codigo_cp = null
-        this.paradas[index].tipo_llegada_id = null
-        if(cambio)this.manejarCambios()
+        for(let parada of this.paradas){
+          if(parada.parada_id === paradaId){
+            parada.centrosPoblados = []
+            parada.codigo_cp = null
+            parada.tipo_llegada_id = null
+            if(cambio)this.manejarCambios()
+          }
+        }
       } else {
         this.centrosPoblados = [];
         this.nuevaParada!.codigo_cp = null
@@ -195,7 +218,7 @@ export class ParadasComponent implements OnInit, OnChanges {
     })
   }
 
-  maestraDireccion(id: any, codigo_cp: any, index?: any, cambio?: boolean) { // MAESTRA DE DIRECCIONES
+  maestraDireccion(id: any, codigo_cp: any, index?: any, cambio?: boolean, paradaId?:any) { // MAESTRA DE DIRECCIONES
     //console.log(id, codigo_cp)
     const idLlegada = Number(id)
     if (id !== 'null') {
@@ -203,12 +226,20 @@ export class ParadasComponent implements OnInit, OnChanges {
         next: (respuesta: any) => {
           //console.log(respuesta)
           if (index !== undefined) {
-            this.paradas[index].direcciones = []; //this.rutas[index].direccion_id = null
-            this.paradas[index].direcciones = respuesta.respuestaDirecciones
-            this.paradas[index].tipo_llegada_id = idLlegada
-            if (cambio) {
-              this.paradas[index].direccion_id = null
-              this.manejarCambios()
+            for(let parada of this.paradas){
+              if(parada.parada_id === paradaId){
+                parada.direcciones = []
+                parada.tipo_llegada_id = idLlegada
+                if(respuesta.respuestaDirecciones.length > 0){
+                  parada.direcciones = respuesta.respuestaDirecciones
+                }else{
+                  parada.direccion_id = null
+                }
+                if(cambio){
+                  parada.direccion_id = null
+                  this.manejarCambios()
+                }
+              }
             }
           } else {
             this.direcciones = []; this.nuevaParada!.direccion_id = null
@@ -219,10 +250,14 @@ export class ParadasComponent implements OnInit, OnChanges {
       })
     } else {
       if (index !== undefined) {
-        this.paradas[index].tipo_llegada_id = null;
-        this.paradas[index].direccion_id = null
-        this.paradas[index].direcciones = []
-        if(cambio)this.manejarCambios()
+        for(let parada of this.paradas){
+          if(parada.parada_id === paradaId){
+            parada.direcciones = []
+            parada.direccion_id = null
+            parada.tipo_llegada_id = null
+            if(cambio)this.manejarCambios()
+          }
+        }
       } else {
         this.nuevaParada.tipo_llegada_id = null;
         this.nuevaParada.direccion_id = null;

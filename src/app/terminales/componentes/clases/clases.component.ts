@@ -70,7 +70,7 @@ export class ClasesComponent implements OnInit, OnChanges {
   maestrasClases() { // Consulta las maestras que corresponda llenar en la lista de Clases
     if (this.clases.length > 0) {
       for (let i = 0; i < this.clases.length; i++) {
-        this.maestraTipoVehiculo(this.clases[i].clase_id, i)
+        this.maestraTipoVehiculo(this.clases[i].clase_id, i,undefined,this.clases[i].id_ruta_vehiculos)
       }
     }
   }
@@ -83,18 +83,26 @@ export class ClasesComponent implements OnInit, OnChanges {
     })
   }
 
-  maestraTipoVehiculo(idGrupo: any, index?: any, cambio?: boolean) {
+  maestraTipoVehiculo(idGrupo: any, index?: any, cambio?: boolean, claseId?:any) {
     if (index !== undefined) {
-      this.servicioTerminales.maestraTiposVehiculos(idGrupo).subscribe({
-        next: (respuesta: any) => {
-          this.clases[index].tipoVehiculo = []
-          this.clases[index].tipoVehiculo = respuesta.respuestaTiposvehiculos
-          if (cambio) {
-            this.clases[index].tipo_vehiculo_id = null
-            this.manejarCambios()
+      if(idGrupo !== 'null' || idGrupo !== null){
+        this.servicioTerminales.maestraTiposVehiculos(idGrupo).subscribe({
+          next: (respuesta: any) => {
+            for(let clase of this.clases){
+              if(clase.id_ruta_vehiculos == claseId){
+                clase.tipoVehiculo = []
+                if(respuesta.respuestaTiposvehiculos.length > 0){
+                  clase.tipoVehiculo = respuesta.respuestaTiposvehiculos
+                }else{ clase.tipo_vehiculo_id = null}
+                if(cambio){
+                  clase.tipo_vehiculo_id = null
+                  this.manejarCambios()
+                }
+              }
+            }
           }
-        }
-      })
+        })
+      }
     } else {
       this.servicioTerminales.maestraTiposVehiculos(idGrupo).subscribe({
         next: (respuesta: any) => {
@@ -148,18 +156,18 @@ export class ClasesComponent implements OnInit, OnChanges {
     }
   }
 
-  manejarTipoVehiculo(tipo_vehiculo_id:any, index?:any){
-    if(index !== undefined){
-      this.clases[index].tipo_vehiculo_id = tipo_vehiculo_id
+  manejarTipoVehiculo(tipo_vehiculo_id:any, index?:any, clase?:Clases){
+    if(index !== undefined && clase){
+      clase.tipo_vehiculo_id = tipo_vehiculo_id
       this.manejarCambios()
     }
   }
 
-  manejarEstado(index?: any) {
-    if (index !== undefined) {
-      if(this.clases[index].estado === 'true') this.clases[index].estado = true
-      else if(this.clases[index].estado === 'false') this.clases[index].estado = false
-      else  this.clases[index].estado = null
+  manejarEstado(index?: any, clase?:Clases) {
+    if (index !== undefined && clase) {
+      if(clase.estado === 'true') clase.estado = true
+      else if(clase.estado === 'false') clase.estado = false
+      else  clase.estado = null
       this.manejarCambios()
     } else {
       if (this.nuevaClase.estado === 'true') this.nuevaClase.estado = true

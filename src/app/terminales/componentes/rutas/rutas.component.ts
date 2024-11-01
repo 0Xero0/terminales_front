@@ -18,15 +18,15 @@ export class RutasComponent implements OnInit {
   @Output() paradasGuardar: EventEmitter<Array<Paradas>> = new EventEmitter<Array<Paradas>>();
   @Output() clasesGuardar: EventEmitter<Array<Clases>> = new EventEmitter<Array<Clases>>();
   @Output() numeroRutas: EventEmitter<number> = new EventEmitter<number>();
-  @Output() verificacionVisibleEmit: EventEmitter <boolean> =  new EventEmitter<boolean>();
-  @Output() verificacionEditableEmit: EventEmitter <boolean> =  new EventEmitter<boolean>();
-  @Output() editableEmit: EventEmitter <boolean> =  new EventEmitter<boolean>();
+  @Output() verificacionVisibleEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() verificacionEditableEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() editableEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() aprobado?: boolean
   @Input() todoGuardado?: boolean
   @Input() faltantes?: Array<number>
   verificacionVisible: boolean = false
   verificacionEditable: boolean = false
-  editable: boolean = false
+  editable: boolean = true
   usuario?: { id: number, usuario: string, nombre: string };
   rol?: { id: number, nombre: string }
 
@@ -100,15 +100,16 @@ export class RutasComponent implements OnInit {
 
   listarRutas() {
     this.servicioTerminales.listarRutas().subscribe({
-      next: (respuesta:any) => {
+      next: (respuesta: any) => {
         this.rutas = respuesta.rutas
         this.editable = !respuesta.editable
         this.verificacionEditable = !respuesta.verificacionEditable
         this.verificacionVisible = respuesta.verificacionVisible
+        this.editableEmit.emit(this.editable)
         if (this.rutas) {
           for (let i = 0; i < this.rutas.length; i++) {//RECORREMOS LAS RUTAS
             if (this.rutas[i].tipo_llegada_id) {//COMPROBAMOS QUE EXISTA UN TIPO DE LLEGADA Y SI EXISTE
-              this.maestraDireccion(this.rutas[i].tipo_llegada_id, this.rutas[i].cp_destino_codigo, i)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
+              this.maestraDireccion(this.rutas[i].tipo_llegada_id, this.rutas[i].cp_destino_codigo, i, undefined, this.rutas[i].id)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
             }
           }
           this.rutasGuardar.emit(this.rutas)
@@ -212,7 +213,7 @@ export class RutasComponent implements OnInit {
     })
   }
 
-  maestraDireccion(tipo_llegada_id: any, cp_destino_codigo: any, index?: any, cambio?: boolean) { // MAESTRA DE DIRECCIONES
+  maestraDireccion(tipo_llegada_id: any, cp_destino_codigo: any, index?: any, cambio?: boolean, rutaId?: number) { // MAESTRA DE DIRECCIONES
     //console.log(index, tipo_llegada_id)
     const idLlegada = tipo_llegada_id
     if (idLlegada !== 'null') {
@@ -221,15 +222,21 @@ export class RutasComponent implements OnInit {
           //console.log(respuesta)
           if (index !== undefined) {
             //console.log(respuesta)
-            this.rutas[index].direcciones = [];
-            if (respuesta.respuestaDirecciones.length > 0) {
-              this.rutas[index].direcciones = respuesta.respuestaDirecciones
-            } else { this.rutas[index].direccion_id = null }
-            this.rutas[index].tipo_llegada_id = idLlegada
-            if (cambio) {
-              this.rutas[index].direccion_id = null
-              this.rutas[index].errorRutas = false
-              this.manejarCambios()
+            for (let ruta of this.rutas) {
+              if (ruta.id === rutaId) {
+                ruta.direcciones = []
+                ruta.tipo_llegada_id = idLlegada
+                if (respuesta.respuestaDirecciones.length > 0) {
+                  ruta.direcciones = respuesta.respuestaDirecciones
+                } else {
+                  ruta.direccion_id = null
+                }
+                if (cambio) {
+                  ruta.direccion_id = null
+                  ruta.errorRutas = false
+                  this.manejarCambios()
+                }
+              }
             }
           } else {
             this.direcciones = []; this.rutaNueva.direccion = null
@@ -240,10 +247,14 @@ export class RutasComponent implements OnInit {
       })
     } else {
       if (index !== undefined) {
-        this.rutas[index].tipo_llegada_id = null;
-        this.rutas[index].direccion_id = null
-        this.rutas[index].direcciones = []
-        if (cambio) { this.manejarCambios() }
+        for (let ruta of this.rutas) {
+          if (ruta.id === rutaId) {
+            ruta.tipo_llegada_id = null
+            ruta.direccion_id = null
+            ruta.direcciones = []
+            if (cambio) { this.manejarCambios() }
+          }
+        }
       } else {
         this.rutaNueva.direccion = null;
         this.rutaNueva.tipo_llegada = null;
@@ -327,15 +338,15 @@ export class RutasComponent implements OnInit {
     }
   }
 
-  manejarDirecciones(event: any, tipo_llegada_id: any, cp_destino: any, index?: number) {
-    console.log(tipo_llegada_id, cp_destino, event.target.value, index)
+  manejarDirecciones(event: any, tipo_llegada_id: any, cp_destino: any, index?: number, ruta?: Ruta) {
+    //console.log(tipo_llegada_id, cp_destino, event.target.value, index)
     const valorSeleccionado = event.target.value;
     if (valorSeleccionado === 'abrirModal') {
-      this.abrirModalConSwal(Number(tipo_llegada_id), cp_destino, index); // Si selecciona la opción de 'Añadir nueva dirección'
+      this.abrirModalConSwal(Number(tipo_llegada_id), cp_destino, index, ruta); // Si selecciona la opción de 'Añadir nueva dirección'
     } else {
-      if (index !== undefined) {
-        this.rutas[index].direccion_id = Number(valorSeleccionado)
-        this.rutas[index].errorRutas = false
+      if (index !== undefined && ruta) {
+        ruta.direccion_id = Number(valorSeleccionado)
+        ruta.errorRutas = false
         this.manejarCambios()
       } else {
         this.rutaNueva.direccion = Number(valorSeleccionado)
@@ -343,7 +354,7 @@ export class RutasComponent implements OnInit {
 
     }
   }
-  abrirModalConSwal(tipo_llegada_id: number, cp_destino: string, index?: number) {
+  abrirModalConSwal(tipo_llegada_id: number, cp_destino: string, index?: number, ruta?: Ruta) {
     // Modal con SweetAlert2 que tiene 2 inputs de texto
     Swal.fire({
       title: 'Añadir nueva dirección',
@@ -377,9 +388,9 @@ export class RutasComponent implements OnInit {
         this.servicioTerminales.crearDireccion(JSONDatosDireccion).subscribe({
           next: (respuesta: any) => {
             console.log(respuesta)
-            if (index !== undefined) {
-              this.rutas[index].direcciones = respuesta.respuestaDirecciones
-              this.rutas[index].direccion_id = null
+            if (index !== undefined && ruta) {
+              ruta.direcciones = respuesta.respuestaDirecciones
+              ruta.direccion_id = null
             } else {
               this.direcciones = respuesta.respuestaDirecciones
               this.rutaNueva.direccion = null
@@ -388,8 +399,8 @@ export class RutasComponent implements OnInit {
           }
         })
       } else if (result.isDismissed) {// Aquí manejas la acción de cancelación
-        if (index !== undefined) {
-          this.rutas[index].direccion_id = null
+        if (index !== undefined && ruta) {
+          ruta.direccion_id = null
         } else {
           this.rutaNueva.direccion = null
         }
@@ -398,15 +409,15 @@ export class RutasComponent implements OnInit {
     });
   }
 
-  estadoRuta(estado: any, index?: number) {
-    if (index !== undefined) {
+  estadoRuta(estado: any, index?: number, ruta?: Ruta) {
+    if (index !== undefined && ruta) {
       if (estado === 'false') {
-        this.rutas[index].estado = false
-        this.rutas[index].corresponde = null
-        this.rutas[index].resolucion_actual = null
+        ruta.estado = false
+        ruta.corresponde = null
+        ruta.resolucion_actual = null
         this.removeFile(1, index)
       } else if (estado === 'true') {
-        this.rutas[index].estado = true
+        ruta.estado = true
       }
       this.rutas[index].errorRutas = false
       this.manejarCambios()
@@ -420,18 +431,18 @@ export class RutasComponent implements OnInit {
     }
   }
 
-  corresponde(idCorresponde: any, index: any, idRuta: any) {
+  corresponde(idCorresponde: any, index: any, ruta: Ruta) {
     if (idCorresponde === 'null') {
-      this.rutas[index].corresponde = null
-      this.rutas[index].resolucion_actual = null
-      this.removeFile(1, index)
+      ruta.corresponde = null
+      ruta.resolucion_actual = null
+      this.removeFile(1, index, ruta)
     } else {
-      this.rutas[index].corresponde = Number(idCorresponde)
+      ruta.corresponde = Number(idCorresponde)
       if (Number(idCorresponde) === 1) {
-        this.rutas[index].resolucion_actual = this.rutas[index].resolucion
+        ruta.resolucion_actual = this.rutas[index].resolucion
       }
     }
-    this.rutas[index].errorRutas = false
+    ruta.errorRutas = false
     this.manejarCambios()
   }
 
@@ -462,17 +473,20 @@ export class RutasComponent implements OnInit {
   }
 
   // MANEJO DE ARCHIVOS //////////////////////////////////////////////////////////////////////////////////
-  manejarRemoverArchivo(input: HTMLInputElement, event: any, tipo: number, index?: any) {
+  manejarRemoverArchivo(input: HTMLInputElement, event: any, tipo: number, index?: any, ruta?: Ruta) {
     input.value = ''
     event.preventDefault();
-    this.removeFile(tipo, index)
+    this.removeFile(tipo, index, ruta)
     this.manejarCambios()
   }
-  removeFile(tipo?: number, index?: any) {
+  removeFile(tipo?: number, index?: any, ruta?: Ruta) {
     if (tipo === 1) {
-      this.rutas[index].documento = ''
-      this.rutas[index].nombre_original = ''
-      this.rutas[index].ruta_archivo = ''
+      if (ruta) {
+        ruta.documento = ''
+        ruta.nombre_original = ''
+        ruta.ruta_archivo = ''
+      }
+
     } else if (tipo === 2) {
       this.rutaNueva.nombreDocumento = ''
       this.rutaNueva.nombreOriginal = ''
@@ -480,7 +494,7 @@ export class RutasComponent implements OnInit {
     }
   }
 
-  guardarArchivo(event: any, index: any, tipo: number, tamanoMaximoMb: number, cambio?: boolean) {
+  guardarArchivo(event: any, index: any, tipo: number, tamanoMaximoMb: number, cambio?: boolean, ruta?: Ruta) {
     if (event) {
       Swal.fire({
         icon: 'info',
@@ -490,15 +504,18 @@ export class RutasComponent implements OnInit {
       Swal.showLoading(null);
       //console.log(this.tamanoValido(event.target.files[0]))
       if (this.tamanoValido(event.target.files[0], tamanoMaximoMb)) {
-        console.log(index, this.rutas)
+        //console.log(index, this.rutas)
         this.servicioArchivos.guardarArchivo(event.target.files[0], 'proveedores', this.usuario?.usuario!).subscribe({
           next: (archivo: any) => {
             Swal.close()
             if (tipo === 1) {
-              this.rutas[index].documento = archivo.nombreAlmacenado
-              this.rutas[index].nombre_original = archivo.nombreOriginalArchivo
-              this.rutas[index].ruta_archivo = archivo.ruta
-              this.manejarCambios()
+              if (ruta) {
+                ruta.documento = archivo.nombreAlmacenado
+                ruta.nombre_original = archivo.nombreOriginalArchivo
+                ruta.ruta_archivo = archivo.ruta
+                this.manejarCambios()
+              }
+
             } else if (tipo === 2) {
               this.rutaNueva.nombreDocumento = archivo.nombreAlmacenado
               this.rutaNueva.nombreOriginal = archivo.nombreOriginalArchivo

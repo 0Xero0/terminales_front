@@ -34,7 +34,7 @@
                 </td>
                 <td>
                   <select [(ngModel)]="clase.estado" name="" [id]="'estado'+i" class="form-select"
-                  (change)="[manejarEstado(i),this.manejarCambios()]" [disabled]="editable">
+                  (change)="[manejarEstado(i,clase),this.manejarCambios()]" [disabled]="editable">
                     <option [value]="null">Seleccione una opción</option>
                     <option [value]="true">Si</option>
                     <option [value]="false">No</option>

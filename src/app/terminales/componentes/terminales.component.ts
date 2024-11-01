@@ -134,7 +134,7 @@ export class TerminalesComponent implements OnInit {
         Swal.fire({ icon: 'success', titleText: '¡Guardado exitosamente!' });
         //console.log(respuesta)
         this.hayCambios = false
-        this.todoGuardado = true
+        this.todoGuardado = !this.todoGuardado
       },
       error: (error: HttpErrorResponse) => {
         if (error.status == 400) {
@@ -156,7 +156,7 @@ export class TerminalesComponent implements OnInit {
     this.servicioTerminales.enviarST().subscribe({
       next: (respuesta: any) => {
         this.faltantes = respuesta.faltantes
-        this.todoGuardado= respuesta.aprobado
+        this.todoGuardado = respuesta.aprobado
 
         if (this.faltantes.length <= 0) {
           Swal.fire('¡Envio exitoso!', 'Enviado a la Superintendencia de transporte.', 'success');
