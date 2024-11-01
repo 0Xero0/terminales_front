@@ -26,7 +26,7 @@
                 <td>{{parada.parada_id}}</td>
                 <td><!-- SELECT DEPARTAMENTOS -->
                   <select [(ngModel)]="parada.codigo_departamento" name="" [id]="'dep'+i" class="form-select"
-                    (change)="maestraMunicipios(parada.codigo_departamento,'municipio'+i,i,true)">
+                    (change)="maestraMunicipios(parada.codigo_departamento,'municipio'+i,i,true)" [disabled]="editable">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let departamento of departamentos" [value]="departamento.codigoDepartamento">
                       {{departamento.nombre}}</option>
@@ -34,7 +34,7 @@
                 </td>
                 <td><!-- SELECT MUNICIPIOS -->
                   <select [(ngModel)]="parada.codigo_municipio" name="" [id]="'municipio'+i" class="form-select"
-                    [disabled]="parada.codigo_departamento === null"
+                    [disabled]="parada.codigo_departamento === null || editable"
                     (change)="maestraCP(parada.codigo_municipio,i,true)">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let municipio of parada.municipios" [value]="municipio.codigoMunicipio">
@@ -43,7 +43,7 @@
                 </td>
                 <td><!-- SELECT CENTRO POBLADO -->
                   <select [(ngModel)]="parada.codigo_cp" name="" [id]="'cp'+i" class="form-select"
-                    [disabled]="parada.codigo_municipio === null" (change)="manejarTipoLlegada(parada.codigo_cp,i)">
+                    [disabled]="parada.codigo_municipio === null || editable" (change)="manejarTipoLlegada(parada.codigo_cp,i)">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let centroPoblado of parada.centrosPoblados"
                       [value]="centroPoblado.codigoCentroPoblado">{{centroPoblado.nombre}}</option>
@@ -52,14 +52,14 @@
                 <td><!-- SELECT TIPO DE LLEGADA -->
                   <select [(ngModel)]="parada.tipo_llegada_id" name="" [id]="'tp'+i" class="form-select"
                     (change)="maestraDireccion(parada.tipo_llegada_id,parada.codigo_cp,i,true)"
-                    [disabled]="parada.codigo_cp === null">
+                    [disabled]="parada.codigo_cp === null || editable">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let tipo of tiposLlegada" [value]="tipo.id">{{tipo.descripcion}}</option>
                   </select>
                 </td>
                 <td><!-- SELECT DIRECCIONES -->
                   <select [(ngModel)]="parada.direccion_id" name="" [id]="'dir'+i" class="form-select"
-                    [disabled]="parada.tipo_llegada_id === null"
+                    [disabled]="parada.tipo_llegada_id === null || editable"
                     (change)="[manejarDirecciones($event,parada.tipo_llegada_id,parada.codigo_cp,i),manejarCambios()]">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let direccion of parada.direcciones" [value]="direccion.id">
@@ -109,7 +109,8 @@
                 </td>
                 <td><!-- SELECT TIPO DE LLEGADA -->
                   <select [(ngModel)]="nuevaParada!.tipo_llegada_id" name="" [id]="'tpN'" class="form-select"
-                    [disabled]="nuevaParada.codigo_cp === null" [class.marcar-error]="!nuevaParada.tipo_llegada_id && error"
+                    [disabled]="nuevaParada.codigo_cp === null"
+                    [class.marcar-error]="!nuevaParada.tipo_llegada_id && error"
                     (change)="maestraDireccion(nuevaParada!.tipo_llegada_id,nuevaParada!.codigo_cp,undefined,true)">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let tipo of tiposLlegada" [value]="tipo.id">{{tipo.descripcion}}</option>
@@ -135,7 +136,7 @@
                 </td>
               </tr>
                <!-- ///////////// BOTÓN PARA HABILITAR EL AGREGAR NUEVA RUTA -->
-               <tr *ngIf="!verificacionVisible">
+               <tr *ngIf="!editable">
                 <td colspan="18">
                   <button type="button" class="boton primario relleno" (click)="estadoAgregarParada(true)">
                     Agregar parada <i class="bi bi-plus-circle"></i>
