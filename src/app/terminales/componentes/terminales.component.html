@@ -28,7 +28,7 @@
   </div>
   <!-- //////////////SECCION BOTONES /////////////////////////////////////////// -->
   <div class="d-flex mt-4">
-    <button type="button" class="boton primario relleno" [disabled]="hayCambios && editable" (click)="enviarST()">
+    <button type="button" class="boton primario relleno" [disabled]="hayCambios || editable" (click)="enviarST()">
       Enviar a ST
     </button>
     <button type="button" class="boton primario relleno" style="margin-left: 300px;" [disabled]="!hayCambios && editable"
