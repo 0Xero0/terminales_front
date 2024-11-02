@@ -12,6 +12,7 @@
       <thead class="encabezado">
         <tr>
           <th style="width: 100px;"><span class="fs-14px">Id_Ruta</span></th>
+          <th style="width: 100px;"><span class="fs-14px">Tipo</span></th>
           <th style="width: 200px;"><span class="fs-14px">Departamento de origen</span></th>
           <th style="width: 200px;"><span class="fs-14px">Municipio de origen</span></th>
           <th style="width: 200px;"><span class="fs-14px">Centro poblado de origen</span></th>
@@ -40,6 +41,10 @@
           [class.selected]="i === rutaSeleccionada" [class.faltante]="ruta.errorRutas">
           <td (click)="seleccionarRuta(ruta, i)">
             {{ruta.id_unico_ruta}}
+          </td>
+          <td (click)="seleccionarRuta(ruta, i)">
+            <label *ngIf="ruta.ida_o_vuelta === 'A'">REGRESO</label>
+            <label *ngIf="ruta.ida_o_vuelta === 'B'">IDA</label>
           </td>
           <td (click)="seleccionarRuta(ruta, i)">
             {{ruta.departamento_origen}}
@@ -119,7 +124,7 @@
                 <div class=" d-flex" *ngIf="ruta.nombre_original">
                   <span class="nombre-archivo">{{ ruta.nombre_original }}</span>
                   <button class="eliminar-archivo" (click)="manejarRemoverArchivo(input,$event,1,i,ruta)"
-                    [disabled]="ruta.corresponde === null || ruta.corresponde === 1 || editable">
+                    [disabled]="ruta.estado === null || ruta.estado === false || editable">
                     <i class="bi bi-trash"></i></button>
                 </div>
                 <div class="sin-archivo d-flex"
@@ -129,7 +134,7 @@
               </div>
               <input #input type="file" [id]="'Archivo'+i" name="adjuntar" accept=".pdf"
                 (change)="guardarArchivo($event,i,1,5,undefined, ruta)"
-                [disabled]="ruta.corresponde === null || ruta.corresponde === 1 || editable">
+                [disabled]="ruta.estado === null || ruta.estado === false || editable">
             </label>
             <a *ngIf="ruta.nombre_original" class="a"
               (click)="descargarArchivo(ruta.nombre_original,ruta.documento,ruta.ruta_archivo)">
@@ -146,7 +151,7 @@
           </td> -->
         </tr>
         <tr *ngIf="rutas.length <= 0">
-          <td colspan="18">
+          <td colspan="19">
             <h6 class="sin-registros"> -- No hay rutas para mostrar. --</h6>
           </td>
         </tr>
@@ -155,6 +160,10 @@
         <tr *ngIf="!verificacionVisible && rutaNuevaHabilitada"><!--  -->
           <td>
             <input type="text" name="id_ruta" id="" class="form-control" placeholder="-"
+              [disabled]="true"><!-- [class.marcar-error]="!rutaNueva.id_ruta && error" -->
+          </td>
+          <td>
+            <input type="text" name="tipo" id="" class="form-control" placeholder="-"
               [disabled]="true"><!-- [class.marcar-error]="!rutaNueva.id_ruta && error" -->
           </td>
           <td>
@@ -288,7 +297,7 @@
         </tr>
         <!-- ///////////// BOTÓN PARA HABILITAR EL AGREGAR NUEVA RUTA -->
         <tr *ngIf="!editable">
-          <td colspan="18">
+          <td colspan="19">
             <button type="button" class="boton primario relleno" (click)="estadoAgregarRuta(true)">
               Agregar ruta <i class="bi bi-plus-circle"></i>
             </button>

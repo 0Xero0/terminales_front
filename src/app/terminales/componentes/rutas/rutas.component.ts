@@ -145,8 +145,16 @@ export class RutasComponent implements OnInit {
         next: (municipios: any) => {
           //console.log(municipios)
           selectElement.disabled = false
-          if (tipo === 1) { this.municipiosOrigen = municipios.respuestaMunicipios }
-          if (tipo === 2) { this.municipiosDestino = municipios.respuestaMunicipios }
+          if (tipo === 1) {
+            this.municipiosOrigen = []
+            this.municipiosOrigen = municipios.respuestaMunicipios
+            this.maestraCP('null', 'cp origen', tipo)
+          }
+          if (tipo === 2) {
+            this.municipiosDestino = []
+            this.municipiosDestino = municipios.respuestaMunicipios
+            this.maestraCP('null', 'cp destino', tipo)
+          }
         }
       })
     } else {
@@ -171,17 +179,22 @@ export class RutasComponent implements OnInit {
       codigoMunicipio = input.value
     }
     const selectElement = document.getElementById(nombre) as HTMLSelectElement;
-    console.log(codigoMunicipio)
+    //console.log(codigoMunicipio)
     if (codigoMunicipio !== 'null') {
       this.servicioTerminales.maestraCentrosPoblados(codigoMunicipio).subscribe({
         next: (respuesta: any) => {
           //console.log(respuesta)
           selectElement.disabled = false
-          if (tipo === 1) { this.centroPobladoOrigen = respuesta.respuestaCentrosPoblados }
+          if (tipo === 1) {
+            this.centroPobladoOrigen = []
+            this.centroPobladoOrigen = respuesta.respuestaCentrosPoblados
+            this.rutaNueva.centro_poblado_origen = null
+          }
           if (tipo === 2) {
+            this.centroPobladoDestino = []
             this.centroPobladoDestino = respuesta.respuestaCentrosPoblados
+            this.rutaNueva.centro_poblado_destino = null
             if (cambio) {
-              this.rutaNueva.centro_poblado_destino = null
               this.rutaNueva.tipo_llegada = null
               this.rutaNueva.direccion = null
             }
@@ -190,10 +203,12 @@ export class RutasComponent implements OnInit {
       })
     } else {
       selectElement.disabled = true;
-      if (tipo === 1) { this.centroPobladoOrigen = [], this.rutaNueva.centro_poblado_origen = null }
+      if (tipo === 1) {
+        this.centroPobladoOrigen = [],
+        this.rutaNueva.centro_poblado_origen = null }
       if (tipo === 2) {
         this.centroPobladoDestino = [],
-          this.rutaNueva.centro_poblado_destino = null
+        this.rutaNueva.centro_poblado_destino = null
         this.rutaNueva.tipo_llegada = null
         if (this.rutaNueva.centro_poblado_destino === null || this.rutaNueva.centro_poblado_destino === 'null') {
 
