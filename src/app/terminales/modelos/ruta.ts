@@ -26,6 +26,7 @@ export interface Ruta {
   direcciones?:Array<{ id: number, descripcion: string }>
   estado?:boolean
   errorRutas?:boolean | null
+  ida_o_vuelta?: string | null
 }
 
 export interface RutaNueva {
