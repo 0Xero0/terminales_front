@@ -87,6 +87,7 @@ export class TerminalesComponent implements OnInit {
     for (let ruta of this.rutas) {
       JSONRutas.push({
         id: ruta.id,
+        idaOVuelta: ruta.ida_o_vuelta,
         idRuta: ruta.id_ruta,
         idUnicoRuta: ruta.id_unico_ruta,
         centroPobladoOrigen: ruta.cp_origen_codigo,

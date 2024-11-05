@@ -43,10 +43,10 @@ export class DocumentacionComponent implements OnInit {
   constructor(private servicioArchivos: ServicioArchivos, private servicioProveedores: ServicioProveedores, private router: Router){}
 
   ngOnInit(): void {
-    this.usuario = JSON.parse(localStorage.getItem('UsuarioVigia')!)
+    this.usuario = JSON.parse(localStorage.getItem('UsuarioTerminales')!)
     this.solicitud = JSON.parse(localStorage.getItem('solicitud')!);console.log(this.solicitud)
     this.solicitudId = JSON.parse(localStorage.getItem('solicitudId')!);console.log(this.solicitudId)
-    this.rol = JSON.parse(localStorage.getItem('rolVigia')!);console.log(this.rol)
+    this.rol = JSON.parse(localStorage.getItem('rolTerminales')!);console.log(this.rol)
     if(this.solicitud){
       this.iniciarVerificacion()
       this.obtenerAplicativos(this.solicitud.aplicativos)

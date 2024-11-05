@@ -1,8 +1,19 @@
-<!-- <hr>
-<div class="d-flex">
-  <input type="text" [(ngModel)]="termino" class="form-control" placeholder="Buscar" (ngOnChange)="filtrar()">
-  {{termino}}
-</div> -->
+<hr>
+<div class="search-container">
+  <!-- Input para buscar por ID -->
+  <label for="filtro">Filtrar rutas</label>
+  <div class="contenedor-input-botones">
+    <input id="filtro" type="number" class="form-control input-filtrar" placeholder="Buscar por Id_Ruta"
+      (keyup.enter)="searchByID(filteredID)" [(ngModel)]="filteredID" />
+    <button type="button" class="boton primario relleno" (click)="searchByID(filteredID)">
+      Buscar
+    </button>
+    <button type="button" class="boton primario relleno" (click)="limpiar()">
+      Limpiar
+    </button>
+  </div>
+</div>
+
 <div class="titulo-ruta">
   <label for="">Rutas</label>
 </div>
@@ -37,14 +48,15 @@
       </thead>
       <tbody>
         <tr class="fila"
-          *ngFor="let ruta of rutas | paginate: { itemsPerPage: 5, currentPage: pageRutas, id:'Ruta' }; let i = index"
-          [class.selected]="i === rutaSeleccionada" [class.faltante]="ruta.errorRutas">
+          *ngFor="let ruta of rutas | paginate: { itemsPerPage: itemsPerPageRutas, currentPage: pageRutas, id:'Ruta' }; let i = index"
+          [class.selected]="i === rutaSeleccionada" [class.faltante]="ruta.errorRutas"
+          [ngClass]="{'highlight': ruta.id_unico_ruta === filteredID}">
           <td (click)="seleccionarRuta(ruta, i)">
             {{ruta.id_unico_ruta}}
           </td>
           <td (click)="seleccionarRuta(ruta, i)">
-            <label *ngIf="ruta.ida_o_vuelta === 'A'">REGRESO</label>
-            <label *ngIf="ruta.ida_o_vuelta === 'B'">IDA</label>
+            <label *ngIf="ruta.ida_o_vuelta === 'B'">REGRESO</label>
+            <label *ngIf="ruta.ida_o_vuelta === 'A'">IDA</label>
           </td>
           <td (click)="seleccionarRuta(ruta, i)">
             {{ruta.departamento_origen}}
@@ -91,8 +103,8 @@
               placeholder="-"> -->
           </td>
           <td>
-            <select [(ngModel)]="ruta.estado" name="ruta_activa_{{i}}" class="form-select" [disabled]="editable"
-              (change)="estadoRuta(ruta.estado,i,ruta)"
+            <select [(ngModel)]="ruta.estado" name="ruta_activa_{{i}}" class="form-select"
+              [disabled]="editable  || ruta.ida_o_vuelta === 'B'" (change)="estadoRuta(ruta.estado,i,ruta)"
               [class.marcar-error]="ruta.estado === null && compararFaltantes(ruta.id,i)">
               <option [value]='null'>Seleccione una opción</option>
               <option [value]='true'>Si</option>
@@ -102,7 +114,8 @@
           <td>{{ruta.resolucion}}</td>
           <td>
             <select [(ngModel)]="ruta.corresponde" name="resolucion_corresponde_{{i}}" class="form-select" type="number"
-              (change)="corresponde(ruta.corresponde,i,ruta)" [disabled]="!ruta.estado || editable"
+              (change)="corresponde(ruta.corresponde,i,ruta)"
+              [disabled]="!ruta.estado || editable  || ruta.ida_o_vuelta === 'B'"
               [class.marcar-error]="!ruta.corresponde && compararFaltantes(ruta.id,i)">
               <option [value]='null'>Seleccione una opción</option>
               <option [value]='1'>Si</option>
@@ -111,30 +124,31 @@
           </td>
           <td>
             <input [(ngModel)]="ruta.resolucion_actual" name="n_resolucion_actual_{{i}}" type="text" placeholder="-"
-              class="form-control" [disabled]="ruta.corresponde === null || ruta.corresponde === 1 || editable"
+              class="form-control"
+              [disabled]="ruta.corresponde === null || ruta.corresponde === 1 || editable  || ruta.ida_o_vuelta === 'B'"
               (ngModelChange)="manejarCambios()">
           </td>
           <td>{{ruta.direccion_territorial}}</td>
           <td>
             <label class="input-archivo d-flex" [for]="'Archivo'+i"
               [class.marcar-error]="!ruta.nombre_original && compararFaltantes(ruta.id,i)"
-              [ngClass]="{'disabled': ruta.estado === null || ruta.estado === false || editable}">
+              [ngClass]="{'disabled': ruta.corresponde !== 2 || editable || ruta.ida_o_vuelta === 'B'}">
               <div class="boton-adjuntar d-flex align-items-center justify-content-center">Seleccionar archivo</div>
               <div class="archivos">
                 <div class=" d-flex" *ngIf="ruta.nombre_original">
                   <span class="nombre-archivo">{{ ruta.nombre_original }}</span>
                   <button class="eliminar-archivo" (click)="manejarRemoverArchivo(input,$event,1,i,ruta)"
-                    [disabled]="ruta.estado === null || ruta.estado === false || editable">
+                    [disabled]="ruta.corresponde !== 2 || editable || ruta.ida_o_vuelta === 'B'">
                     <i class="bi bi-trash"></i></button>
                 </div>
                 <div class="sin-archivo d-flex"
-                  *ngIf="!ruta.nombre_original || ruta.nombre_original == null || ruta.nombre_original == ''">
+                  *ngIf="!ruta.nombre_original || ruta.nombre_original == null || ruta.nombre_original == '' || ruta.ida_o_vuelta === 'B'">
                   <span>Sin archivo seleccionado</span>
                 </div>
               </div>
               <input #input type="file" [id]="'Archivo'+i" name="adjuntar" accept=".pdf"
                 (change)="guardarArchivo($event,i,1,5,undefined, ruta)"
-                [disabled]="ruta.estado === null || ruta.estado === false || editable">
+                [disabled]="ruta.corresponde !== 2 || editable || ruta.ida_o_vuelta === 'B'">
             </label>
             <a *ngIf="ruta.nombre_original" class="a"
               (click)="descargarArchivo(ruta.nombre_original,ruta.documento,ruta.ruta_archivo)">
@@ -314,13 +328,8 @@
   <div class="d-flex justify-content-end" style="margin-right: 20px;">
     <!-- Paginador -->
     <pagination-controls class="pagination-controls"
-      (pageChange)="[pageRutas = $event, rutaSeleccionada = null, rutaConsultada = false]"
-      previousLabel="Ant."
-      nextLabel="Sig."
-      [maxSize]="7"
-      [directionLinks]="true"
-      [autoHide]="false"
-      #paginador1 id="Ruta">
+      (pageChange)="[pageRutas = $event, rutaSeleccionada = null, rutaConsultada = false]" previousLabel="Ant."
+      nextLabel="Sig." [maxSize]="7" [directionLinks]="true" [autoHide]="false" #paginador1 id="Ruta">
     </pagination-controls>
     <!--  <ngb-pagination [collectionSize]="paginadorReportes.totalRegistros ?? 0" [page]="paginadorReportes.pagina"
       [pageSize]="paginadorReportes.limite" (pageChange)="paginadorReportes.cambiarPagina($event)" [maxSize]="5">
@@ -333,12 +342,8 @@
 </div>
 <hr>
 <div *ngIf="rutaConsultada" style="margin-bottom: 10px;">
-  <app-paradas
-    (paradasGuardar)="recibirParadas($event)"
-    [rutaId]="rutaId"
-    [editable]="editable"
-    [verificacionVisible]="verificacionVisible"
-  ></app-paradas>
+  <app-paradas (paradasGuardar)="recibirParadas($event)" [rutaId]="rutaId" [editable]="editable"
+    [verificacionVisible]="verificacionVisible"></app-paradas>
 </div>
 <div *ngIf="rutaConsultada" style="margin-bottom: 10px;">
   <app-clases (clasesGuardar)="recibirClases($event)" [rutaId]="rutaId" [editable]="editable"></app-clases>

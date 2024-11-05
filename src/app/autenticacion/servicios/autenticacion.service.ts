@@ -14,10 +14,10 @@ import { Aplicativos } from 'src/app/aplicativos/modelos/aplicativos';
 export class AutenticacionService {
   private urlBackend: string
   headers: HttpHeaders;
-  public readonly llaveTokenLocalStorage = 'jwtVigia'
-  public readonly llaveUsuarioLocalStorage = 'UsuarioVigia'
-  public readonly llaveRolesLocalStorage = 'rolVigia'
-  public readonly aplicativos = 'aplicativos'
+  public readonly llaveTokenLocalStorage = 'jwtTerminales'
+  public readonly llaveUsuarioLocalStorage = 'UsuarioTerminales'
+  public readonly llaveRolesLocalStorage = 'rolTerminales'
+  public readonly aplicativos = 'aplicativosTerminales'
   userToken: string = '';
 
   constructor(private clientHttp:HttpClient) {
@@ -71,8 +71,8 @@ export class AutenticacionService {
   }
 
   leerToken() {
-    if (localStorage.getItem('tokenVigia')) {
-      this.userToken = localStorage.getItem('jwtVigia')!;
+    if (localStorage.getItem('tokenTerminales')) {
+      this.userToken = localStorage.getItem('jwtTerminales')!;
     } else {
       this.userToken = '';
     }

@@ -55,15 +55,17 @@ export class RutasComponent implements OnInit {
 
   termino: any
 
+  filteredID: number | null = null; // Para almacenar el ID buscado
   pageRutas: number = 1; // Variable para controlar la página actual
+  itemsPerPageRutas: number = 6; // Variable para controlar la cantidad de registros mostrados por página
 
   constructor(private servicioArchivos: ServicioArchivos, private servicioTerminales: TerminalesService) {
     this.rutaNueva = this.inicializarRutaNueva()
   }
 
   ngOnInit(): void {
-    this.usuario = JSON.parse(localStorage.getItem('UsuarioVigia')!)
-    this.rol = JSON.parse(localStorage.getItem('rolVigia')!);
+    this.usuario = JSON.parse(localStorage.getItem('UsuarioTerminales')!)
+    this.rol = JSON.parse(localStorage.getItem('rolTerminales')!);
     //this.listarRutas()
     this.maestraDepartamentos()
     this.maestraTipoLlegadas();
@@ -75,6 +77,24 @@ export class RutasComponent implements OnInit {
       this.rutas = []
       this.listarRutas();
     }
+  }
+
+  searchByID(id: number | null): void {
+    // Encuentra el índice del registro con el ID especificado
+    const index = this.rutas.findIndex(item => item.id_unico_ruta === id);
+
+    if (index !== -1) {
+      // Calcula la página en la que se encuentra el registro
+      this.pageRutas = Math.floor(index / this.itemsPerPageRutas) + 1;
+      this.filteredID = id; // Guarda el ID para resaltar o enfocarlo
+    } else {
+      // Si no se encuentra el ID, puedes mostrar un mensaje de error o aviso
+      console.warn('Registro no encontrado');
+    }
+  }
+  limpiar(){
+    this.filteredID = null
+    this.pageRutas = 1
   }
 
   obtenerCantidadRutas(idUsuario: any) {

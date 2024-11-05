@@ -1,10 +1,29 @@
+.search-container {
+  margin-bottom: 1em;
+}
+
+.search-container label {
+  font-weight: bold;
+  margin-left: 10px;
+  margin-bottom: 0.5em;
+}
+
+.contenedor-input-botones{
+  display: flex;
+  gap: 0.5em;
+}
+
+.input-filtrar {
+  width: 225px;
+}
+/******************************************************************************/
 .ruta {
   overflow: auto;
   margin-top: 10px;
   box-shadow: 0px 3px 6px #00000029;
 }
 .titulo-ruta {
-  margin-top: 30px;
+  margin-top: 15px;
   margin-left: 10px;
   width: 500px;
   height: 19px;
@@ -290,3 +309,8 @@ input[type="file"]{
   border-bottom-right-radius: 7px; /* Radio en la esquina inferior derecha */
   border-right: 1px solid #e2e6e9;
 }
+
+::ng-deep .highlight {
+  background-color: yellow; /* O el color que prefieras */
+}
+

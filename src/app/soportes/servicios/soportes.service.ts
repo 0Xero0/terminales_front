@@ -26,7 +26,7 @@ export class SoportesService extends Autenticable {
     }
   ]
   private readonly host = environment.urlBackend
-  private readonly llaveLocalStorage = 'soporteVigia'
+  private readonly llaveLocalStorage = 'soporteTerminales'
 
   constructor(private http: HttpClient) {
     super()

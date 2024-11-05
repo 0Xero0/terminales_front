@@ -47,7 +47,7 @@ export class InicioSesionComponent implements OnInit {
     ).subscribe({
       next: (respuesta: IniciarSesionRespuesta) => {
         Swal.close()
-        localStorage.setItem('tokenVigia', respuesta.token)
+        localStorage.setItem('tokenTerminales', respuesta.token)
         localStorage.setItem('inicio-sesion', JSON.stringify(true))
         this.servicioAutenticacion.guardarInformacionInicioSesion(respuesta.token, respuesta.rol, respuesta.usuario, respuesta.aplicativos)
         if (respuesta.claveTemporal === true) {
