@@ -16,6 +16,15 @@
 .input-filtrar {
   width: 225px;
 }
+
+@keyframes highlight {
+  0% { background-color: rgb(251, 250, 206); }
+  50% { background-color: transparent; }
+  100% { background-color: rgb(251, 250, 206); }
+}
+::ng-deep .highlight {
+  background-color: rgb(251, 250, 206); /* O el color que prefieras */
+}
 /******************************************************************************/
 .ruta {
   overflow: auto;
@@ -308,9 +317,5 @@ input[type="file"]{
   border-top-right-radius: 7px; /* Radio en la esquina superior derecha */
   border-bottom-right-radius: 7px; /* Radio en la esquina inferior derecha */
   border-right: 1px solid #e2e6e9;
-}
-
-::ng-deep .highlight {
-  background-color: yellow; /* O el color que prefieras */
 }
 

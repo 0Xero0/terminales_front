@@ -55,6 +55,7 @@ export class RutasComponent implements OnInit {
 
   termino: any
 
+  highlightID: number | null = null; // Para almacenar el ID resaltado temporalmente
   filteredID: number | null = null; // Para almacenar el ID buscado
   pageRutas: number = 1; // Variable para controlar la página actual
   itemsPerPageRutas: number = 6; // Variable para controlar la cantidad de registros mostrados por página
@@ -84,17 +85,25 @@ export class RutasComponent implements OnInit {
     const index = this.rutas.findIndex(item => item.id_unico_ruta === id);
 
     if (index !== -1) {
+      this.rutaSeleccionada = null
+      this.rutaConsultada = false
       // Calcula la página en la que se encuentra el registro
       this.pageRutas = Math.floor(index / this.itemsPerPageRutas) + 1;
       this.filteredID = id; // Guarda el ID para resaltar o enfocarlo
+      // Limpiar el resaltado después de un tiempo
+      setTimeout(() => {
+        this.highlightID = null; // Elimina el resaltado después de 1 segundo
+      }, 1000); // Duración del resaltado
     } else {
       // Si no se encuentra el ID, puedes mostrar un mensaje de error o aviso
       console.warn('Registro no encontrado');
     }
   }
-  limpiar(){
+  limpiar() {
     this.filteredID = null
-    this.pageRutas = 1
+    /* this.pageRutas = 1 */
+    this.rutaSeleccionada = null
+    this.rutaConsultada = false
   }
 
   obtenerCantidadRutas(idUsuario: any) {
@@ -225,10 +234,11 @@ export class RutasComponent implements OnInit {
       selectElement.disabled = true;
       if (tipo === 1) {
         this.centroPobladoOrigen = [],
-        this.rutaNueva.centro_poblado_origen = null }
+          this.rutaNueva.centro_poblado_origen = null
+      }
       if (tipo === 2) {
         this.centroPobladoDestino = [],
-        this.rutaNueva.centro_poblado_destino = null
+          this.rutaNueva.centro_poblado_destino = null
         this.rutaNueva.tipo_llegada = null
         if (this.rutaNueva.centro_poblado_destino === null || this.rutaNueva.centro_poblado_destino === 'null') {
 
