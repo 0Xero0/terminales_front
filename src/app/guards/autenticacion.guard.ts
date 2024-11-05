@@ -7,7 +7,7 @@ import { ServicioUsuarios} from '../administrador/servicios/usuarios.service';
   providedIn: 'root'
 })
 export class AutenticacionGuard implements CanActivate {
-  public readonly llaveToken = 'jwtVigia'
+  public readonly llaveToken = 'jwtTerminales'
   public readonly llaveExpiracion = 'expira'
 
   public constructor(private enrutador:Router, private servicioUsuario: ServicioUsuarios ){}

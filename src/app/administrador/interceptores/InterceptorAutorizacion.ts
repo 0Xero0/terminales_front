@@ -6,9 +6,9 @@ import { Router } from '@angular/router';
 @Injectable()
 export class InterceptorAutorizacion implements HttpInterceptor {
     constructor(private enrutador:Router){}
-    
+
     intercept(peticion: HttpRequest<any>, siguiente: HttpHandler): Observable<HttpEvent<any>> {
-        const token = localStorage.getItem('jwtVigia');
+        const token = localStorage.getItem('jwtTerminales');
         const peticionClonada = peticion.clone()
         if (!token) {
             return siguiente.handle(peticionClonada);

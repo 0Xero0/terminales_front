@@ -18,7 +18,7 @@ export class ReportesService extends Autenticable {
     let endpoint = `/api/v1/soportes/vigilado`
     return this.http.get<any>(`${this.host}${endpoint}`,
       { headers: new HttpHeaders({
-        'Authorization': `Bearer ${localStorage.getItem('tokenVigia')}`
+        'Authorization': `Bearer ${localStorage.getItem('tokenTerminales')}`
     }) })
   }
 

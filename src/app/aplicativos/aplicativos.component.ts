@@ -26,9 +26,9 @@ export class AplicativosComponent implements OnInit{
   }]
 
   constructor(private servicioApp:ServicioApp,private router: Router, private servicioProveedores: ServicioProveedores){
-    this.token = localStorage.getItem('tokenVigia');
-    this.rol = JSON.parse(localStorage.getItem('rolVigia')!);
-    const aplicativosJSON = localStorage.getItem('aplicativos')
+    this.token = localStorage.getItem('tokenTerminales');
+    this.rol = JSON.parse(localStorage.getItem('rolTerminales')!);
+    const aplicativosJSON = localStorage.getItem('aplicativosTerminales')
     /* console.log(aplicativosJSON) */
     if(!aplicativosJSON){return ;}
     try{
