@@ -50,7 +50,7 @@
         <tr class="fila"
           *ngFor="let ruta of rutas | paginate: { itemsPerPage: itemsPerPageRutas, currentPage: pageRutas, id:'Ruta' }; let i = index"
           [class.selected]="i === rutaSeleccionada" [class.faltante]="ruta.errorRutas"
-          [ngClass]="{'highlight': ruta.id_unico_ruta === filteredID}">
+          [ngClass]="{'highlight': ruta.id_unico_ruta === filteredID || ruta.id_unico_ruta === highlightID}">
           <td (click)="seleccionarRuta(ruta, i)">
             {{ruta.id_unico_ruta}}
           </td>
