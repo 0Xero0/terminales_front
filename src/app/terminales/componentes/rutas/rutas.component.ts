@@ -102,8 +102,8 @@ export class RutasComponent implements OnInit {
   limpiar() {
     this.filteredID = null
     /* this.pageRutas = 1 */
-    this.rutaSeleccionada = null
-    this.rutaConsultada = false
+    /* this.rutaSeleccionada = null
+    this.rutaConsultada = false */
   }
 
   obtenerCantidadRutas(idUsuario: any) {
@@ -484,7 +484,7 @@ export class RutasComponent implements OnInit {
     } else {
       ruta.corresponde = Number(idCorresponde)
       if (Number(idCorresponde) === 1) {
-        ruta.resolucion_actual = this.rutas[index].resolucion
+        ruta.resolucion_actual = ruta.resolucion
       }
     }
     ruta.errorRutas = false

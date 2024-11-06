@@ -233,6 +233,12 @@ input[type="file"]{
   border-color: #C4C4C4;
 }
 
+.disabled .archivo{
+  background-color: #e9ecef;
+  color: #878787;
+  border-color: #C4C4C4;
+}
+
 /* Paginador */
 /* Asegura que el contenedor del paginador esté centrado */
 ::ng-deep .pagination-controls {
