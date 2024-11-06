@@ -132,13 +132,13 @@
           <td>
             <label class="input-archivo d-flex" [for]="'Archivo'+i"
               [class.marcar-error]="!ruta.nombre_original && compararFaltantes(ruta.id,i)"
-              [ngClass]="{'disabled': ruta.corresponde === 1 || editable || ruta.ida_o_vuelta === 'B'}">
+              [ngClass]="{'disabled':editable || ruta.ida_o_vuelta === 'B'}">
               <div class="boton-adjuntar d-flex align-items-center justify-content-center">Seleccionar archivo</div>
               <div class="archivos">
                 <div class="archivo d-flex" *ngIf="ruta.nombre_original">
                   <span class="nombre-archivo">{{ ruta.nombre_original }}</span>
                   <button class="eliminar-archivo" (click)="manejarRemoverArchivo(input,$event,1,i,ruta)"
-                    [disabled]="ruta.corresponde === 1 || editable || ruta.ida_o_vuelta === 'B'">
+                    [disabled]="editable || ruta.ida_o_vuelta === 'B'">
                     <i class="bi bi-trash"></i></button>
                 </div>
                 <div class="sin-archivo d-flex"
@@ -148,7 +148,7 @@
               </div>
               <input #input type="file" [id]="'Archivo'+i" name="adjuntar" accept=".pdf"
                 (change)="guardarArchivo($event,i,1,5,undefined, ruta)"
-                [disabled]="ruta.corresponde === 1 || editable || ruta.ida_o_vuelta === 'B'">
+                [disabled]="editable || ruta.ida_o_vuelta === 'B'">
             </label>
             <a *ngIf="ruta.nombre_original" class="a"
               (click)="descargarArchivo(ruta.nombre_original,ruta.documento,ruta.ruta_archivo)">
