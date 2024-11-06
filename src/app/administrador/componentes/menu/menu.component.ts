@@ -6,6 +6,7 @@ import { AutenticacionService } from 'src/app/autenticacion/servicios/autenticac
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { MenuHeaderPService } from '../../utilidades/services-menu-p/menu-header-p-service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-menu',
@@ -64,8 +65,13 @@ export class MenuComponent implements OnInit {
 
   cerrarSesion() {
 
-    this.servicioAutenticacion.cerrarSesion()
-    this.router.navigateByUrl('/inicio-sesion')
+    /* this.servicioAutenticacion.cerrarSesion()
+    this.router.navigateByUrl('/inicio-sesion') */
+    if(this.inicioVigia2){
+      window.location.href = environment.urlVigia2+'/administrar/administrar-aplicativos'
+    }else if(this.inicioSesion){
+      this.router.navigateByUrl('/inicio-sesion')
+    }
   }
 
   imprimirRuta(submodulo: Submodulo) {
