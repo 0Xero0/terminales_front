@@ -102,8 +102,8 @@ export class RutasComponent implements OnInit {
   limpiar() {
     this.filteredID = null
     /* this.pageRutas = 1 */
-    this.rutaSeleccionada = null
-    this.rutaConsultada = false
+    /* this.rutaSeleccionada = null
+    this.rutaConsultada = false */
   }
 
   obtenerCantidadRutas(idUsuario: any) {
