@@ -484,7 +484,7 @@ export class RutasComponent implements OnInit {
     } else {
       ruta.corresponde = Number(idCorresponde)
       if (Number(idCorresponde) === 1) {
-        ruta.resolucion_actual = this.rutas[index].resolucion
+        ruta.resolucion_actual = ruta.resolucion
       }
     }
     ruta.errorRutas = false
