@@ -3,11 +3,16 @@
   <!-- Input para buscar por ID -->
   <label for="filtro">Filtrar rutas</label>
   <div class="contenedor-input-botones">
-    <input id="filtro" type="number" class="form-control input-filtrar" placeholder="Buscar por Id_Ruta"
+    <div class="search-input-wrapper">
+      <input id="filtro" type="number" class="form-control input-filtrar" placeholder="Buscar por Id_Ruta"
       (keyup.enter)="searchByID(filteredID)" [(ngModel)]="filteredID" />
-    <button type="button" class="boton primario relleno" (click)="searchByID(filteredID)">
+      <button class="search-button" (click)="searchByID(filteredID)">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+    <!-- <button type="button" class="boton primario relleno" (click)="searchByID(filteredID)">
       Buscar
-    </button>
+    </button> -->
     <button type="button" class="boton primario relleno" (click)="limpiar()">
       Limpiar
     </button>
@@ -23,14 +28,14 @@
       <thead class="encabezado">
         <tr>
           <th style="width: 100px;"><span class="fs-14px">Id_Ruta</span></th>
-          <th style="width: 100px;"><span class="fs-14px">Tipo</span></th>
+          <!-- <th style="width: 100px;"><span class="fs-14px">Tipo</span></th> -->
           <th style="width: 200px;"><span class="fs-14px">Departamento de origen</span></th>
           <th style="width: 200px;"><span class="fs-14px">Municipio de origen</span></th>
           <th style="width: 200px;"><span class="fs-14px">Centro poblado de origen</span></th>
           <th style="width: 200px;"><span class="fs-14px">Departamento de destino</span></th>
           <th style="width: 200px;"><span class="fs-14px">Municipio de destino</span></th>
           <th style="width: 200px;"><span class="fs-14px">Centro poblado de destino</span></th>
-          <th style="width: 200px;"><span class="fs-14px">Tipo de llegada</span></th>
+          <th style="width: 200px;"><span class="fs-14px">Tipo de llegada (finalización trayecto)</span></th>
           <th style="width: 200px;"><span class="fs-14px">Dirección</span></th>
           <th style="width: 200px;"><span class="fs-14px">Vía</span></th>
           <th style="width: 200px;"><span class="fs-14px">¿La ruta está activa?</span></th>
@@ -54,32 +59,65 @@
           <td (click)="seleccionarRuta(ruta, i)">
             {{ruta.id_unico_ruta}}
           </td>
-          <td (click)="seleccionarRuta(ruta, i)">
+          <!-- <td (click)="seleccionarRuta(ruta, i)">
             <label *ngIf="ruta.ida_o_vuelta === 'B'">REGRESO</label>
             <label *ngIf="ruta.ida_o_vuelta === 'A'">IDA</label>
+          </td> -->
+          <td (click)="seleccionarRuta(ruta, i)">
+            <div *ngIf="ruta.departamento_origen">{{ruta.departamento_origen}}</div>
+            <select *ngIf="!ruta.departamento_origen" [id]="'depOrigen'+i" class="form-select" (change)="maestraMunicipios($event,undefined,1,ruta)"
+            [class.marcar-error]="!ruta.departamento_origen_codigo && compararFaltantes(ruta.id)" [(ngModel)]="ruta.departamento_origen_codigo">
+              <option [value]="null">Seleccione una opción</option>
+              <option *ngFor="let opt of departamentos" [value]='opt.codigoDepartamento'>{{opt.nombre}}</option>
+            </select>
           </td>
           <td (click)="seleccionarRuta(ruta, i)">
-            {{ruta.departamento_origen}}
+            <div *ngIf="ruta.municipio_origen">{{ruta.municipio_origen}}</div>
+            <select *ngIf="!ruta.municipio_origen" [id]="'munOrigen'+i" class="form-select"
+            (change)="maestraCP($event,undefined,1,true,ruta)" [disabled]="ruta.departamento_origen_codigo == null"
+            [class.marcar-error]="!ruta.municipio_origen_codigo && compararFaltantes(ruta.id)" [(ngModel)]="ruta.municipio_origen_codigo">
+              <option [value]="null">Seleccione una opción</option>
+              <option *ngFor="let opt of ruta.municipiosOrigen" [value]='opt.codigoMunicipio'>{{opt.nombre}}</option>
+            </select>
           </td>
           <td (click)="seleccionarRuta(ruta, i)">
-            {{ruta.municipio_origen}}
+            <div *ngIf="ruta.cp_origen">{{ruta.cp_origen}}</div>
+            <select *ngIf="!ruta.cp_origen" [id]="'cpOrigen'+i" class="form-select" [disabled]="ruta.municipio_origen_codigo == null"
+            [class.marcar-error]="!ruta.cp_origen_codigo && compararFaltantes(ruta.id)" [(ngModel)]="ruta.cp_origen_codigo">
+              <option [value]="null">Seleccione una opción</option>
+              <option *ngFor="let opt of ruta.cpOrigen" [value]='opt.codigoCentroPoblado'>{{opt.nombre}}</option>
+            </select>
           </td>
           <td (click)="seleccionarRuta(ruta, i)">
-            {{ruta.cp_origen}}
+            <div *ngIf="ruta.departamento_destino">{{ruta.departamento_destino}}</div>
+            <select *ngIf="!ruta.departamento_destino" [id]="'depDestino'+i" class="form-select" (change)="maestraMunicipios($event,undefined,2,ruta)"
+            [class.marcar-error]="!ruta.departamento_destino_codigo && compararFaltantes(ruta.id)" [(ngModel)]="ruta.departamento_destino_codigo">
+              <option [value]="null">Seleccione una opción</option>
+              <option *ngFor="let opt of departamentos" [value]='opt.codigoDepartamento'>{{opt.nombre}}</option>
+            </select>
           </td>
           <td (click)="seleccionarRuta(ruta, i)">
-            {{ruta.departamento_destino}}
+            <div *ngIf="ruta.municipio_destino">{{ruta.municipio_destino}}</div>
+            <select *ngIf="!ruta.municipio_destino" [id]="'munDestino'+i" class="form-select"
+            (change)="maestraCP($event,undefined,2,true,ruta)" [disabled]="ruta.departamento_destino_codigo == null"
+            [class.marcar-error]="!ruta.municipio_destino_codigo && compararFaltantes(ruta.id)" [(ngModel)]="ruta.municipio_destino_codigo">
+              <option [value]="null">Seleccione una opción</option>
+              <option *ngFor="let opt of ruta.municipiosDestino" [value]='opt.codigoMunicipio'>{{opt.nombre}}</option>
+            </select>
           </td>
           <td (click)="seleccionarRuta(ruta, i)">
-            {{ruta.municipio_destino}}
-          </td>
-          <td (click)="seleccionarRuta(ruta, i)">
-            {{ruta.cp_destino}}
+            <div *ngIf="ruta.cp_destino">{{ruta.cp_destino}}</div>
+            <select *ngIf="!ruta.cp_destino" [id]="'cpDestino'+i" class="form-select"
+            (change)="manejarTipoLlegadaNueva(ruta)" [disabled]="ruta.municipio_destino_codigo == null"
+            [class.marcar-error]="!ruta.cp_destino_codigo && compararFaltantes(ruta.id)" [(ngModel)]="ruta.cp_destino_codigo">
+              <option [value]="null">Seleccione una opción</option>
+              <option *ngFor="let opt of ruta.cpDestino" [value]='opt.codigoCentroPoblado'>{{opt.nombre}}</option>
+            </select>
           </td>
           <td><!-- (click)="seleccionarRuta(ruta, i)"SELECT TIPO DE LLEGADA -->
             <!-- {{ruta.tipo_llegada}} -->
             <select [(ngModel)]="ruta.tipo_llegada_id" name="tipo_llegada_{{i}}" class="form-select"
-              [class.marcar-error]="!ruta.tipo_llegada_id && compararFaltantes(ruta.id)" [disabled]="editable"
+              [class.marcar-error]="!ruta.tipo_llegada_id && compararFaltantes(ruta.id)" [disabled]="ruta.cp_destino_codigo === null || editable"
               (change)="maestraDireccion(ruta.tipo_llegada_id,ruta.cp_destino_codigo, i, true, ruta.id)">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let opt of tipoLlegada" [value]='opt.id'>{{opt.descripcion}}</option>
@@ -94,13 +132,13 @@
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let direccion of ruta.direcciones" [value]='direccion.id'>{{direccion.descripcion}}
               </option>
-              <option value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal -->
+              <option *ngIf="ruta.tipo_llegada_id !== 1" value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal -->
             </select>
           </td>
           <td style="width: 130px;"><!-- (click)="seleccionarRuta(ruta, i)" VIA -->
-            {{ruta.via}}
-            <!-- <input [(ngModel)]="ruta.via" name="via_{{i}}" type="text" class="form-control" (change)="manejarCambios()"
-              placeholder="-"> -->
+            <div *ngIf="ruta.via">{{ruta.via}}</div>
+            <input *ngIf="!ruta.via" [(ngModel)]="ruta.via" name="via_{{i}}" type="text" class="form-control" (change)="manejarCambios()"
+              placeholder="-">
           </td>
           <td>
             <select [(ngModel)]="ruta.estado" name="ruta_activa_{{i}}" class="form-select"
@@ -165,7 +203,7 @@
           </td> -->
         </tr>
         <tr *ngIf="rutas.length <= 0">
-          <td colspan="19">
+          <td colspan="18">
             <h6 class="sin-registros"> -- No hay rutas para mostrar. --</h6>
           </td>
         </tr>
@@ -176,10 +214,10 @@
             <input type="text" name="id_ruta" id="" class="form-control" placeholder="-"
               [disabled]="true"><!-- [class.marcar-error]="!rutaNueva.id_ruta && error" -->
           </td>
-          <td>
+          <!-- <td>
             <input type="text" name="tipo" id="" class="form-control" placeholder="-"
-              [disabled]="true"><!-- [class.marcar-error]="!rutaNueva.id_ruta && error" -->
-          </td>
+              [disabled]="true">
+          </td> -->
           <td>
             <!-- SELECT DEPARTAMENTOS ORIGEN -->
             <select id="dep origen" class="form-select" (change)="maestraMunicipios($event,'mun origen',1)"
@@ -241,7 +279,7 @@
               (change)="manejarDirecciones($event,rutaNueva.tipo_llegada,rutaNueva.centro_poblado_destino,undefined)">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let direccion of direcciones" [value]='direccion.id'>{{direccion.descripcion}}</option>
-              <option value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal -->
+              <option *ngIf="rutaNueva.tipo_llegada === 4" value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal -->
             </select>
           </td>
           <td style="width: 130px;"> <!-- INPUT VIA -->
@@ -342,9 +380,18 @@
 </div>
 <hr>
 <div *ngIf="rutaConsultada" style="margin-bottom: 10px;">
-  <app-paradas (paradasGuardar)="recibirParadas($event)" [rutaId]="rutaId" [editable]="editable"
-    [verificacionVisible]="verificacionVisible"></app-paradas>
+  <app-paradas
+    (paradasGuardar)="recibirParadas($event)"
+    [rutaId]="rutaId" [editable]="editable"
+    [verificacionVisible]="verificacionVisible"
+    [ruta]="rutaInfo">
+  </app-paradas>
 </div>
 <div *ngIf="rutaConsultada" style="margin-bottom: 10px;">
-  <app-clases (clasesGuardar)="recibirClases($event)" [rutaId]="rutaId" [editable]="editable"></app-clases>
+  <app-clases
+    (clasesGuardar)="recibirClases($event)"
+    [rutaId]="rutaId"
+    [editable]="editable"
+    [ruta]="rutaInfo">
+  </app-clases>
 </div>

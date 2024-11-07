@@ -3,6 +3,7 @@ import { Clases } from '../../modelos/clases';
 import Swal from 'sweetalert2';
 import { TerminalesService } from '../../servicios/terminales.service';
 import { validarCampos } from '../../validadores/validar-campos';
+import { Ruta } from '../../modelos/ruta';
 
 @Component({
   selector: 'app-clases',
@@ -17,6 +18,7 @@ export class ClasesComponent implements OnInit, OnChanges {
   @Input() verificacionEditable?: boolean
   @Input() editable: boolean = false
   @Input() aprobado?: boolean
+  @Input() ruta?:Ruta
   clases: Array<Clases> = []
   nuevaClase: Clases
   claseNuevaHabilitada: boolean = false

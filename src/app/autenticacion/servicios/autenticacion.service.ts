@@ -38,6 +38,8 @@ export class AutenticacionService {
   }
 
   public cerrarSesion(){
+    localStorage.removeItem('inicio-sesion')
+    localStorage.removeItem('inicio-vigia2')
     localStorage.removeItem(this.llaveUsuarioLocalStorage)
     localStorage.removeItem(this.llaveTokenLocalStorage)
     localStorage.removeItem(this.llaveRolesLocalStorage)

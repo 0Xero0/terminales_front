@@ -4,6 +4,7 @@ import { TerminalesService } from '../../servicios/terminales.service';
 import { Paginador } from 'src/app/administrador/modelos/compartido/Paginador';
 import Swal from 'sweetalert2';
 import { validarCampos } from '../../validadores/validar-campos';
+import { Ruta } from '../../modelos/ruta';
 
 @Component({
   selector: 'app-paradas',
@@ -19,6 +20,7 @@ export class ParadasComponent implements OnInit, OnChanges {
   @Input() verificacionEditable?: boolean
   @Input() editable: boolean = false
   @Input() aprobado?: boolean
+  @Input() ruta?:Ruta
   paradas: Array<Paradas> = []
   nuevaParada: Paradas
   paradaNuevaHabilitada: boolean = false
