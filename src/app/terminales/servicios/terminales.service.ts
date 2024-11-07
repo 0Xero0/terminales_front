@@ -57,8 +57,9 @@ export class TerminalesService extends Autenticable {
 
   // LISTAS ////////////////////////////////////////////////////////////////////////////////////
 
-  listarRutas(pagina?: number, limite?: number, filtros?: any){/* ?pagina=${pagina}&limite=${limite} */
-    let endpoint = `/api/v1/terminales/visualizar-rutas`
+  listarRutas(vigiladoId?:any, pagina?: number, limite?: number, filtros?: any){/* ?pagina=${pagina}&limite=${limite} */
+    //let endpoint = `/api/v1/terminales/visualizar-rutas`
+    let endpoint = `/api/v1/terminales/visualizar-rutas-vigilado?vigiladoId=${vigiladoId}`
     if(filtros){
       if(filtros.termino) endpoint+=`&filtro=${filtros.termino}`;
     }

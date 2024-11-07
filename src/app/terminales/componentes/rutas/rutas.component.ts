@@ -6,6 +6,7 @@ import { Paradas } from '../../modelos/paradas';
 import { Clases } from '../../modelos/clases';
 import Swal from 'sweetalert2';
 import { validarCampos } from '../../validadores/validar-campos';
+import { Usuario } from 'src/app/autenticacion/modelos/IniciarSesionRespuesta';
 
 @Component({
   selector: 'app-rutas',
@@ -24,10 +25,10 @@ export class RutasComponent implements OnInit {
   @Input() aprobado?: boolean
   @Input() todoGuardado?: boolean
   @Input() faltantes?: Array<number>
+  @Input() usuario?: Usuario | null
   verificacionVisible: boolean = false
   verificacionEditable: boolean = false
   editable: boolean = true
-  usuario?: { id: number, usuario: string, nombre: string };
   rol?: { id: number, nombre: string }
 
   paradas: Paradas[] = []
@@ -37,6 +38,7 @@ export class RutasComponent implements OnInit {
 
   rutas: Ruta[] = [];
   rutaId: any
+  rutaInfo?: Ruta
   rutaSeleccionada: number | null = null;  // Índice de la ruta seleccionada
   rutaConsultada: boolean = false
   rutaNueva: RutaNueva
@@ -128,9 +130,10 @@ export class RutasComponent implements OnInit {
   }
 
   listarRutas() {
-    this.servicioTerminales.listarRutas().subscribe({
+    console.log(this.usuario)
+    this.servicioTerminales.listarRutas(this.usuario?.id).subscribe({
       next: (respuesta: any) => {
-        this.rutas = respuesta.rutas
+        this.rutas = respuesta.rutasVigilado
         this.editable = !respuesta.editable
         this.verificacionEditable = !respuesta.verificacionEditable
         this.verificacionVisible = respuesta.verificacionVisible
@@ -164,42 +167,72 @@ export class RutasComponent implements OnInit {
     })
   }
 
-  maestraMunicipios(event: any, nombre: string, tipo: number) { // MAESTRA DE MUNICIPIOS
+  maestraMunicipios(event: any, nombre?: string, tipo?: number, ruta?: Ruta) { // MAESTRA DE MUNICIPIOS
     const input = event.target as HTMLSelectElement
     const id_departamento = input.value
-    const selectElement = document.getElementById(nombre) as HTMLSelectElement;
+    let selectElement: any = undefined
+    if (nombre) selectElement = document.getElementById(nombre) as HTMLSelectElement;
     //console.log(id_departamento)
     if (id_departamento !== 'null') {
       this.servicioTerminales.maestraMunicipios(id_departamento).subscribe({
         next: (municipios: any) => {
           //console.log(municipios)
-          selectElement.disabled = false
+          if (selectElement) selectElement.disabled = false;
           if (tipo === 1) {
-            this.municipiosOrigen = []
-            this.municipiosOrigen = municipios.respuestaMunicipios
-            this.maestraCP('null', 'cp origen', tipo)
+            if (ruta?.id_unico_ruta) {
+              console.log(municipios.respuestaMunicipios)
+              ruta.municipiosOrigen = []
+              ruta.municipiosOrigen = municipios.respuestaMunicipios
+              this.maestraCP('null', undefined, tipo, undefined, ruta)
+            } else {
+              this.municipiosOrigen = []
+              this.municipiosOrigen = municipios.respuestaMunicipios
+              this.maestraCP('null', 'cp origen', tipo)
+            }
+
           }
           if (tipo === 2) {
-            this.municipiosDestino = []
-            this.municipiosDestino = municipios.respuestaMunicipios
-            this.maestraCP('null', 'cp destino', tipo)
+            if (ruta?.id_unico_ruta) {
+              ruta.municipiosDestino = []
+              ruta.municipiosDestino = municipios.respuestaMunicipios
+              this.maestraCP('null', undefined, tipo, true, ruta)
+            } else {
+              this.municipiosDestino = []
+              this.municipiosDestino = municipios.respuestaMunicipios
+              this.maestraCP('null', 'cp destino', tipo)
+            }
+
           }
         }
       })
     } else {
-      selectElement.disabled = true;
+      if (selectElement) selectElement.disabled = true;
       if (tipo === 1) {
-        this.municipiosOrigen = []
-        this.maestraCP('null', 'cp origen', tipo)
+        if (ruta?.id_unico_ruta) {
+          ruta.municipiosOrigen = []
+          ruta.departamento_origen_codigo = null
+          this.maestraCP('null', undefined, tipo, undefined, ruta)
+        } else {
+          this.municipiosOrigen = []
+          this.maestraCP('null', 'cp origen', tipo)
+        }
+
       }
       if (tipo === 2) {
-        this.municipiosDestino = []
-        this.maestraCP('null', 'cp destino', tipo)
+        if (ruta?.id_unico_ruta) {
+          ruta.municipiosDestino = []
+          ruta.departamento_destino_codigo = null
+          this.maestraCP('null', undefined, tipo, true, ruta)
+        } else {
+          this.municipiosDestino = []
+          this.maestraCP('null', 'cp destino', tipo)
+        }
+
       }
     }
   }
 
-  maestraCP(event: any, nombre: string, tipo: number, cambio?: boolean) { // MAESTRA DE CENTROS POBLADOS
+  maestraCP(event: any, nombre?: string, tipo?: number, cambio?: boolean, ruta?: Ruta) { // MAESTRA DE CENTROS POBLADOS
     let codigoMunicipio
     if (event === 'null' || event === null) {
       codigoMunicipio = 'null'
@@ -207,41 +240,74 @@ export class RutasComponent implements OnInit {
       const input = event.target as HTMLSelectElement
       codigoMunicipio = input.value
     }
-    const selectElement = document.getElementById(nombre) as HTMLSelectElement;
+    let selectElement: any = undefined
+    if (nombre) selectElement = document.getElementById(nombre) as HTMLSelectElement;
     //console.log(codigoMunicipio)
     if (codigoMunicipio !== 'null') {
       this.servicioTerminales.maestraCentrosPoblados(codigoMunicipio).subscribe({
         next: (respuesta: any) => {
           //console.log(respuesta)
-          selectElement.disabled = false
+          if (selectElement) selectElement.disabled = false
           if (tipo === 1) {
-            this.centroPobladoOrigen = []
-            this.centroPobladoOrigen = respuesta.respuestaCentrosPoblados
-            this.rutaNueva.centro_poblado_origen = null
+            if (ruta?.id_unico_ruta) {
+              ruta.cpOrigen = []
+              ruta.cpOrigen = respuesta.respuestaCentrosPoblados
+              ruta.cp_origen_codigo = null
+            } else {
+              this.centroPobladoOrigen = []
+              this.centroPobladoOrigen = respuesta.respuestaCentrosPoblados
+              this.rutaNueva.centro_poblado_origen = null
+            }
           }
           if (tipo === 2) {
-            this.centroPobladoDestino = []
-            this.centroPobladoDestino = respuesta.respuestaCentrosPoblados
-            this.rutaNueva.centro_poblado_destino = null
-            if (cambio) {
-              this.rutaNueva.tipo_llegada = null
-              this.rutaNueva.direccion = null
+            if (ruta?.id_unico_ruta) {
+              ruta.cpDestino = []
+              ruta.cpDestino = respuesta.respuestaCentrosPoblados
+              ruta.cp_destino_codigo = null
+              if (cambio) {
+                ruta.tipo_llegada_id = null
+                ruta.direccion_id = null
+              }
+            } else {
+              this.centroPobladoDestino = []
+              this.centroPobladoDestino = respuesta.respuestaCentrosPoblados
+              this.rutaNueva.centro_poblado_destino = null
+              if (cambio) {
+                this.rutaNueva.tipo_llegada = null
+                this.rutaNueva.direccion = null
+              }
             }
+
           }
         }
       })
     } else {
-      selectElement.disabled = true;
+      if (selectElement) selectElement.disabled = true;
       if (tipo === 1) {
-        this.centroPobladoOrigen = [],
+        if (ruta?.id_unico_ruta) {
+          ruta.cpOrigen = []
+          ruta.cp_origen_codigo = null
+          ruta.municipio_origen_codigo = null
+        } else {
+          this.centroPobladoOrigen = []
           this.rutaNueva.centro_poblado_origen = null
+        }
       }
       if (tipo === 2) {
-        this.centroPobladoDestino = [],
+        if (ruta?.id_unico_ruta) {
+          ruta.cpDestino = []
+          ruta.cp_destino_codigo = null
+          ruta.municipio_destino_codigo = null
+          if (cambio) {
+            ruta.tipo_llegada_id = null
+            ruta.direccion_id = null
+          }
+        } else {
+          this.centroPobladoDestino = []
           this.rutaNueva.centro_poblado_destino = null
-        this.rutaNueva.tipo_llegada = null
-        if (this.rutaNueva.centro_poblado_destino === null || this.rutaNueva.centro_poblado_destino === 'null') {
-
+          this.rutaNueva.tipo_llegada = null
+          if (this.rutaNueva.centro_poblado_destino === null || this.rutaNueva.centro_poblado_destino === 'null') {
+          }
           //console.log(this.rutaNueva)
           //this.rutaNueva.direccion = null
         }
@@ -270,7 +336,7 @@ export class RutasComponent implements OnInit {
             for (let ruta of this.rutas) {
               if (ruta.id === rutaId) {
                 ruta.direcciones = []
-                ruta.tipo_llegada_id = idLlegada
+                ruta.tipo_llegada_id = Number(idLlegada)
                 if (respuesta.respuestaDirecciones.length > 0) {
                   ruta.direcciones = respuesta.respuestaDirecciones
                 } else {
@@ -286,7 +352,7 @@ export class RutasComponent implements OnInit {
           } else {
             this.direcciones = []; this.rutaNueva.direccion = null
             this.direcciones = respuesta.respuestaDirecciones
-            this.rutaNueva.tipo_llegada = idLlegada
+            this.rutaNueva.tipo_llegada = Number(idLlegada)
           }
         }
       })
@@ -315,7 +381,7 @@ export class RutasComponent implements OnInit {
   seleccionarRuta(ruta: Ruta, index: number) {
     // Verificamos si es el mismo registro que ya está seleccionado
     if (this.rutaSeleccionada === index) return;
-
+    this.rutaInfo = ruta
     // Marcar el registro actual como seleccionado
     this.rutaSeleccionada = index;
     this.rutaNuevaHabilitada = false
@@ -504,7 +570,13 @@ export class RutasComponent implements OnInit {
     //this.manejarCambios()
   }
 
-  manejarTipoLlegadaNueva() {
+  manejarTipoLlegadaNueva(ruta?:Ruta) {
+    if(ruta?.id_unico_ruta){
+      if (ruta.cp_destino_codigo === null || ruta.cp_destino_codigo === 'null') {
+        ruta.tipo_llegada_id = null
+        ruta.direccion_id = null
+      }
+    }
     if (this.rutaNueva.centro_poblado_destino === null || this.rutaNueva.centro_poblado_destino === 'null') {
       //this.rutaNueva.centro_poblado_destino = null
       this.rutaNueva.tipo_llegada = null

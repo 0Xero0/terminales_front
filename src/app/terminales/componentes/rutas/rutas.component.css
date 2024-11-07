@@ -14,7 +14,41 @@
 }
 
 .input-filtrar {
-  width: 225px;
+  width: 100%;
+  padding: 10px 35px 10px 15px; /* Espacio para el icono y el texto */
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 20px; /* Bordes redondeados */
+  outline: none;
+}
+
+/* Estilo para el contenedor del input y el icono */
+.search-input-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 250px; /* Ancho del input */
+}
+
+.search-button {
+  position: absolute;
+  right: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #3366CC; /* Color de fondo del botón */
+  border: none;
+  border-radius: 50%; /* Forma circular */
+  width: 30px; /* Ancho del botón */
+  height: 30px; /* Alto del botón */
+  cursor: pointer;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white; /* Color del icono */
+}
+
+.search-button:hover {
+  background-color: #004884;
 }
 
 @keyframes highlight {

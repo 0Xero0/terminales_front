@@ -3,11 +3,15 @@ export interface Ruta {
   id_ruta: string | number,
   id_unico_ruta?: string | number,
   departamento_origen: string | null,
+  departamento_origen_codigo: string | null
   municipio_origen: string | null,
+  municipio_origen_codigo: string | null,
   cp_origen_codigo?: string | null
   cp_origen: string | null,
   departamento_destino: string | null,
+  departamento_destino_codigo: string | null,
   municipio_destino: string | null,
+  municipio_destino_codigo: string | null,
   cp_destino_codigo?: string | null,
   cp_destino: string | null,
   tipo_llegada_id: string | number | null,
@@ -23,6 +27,10 @@ export interface Ruta {
   documento?:string,
   nombre_original?:string,
   ruta_archivo?:string,
+  municipiosOrigen?:Array<{ id: number, codigoMunicipio: string, nombre:string }>
+  municipiosDestino?:Array<{ id: number, codigoMunicipio: string, nombre:string }>
+  cpOrigen?:Array<{ id: number, codigoCentroPoblado: string, nombre:string }>
+  cpDestino?:Array<{ id: number, codigoCentroPoblado: string, nombre:string }>
   direcciones?:Array<{ id: number, descripcion: string }>
   estado?:boolean
   errorRutas?:boolean | null

@@ -2,7 +2,12 @@
   <div ngbAccordionItem [collapsed]="false">
     <h2 ngbAccordionHeader>
       <button ngbAccordionButton class="fw-semibold texto-primario">
-        PARADAS
+        <label class="titulo">Paradas del trayecto</label>
+        <label class="titulo">| Origen: </label>
+        <label style=" margin-right: 5px;"> {{ruta?.departamento_origen}}, {{ruta?.municipio_origen}}</label>
+        <label class="titulo">| Destino: </label>
+        <label style=" margin-right: 5px;"> {{ruta?.departamento_destino}}, {{ruta?.municipio_destino}}</label>
+        <label class="titulo">| Vehículos En Transito (Paradas Intermedias)</label>
       </button>
     </h2>
     <div ngbAccordionCollapse>
