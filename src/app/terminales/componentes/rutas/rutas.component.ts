@@ -569,6 +569,9 @@ export class RutasComponent implements OnInit {
     this.clasesGuardar.emit(this.clases)
     //this.manejarCambios()
   }
+  recibirHayCambioa(hayCambios:any){
+    this.hayCambios.emit(hayCambios)
+  }
 
   manejarTipoLlegadaNueva(ruta?:Ruta) {
     if(ruta?.id_unico_ruta){

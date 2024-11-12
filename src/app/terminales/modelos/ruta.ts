@@ -19,6 +19,7 @@ export interface Ruta {
   direccion_id: number | string | null,
   direccion?: string | null,
   via: string | undefined,
+  viaNueva: string | undefined,
   ruta_activa: string | null,
   resolucion: number | null,
   corresponde: string | number | null,
