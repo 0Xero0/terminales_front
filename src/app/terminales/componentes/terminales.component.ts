@@ -46,6 +46,7 @@ export class TerminalesComponent implements OnInit {
 
   recibirHayCambios(hayCambios: boolean) {
     this.hayCambios = hayCambios
+    console.log(hayCambios)
   }
 
   recibirRutas(rutas: Ruta[]) {
@@ -85,6 +86,7 @@ export class TerminalesComponent implements OnInit {
     let JSONParadas: Array<any> = []
     let JSONClases: Array<any> = []
     for (let ruta of this.rutas) {
+      if(ruta.via === '-' || ruta.via === null || ruta.via === 'null' || !ruta.via) ruta.via = ruta.viaNueva
       JSONRutas.push({
         id: ruta.id,
         idaOVuelta: ruta.ida_o_vuelta,

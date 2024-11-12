@@ -35,7 +35,7 @@
           <th style="width: 200px;"><span class="fs-14px">Departamento de destino</span></th>
           <th style="width: 200px;"><span class="fs-14px">Municipio de destino</span></th>
           <th style="width: 200px;"><span class="fs-14px">Centro poblado de destino</span></th>
-          <th style="width: 200px;"><span class="fs-14px">Tipo de llegada (finalización trayecto)</span></th>
+          <th style="width: 200px;"><span class="fs-14px">Tipo de llegada (Finalización trayecto)</span></th>
           <th style="width: 200px;"><span class="fs-14px">Dirección</span></th>
           <th style="width: 200px;"><span class="fs-14px">Vía</span></th>
           <th style="width: 200px;"><span class="fs-14px">¿La ruta está activa?</span></th>
@@ -136,8 +136,9 @@
             </select>
           </td>
           <td style="width: 130px;"><!-- (click)="seleccionarRuta(ruta, i)" VIA -->
-            <div *ngIf="ruta.via">{{ruta.via}}</div>
-            <input *ngIf="!ruta.via" [(ngModel)]="ruta.via" name="via_{{i}}" type="text" class="form-control" (change)="manejarCambios()"
+            <div *ngIf="ruta.via && ruta.via !== '-'">{{ruta.via}}</div>
+            <input *ngIf="!ruta.via || ruta.via === '-'" [(ngModel)]="ruta.viaNueva" name="via_{{i}}" type="text" class="form-control"
+              (change)="manejarCambios()"
               placeholder="-">
           </td>
           <td>
@@ -382,6 +383,7 @@
 <div *ngIf="rutaConsultada" style="margin-bottom: 10px;">
   <app-paradas
     (paradasGuardar)="recibirParadas($event)"
+    (hayCambios)="recibirHayCambioa($event)"
     [rutaId]="rutaId" [editable]="editable"
     [verificacionVisible]="verificacionVisible"
     [ruta]="rutaInfo">
@@ -390,6 +392,7 @@
 <div *ngIf="rutaConsultada" style="margin-bottom: 10px;">
   <app-clases
     (clasesGuardar)="recibirClases($event)"
+    (hayCambios)="recibirHayCambioa($event)"
     [rutaId]="rutaId"
     [editable]="editable"
     [ruta]="rutaInfo">

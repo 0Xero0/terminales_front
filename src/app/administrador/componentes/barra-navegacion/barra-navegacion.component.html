@@ -4,10 +4,18 @@
         <img class="img-fluid" src="assets/img/cabecera/gov.png" alt="">
       </div>
       <div class="d-flex align-items-center justify-content-end ms-auto" *ngIf="usuario"
-      style="color: white; margin-right: 45px;">
-        <span class="fs-12px p-3 cursor-pointer">
+      style="color: white;">
+        <span class="fs-12px p-3">
          <!--  <b>Usuario: </b> -->{{ usuario.nombre }} {{ usuario.apellido }}
-        </span><i class="bi bi-person-circle"></i>
+        <i class="bi bi-person-circle"></i></span>
+      </div>
+      <div style="color: white; margin-right: 45px;" class="cursor-pointer">
+        <button *ngIf="inicioSesion" type="button" class="boton primario relleno" (click)="cerrarSesion()">
+          <i class="bi bi-box-arrow-right"></i> Salir
+        </button>
+        <button *ngIf="inicioVigia2" type="button" class="boton primario relleno" (click)="cerrarSesion()">
+          <i class="bi bi-box-arrow-right"></i> Volver
+        </button>
       </div>
     </div>
 
