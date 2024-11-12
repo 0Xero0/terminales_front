@@ -132,7 +132,7 @@
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let direccion of ruta.direcciones" [value]='direccion.id'>{{direccion.descripcion}}
               </option>
-              <option *ngIf="ruta.tipo_llegada_id !== 1" value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal -->
+              <option value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal *ngIf="ruta.tipo_llegada_id !== 1"-->
             </select>
           </td>
           <td style="width: 130px;"><!-- (click)="seleccionarRuta(ruta, i)" VIA -->
