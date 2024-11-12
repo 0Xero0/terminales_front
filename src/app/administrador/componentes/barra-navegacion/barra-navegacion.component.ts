@@ -20,6 +20,9 @@ export class BarraNavegacionComponent implements OnInit {
   public readonly llaveRolesLocalStorage = 'rolTerminales'
   public readonly llaveUsuarioLocalStorage = 'UsuarioTerminales'
 
+  inicioSesion: boolean = false
+  inicioVigia2: boolean = false
+
   constructor(private servicioCabecera: ServicioCabeceraService, private servicioLocalStorage: ServicioLocalStorage,) {
     this.usuarioQuiereCerrarSesion = new EventEmitter<void>()
     this.menuLateralDesplegado = new EventEmitter<void>()
@@ -29,6 +32,11 @@ export class BarraNavegacionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const inicioSesion = JSON.parse(localStorage.getItem('inicio-sesion') || 'false');
+    if(inicioSesion){this.inicioSesion = inicioSesion}
+    const inicioVigia2 = JSON.parse(localStorage.getItem('inicio-vigia2') || 'false');
+    if(inicioVigia2){this.inicioVigia2 = inicioVigia2}
+
     this.usuario = this.servicioLocalStorage.obtenerUsuario()
     this.roles = JSON.parse(localStorage.getItem(this.llaveRolesLocalStorage)!)
     const Usuario = JSON.parse(localStorage.getItem(this.llaveUsuarioLocalStorage)!)
