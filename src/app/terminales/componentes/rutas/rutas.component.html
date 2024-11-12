@@ -280,7 +280,7 @@
               (change)="manejarDirecciones($event,rutaNueva.tipo_llegada,rutaNueva.centro_poblado_destino,undefined)">
               <option [value]="null">Seleccione una opción</option>
               <option *ngFor="let direccion of direcciones" [value]='direccion.id'>{{direccion.descripcion}}</option>
-              <option *ngIf="rutaNueva.tipo_llegada === 4" value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal -->
+              <option  value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal *ngIf="rutaNueva.tipo_llegada === 4"-->
             </select>
           </td>
           <td style="width: 130px;"> <!-- INPUT VIA -->
