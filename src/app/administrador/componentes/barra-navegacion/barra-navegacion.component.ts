@@ -48,6 +48,7 @@ export class BarraNavegacionComponent implements OnInit {
   }
 
   public cerrarSesion(){
+    localStorage.removeItem('rutasRevisadas');
     this.usuarioQuiereCerrarSesion.emit()
   }
 }

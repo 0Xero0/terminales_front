@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { Ruta, RutaNueva } from '../../modelos/ruta';
+import { Faltantes, Ruta, Ruta2, RutaFiltrada, RutaNueva } from '../../modelos/ruta';
 import { ServicioArchivos } from 'src/app/archivos/servicios/archivos.service';
 import { TerminalesService } from '../../servicios/terminales.service';
 import { Paradas } from '../../modelos/paradas';
@@ -7,6 +7,8 @@ import { Clases } from '../../modelos/clases';
 import Swal from 'sweetalert2';
 import { validarCampos } from '../../validadores/validar-campos';
 import { Usuario } from 'src/app/autenticacion/modelos/IniciarSesionRespuesta';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-rutas',
@@ -15,7 +17,7 @@ import { Usuario } from 'src/app/autenticacion/modelos/IniciarSesionRespuesta';
 })
 export class RutasComponent implements OnInit {
   @Output() hayCambios: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Output() rutasGuardar: EventEmitter<Array<Ruta>> = new EventEmitter<Array<Ruta>>();
+  @Output() rutasGuardar: EventEmitter<Array<Ruta2>> = new EventEmitter<Array<Ruta2>>();
   @Output() paradasGuardar: EventEmitter<Array<Paradas>> = new EventEmitter<Array<Paradas>>();
   @Output() clasesGuardar: EventEmitter<Array<Clases>> = new EventEmitter<Array<Clases>>();
   @Output() numeroRutas: EventEmitter<number> = new EventEmitter<number>();
@@ -24,7 +26,7 @@ export class RutasComponent implements OnInit {
   @Output() editableEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() aprobado?: boolean
   @Input() todoGuardado?: boolean
-  @Input() faltantes?: Array<number>
+  @Input() faltantes?: Array<Faltantes>
   @Input() usuario?: Usuario | null
   verificacionVisible: boolean = false
   verificacionEditable: boolean = false
@@ -36,7 +38,7 @@ export class RutasComponent implements OnInit {
 
   resolucionCorresponde: boolean = false
 
-  rutas: Ruta[] = [];
+  rutas: Ruta2[] = [];
   rutaId: any
   rutaInfo?: Ruta
   rutaSeleccionada: number | null = null;  // Índice de la ruta seleccionada
@@ -54,15 +56,21 @@ export class RutasComponent implements OnInit {
 
   error: boolean = false
   errorRutas: boolean = false
+  rutasMostradas: Ruta2[] = []
 
   termino: any
 
   highlightID: number | null = null; // Para almacenar el ID resaltado temporalmente
-  filteredID: number | null = null; // Para almacenar el ID buscado
+  filteredID: any; // Para almacenar el ID buscado
   pageRutas: number = 1; // Variable para controlar la página actual
-  itemsPerPageRutas: number = 6; // Variable para controlar la cantidad de registros mostrados por página
+  itemsPerPageRutas: number = 5; // Variable para controlar la cantidad de registros mostrados por página
 
-  constructor(private servicioArchivos: ServicioArchivos, private servicioTerminales: TerminalesService) {
+  constructor(
+    private servicioArchivos: ServicioArchivos,
+    private servicioTerminales: TerminalesService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.rutaNueva = this.inicializarRutaNueva()
   }
 
@@ -76,36 +84,63 @@ export class RutasComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    this.route.queryParams.subscribe((params: any) => {
+      // Obtener los parámetros
+      const idRuta = Number(params.idRuta);
+      const revisada = params.revisada === 'true'; // Convertir a booleano
+
+      // Leer el arreglo actual desde el localStorage
+      const rutasRevisadas = JSON.parse(localStorage.getItem('rutasRevisadas') || '[]');
+
+      // Verificar si el idRuta ya existe en el arreglo
+      const existe = rutasRevisadas.some((ruta: any) => ruta.idRuta === idRuta);
+
+      if (!existe) {
+        // Agregar el nuevo objeto si no existe
+        rutasRevisadas.push({ idRuta, revisada });
+      }
+
+      // Guardar el arreglo actualizado en el localStorage
+      localStorage.setItem('rutasRevisadas', JSON.stringify(rutasRevisadas));
+    });
     if (changes['todoGuardado']) {
       this.rutas = []
       this.listarRutas();
     }
   }
 
-  searchByID(id: number | null): void {
-    // Encuentra el índice del registro con el ID especificado
-    const index = this.rutas.findIndex(item => item.id_unico_ruta === id);
+  filtrarRutas() {
+    const lowerSearchText = this.filteredID.toLowerCase();
 
-    if (index !== -1) {
-      this.rutaSeleccionada = null
-      this.rutaConsultada = false
-      // Calcula la página en la que se encuentra el registro
-      this.pageRutas = Math.floor(index / this.itemsPerPageRutas) + 1;
-      this.filteredID = id; // Guarda el ID para resaltar o enfocarlo
-      // Limpiar el resaltado después de un tiempo
-      setTimeout(() => {
-        this.highlightID = null; // Elimina el resaltado después de 1 segundo
-      }, 1000); // Duración del resaltado
-    } else {
-      // Si no se encuentra el ID, puedes mostrar un mensaje de error o aviso
-      console.warn('Registro no encontrado');
-    }
+    this.rutasMostradas = this.rutas.filter(ruta =>
+      Object.values(ruta).some(campo => {
+        const valorCampo = campo !== null && campo !== undefined ? campo.toString().toLowerCase() : '';
+        return valorCampo.includes(lowerSearchText);
+      })
+    );
+    console.log(this.rutasMostradas)
   }
+
   limpiar() {
     this.filteredID = null
-    /* this.pageRutas = 1 */
-    /* this.rutaSeleccionada = null
-    this.rutaConsultada = false */
+    this.rutasMostradas = this.rutas
+  }
+
+  crearNuevaRuta() {
+    this.router.navigate(['/administrar', 'crear-ruta']);
+  }
+
+  revisarRuta(ruta: Ruta2) {
+    ruta.errorRutas = false
+    const ids: any = {
+      idRuta: ruta.idRuta,
+      idCodigoRuta: ruta.idCodigoRuta,
+      idCodigoUnicoRuta: ruta.idCodigoUnicoRuta,
+      codCpDestino: ruta.codCpDestino,
+      codCpOrigen: ruta.codCpOrigen
+    }
+    this.router.navigate(['/administrar', 'revisar-ruta'], { state: { ruta } });
+
   }
 
   obtenerCantidadRutas(idUsuario: any) {
@@ -130,24 +165,48 @@ export class RutasComponent implements OnInit {
   }
 
   listarRutas() {
-    console.log(this.usuario)
+    //console.log(this.usuario)
+    const rutasRevisadas = JSON.parse(localStorage.getItem('rutasRevisadas') || '[]');
     this.servicioTerminales.listarRutas(this.usuario?.id).subscribe({
       next: (respuesta: any) => {
-        this.rutas = respuesta.rutasVigilado
+        console.log(this.rutasMostradas)
+        // Actualizar "rutas" con los nuevos datos, restaurando "revisada" si existe
+        this.rutas = respuesta.rutasVigilado.map((registro: any, index: any) => {
+          const idRuta = registro.rutas.idRuta;
+          // Buscar si existe una coincidencia por idRuta en el localStorage
+          const rutaRevisada = rutasRevisadas.find((ruta: any) => ruta.idRuta === idRuta);
+          return {
+            ...registro.rutas, // Mantén los campos originales
+            index: index + 1, // Agrega el campo "consecutivo"
+            revisada: rutaRevisada ? rutaRevisada.revisada : false, // Usar el valor del localStorage si existe
+          };
+        });
+        // Actualizar rutasMostradas para reflejar el estado completo
+        this.rutasMostradas = [...this.rutas];
+
+        // Actualizar otros valores
+        this.rutasMostradas = this.rutas
         this.editable = !respuesta.editable
         this.verificacionEditable = !respuesta.verificacionEditable
         this.verificacionVisible = respuesta.verificacionVisible
+
+        // Emitir valores actualizados
+        this.rutasGuardar.emit(this.rutas)
         this.editableEmit.emit(this.editable)
-        if (this.rutas) {
-          for (let i = 0; i < this.rutas.length; i++) {//RECORREMOS LAS RUTAS
-            if (this.rutas[i].tipo_llegada_id) {//COMPROBAMOS QUE EXISTA UN TIPO DE LLEGADA Y SI EXISTE
-              this.maestraDireccion(this.rutas[i].tipo_llegada_id, this.rutas[i].cp_destino_codigo, i, undefined, this.rutas[i].id)//CONSULTAMOS LA DIRECCIÓN CORRESPONDIENTE
-            }
-          }
-          this.rutasGuardar.emit(this.rutas)
-        }
+
+        console.log(this.rutas);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.mostrarError(error.error.mensaje)
       }
     })
+  }
+  mostrarError(mensaje: string) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: mensaje || 'Ocurrió un error inesperado.',
+    });
   }
 
   consultarInformacionRuta(id_ruta: number) { //Consultamos paradas y clases de la ruta seleccionada
@@ -324,59 +383,6 @@ export class RutasComponent implements OnInit {
     })
   }
 
-  maestraDireccion(tipo_llegada_id: any, cp_destino_codigo: any, index?: any, cambio?: boolean, rutaId?: number) { // MAESTRA DE DIRECCIONES
-    //console.log(index, tipo_llegada_id)
-    const idLlegada = tipo_llegada_id
-    if (idLlegada !== 'null') {
-      this.servicioTerminales.maestraDirecciones(tipo_llegada_id, cp_destino_codigo).subscribe({
-        next: (respuesta: any) => {
-          //console.log(respuesta)
-          if (index !== undefined) {
-            //console.log(respuesta)
-            for (let ruta of this.rutas) {
-              if (ruta.id === rutaId) {
-                ruta.direcciones = []
-                ruta.tipo_llegada_id = Number(idLlegada)
-                if (respuesta.respuestaDirecciones.length > 0) {
-                  ruta.direcciones = respuesta.respuestaDirecciones
-                } else {
-                  ruta.direccion_id = null
-                }
-                if (cambio) {
-                  ruta.direccion_id = null
-                  ruta.errorRutas = false
-                  this.manejarCambios()
-                }
-              }
-            }
-          } else {
-            this.direcciones = []; this.rutaNueva.direccion = null
-            this.direcciones = respuesta.respuestaDirecciones
-            this.rutaNueva.tipo_llegada = Number(idLlegada)
-          }
-        }
-      })
-    } else {
-      if (index !== undefined) {
-        for (let ruta of this.rutas) {
-          if (ruta.id === rutaId) {
-            ruta.tipo_llegada_id = null
-            ruta.direccion_id = null
-            ruta.direcciones = []
-            if (cambio) { this.manejarCambios() }
-          }
-        }
-      } else {
-        this.rutaNueva.direccion = null;
-        this.rutaNueva.tipo_llegada = null;
-        this.direcciones = []
-        console.log(this.rutaNueva.direccion, this.rutaNueva.tipo_llegada)
-      }
-    }
-
-
-  }
-
   // ACCIONES ///////////////////////////////////////////////////////////////////////////////////////////////////
   seleccionarRuta(ruta: Ruta, index: number) {
     // Verificamos si es el mismo registro que ya está seleccionado
@@ -520,7 +526,7 @@ export class RutasComponent implements OnInit {
     });
   }
 
-  estadoRuta(estado: any, index?: number, ruta?: Ruta) {
+  /* estadoRuta(estado: any, index?: number, ruta?: Ruta) {
     if (index !== undefined && ruta) {
       if (estado === 'false') {
         ruta.estado = false
@@ -540,7 +546,7 @@ export class RutasComponent implements OnInit {
       }
       //console.log(this.rutaNueva.ruta_activa)
     }
-  }
+  } */
 
   corresponde(idCorresponde: any, index: any, ruta: Ruta) {
     if (idCorresponde === 'null') {
@@ -569,12 +575,12 @@ export class RutasComponent implements OnInit {
     this.clasesGuardar.emit(this.clases)
     //this.manejarCambios()
   }
-  recibirHayCambioa(hayCambios:any){
+  recibirHayCambioa(hayCambios: any) {
     this.hayCambios.emit(hayCambios)
   }
 
-  manejarTipoLlegadaNueva(ruta?:Ruta) {
-    if(ruta?.id_unico_ruta){
+  manejarTipoLlegadaNueva(ruta?: Ruta) {
+    if (ruta?.id_unico_ruta) {
       if (ruta.cp_destino_codigo === null || ruta.cp_destino_codigo === 'null') {
         ruta.tipo_llegada_id = null
         ruta.direccion_id = null
@@ -585,11 +591,6 @@ export class RutasComponent implements OnInit {
       this.rutaNueva.tipo_llegada = null
       this.rutaNueva.direccion = null
     }
-  }
-
-  filtrar() {
-    const encontrado = this.rutas.find(ruta => ruta.id_unico_ruta === this.termino);
-    if (encontrado) { this.rutas = encontrado ? [encontrado] : [] }
   }
 
   // MANEJO DE ARCHIVOS //////////////////////////////////////////////////////////////////////////////////
@@ -650,9 +651,9 @@ export class RutasComponent implements OnInit {
 
   }
 
-  descargarArchivo(nombreOriginal: string, nombre?: string, ruta?: string) { // PENDIENTE POR PONER A FUNCIONAR
+  descargarArchivo(nombreOriginal?: string, nombre?: string, ruta?: string) { // PENDIENTE POR PONER A FUNCIONAR
     //console.log(nombre, ruta)
-    this.servicioArchivos.descargarArchivo(nombre!, ruta!, nombreOriginal)
+    this.servicioArchivos.descargarArchivo(nombre!, ruta!, nombreOriginal!)
   }
 
   // VALIDACIONES Y CAMBIOS ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -678,7 +679,7 @@ export class RutasComponent implements OnInit {
     // Recorrer cada faltante devuelto al enviar al ST
     for (const faltante of this.faltantes!) {
       // Verificar si el faltante es igual al ID de ubicación de la ruta en BD
-      if (faltante === id) {
+      if (faltante.idRuta === id) {
         return true; // Devuelve true en cuanto encuentra una coincidencia
       }
     }
@@ -687,7 +688,7 @@ export class RutasComponent implements OnInit {
 
   manejarCambios() {
     this.hayCambios.emit(true)
-    this.rutasGuardar.emit(this.rutas)
+    //this.rutasGuardar.emit(this.rutas)
     this.paradasGuardar.emit(this.paradas)
     this.clasesGuardar.emit(this.clases)
   }

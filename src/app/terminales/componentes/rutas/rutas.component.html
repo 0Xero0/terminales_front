@@ -4,17 +4,18 @@
   <label for="filtro">Filtrar rutas</label>
   <div class="contenedor-input-botones">
     <div class="search-input-wrapper">
-      <input id="filtro" type="number" class="form-control input-filtrar" placeholder="Buscar por Id_Ruta"
-      (keyup.enter)="searchByID(filteredID)" [(ngModel)]="filteredID" />
-      <button class="search-button" (click)="searchByID(filteredID)">
+      <input id="filtro" type="text" class="form-control input-filtrar" placeholder="Buscar"
+        [(ngModel)]="filteredID" (input)="filtrarRutas()"/>
+      <button class="search-button">
         <i class="bi bi-search"></i>
       </button>
     </div>
-    <!-- <button type="button" class="boton primario relleno" (click)="searchByID(filteredID)">
-      Buscar
-    </button> -->
     <button type="button" class="boton primario relleno" (click)="limpiar()">
       Limpiar
+    </button>
+    <button type="button" class="boton primario relleno" style="margin-left: auto; margin-right: 60px;"
+    (click)="crearNuevaRuta()">
+      Agregar ruta <i class="bi bi-plus-circle"></i>
     </button>
   </div>
 </div>
@@ -27,374 +28,53 @@
     <table class="table custom-scroll">
       <thead class="encabezado">
         <tr>
-          <th style="width: 100px;"><span class="fs-14px">Id_Ruta</span></th>
-          <!-- <th style="width: 100px;"><span class="fs-14px">Tipo</span></th> -->
-          <th style="width: 200px;"><span class="fs-14px">Departamento de origen</span></th>
-          <th style="width: 200px;"><span class="fs-14px">Municipio de origen</span></th>
-          <th style="width: 200px;"><span class="fs-14px">Centro poblado de origen</span></th>
-          <th style="width: 200px;"><span class="fs-14px">Departamento de destino</span></th>
-          <th style="width: 200px;"><span class="fs-14px">Municipio de destino</span></th>
-          <th style="width: 200px;"><span class="fs-14px">Centro poblado de destino</span></th>
-          <th style="width: 200px;"><span class="fs-14px">Tipo de llegada (Finalización trayecto)</span></th>
-          <th style="width: 200px;"><span class="fs-14px">Dirección</span></th>
-          <th style="width: 200px;"><span class="fs-14px">Vía</span></th>
-          <th style="width: 200px;"><span class="fs-14px">¿La ruta está activa?</span></th>
-          <th style="width: 200px;"><span class="fs-14px">N° de resolución en BD</span></th>
-          <th style="width: 200px;"><span class="fs-14px">¿N° de Resolución corresponde?</span></th>
-          <th style="width: 200px;"><span class="fs-14px">N° de resolución actual</span></th>
-          <th style="width: 200px;"><span class="fs-14px">Dirección territorial</span></th>
-          <th style="width: 250px;"><span class="fs-14px">Cargue la Resolución PDF 5Mb</span></th>
-          <th style="width: 200px;" *ngIf="verificacionVisible">
-            <span class="fs-14px">Funciona</span>
-          </th>
-          <th style="width: 60px;" *ngIf="!verificacionVisible"></th>
-          <th style="width: 60px;" *ngIf="!verificacionVisible"></th>
+          <th rowspan="2" style="width: 70px; text-align: center;"><span>Ruta</span></th>
+          <th rowspan="2" style="width: 100px; text-align: center;"><span>N° de vias</span></th>
+          <th colspan="3" class="origen"><span class="fs-14px">Origen</span></th>
+          <th colspan="3" class="destino"><span class="fs-14px">Destino</span></th>
+          <th rowspan="2" style="text-align: center;"><span>Detalles</span></th>
+        </tr>
+        <tr>
+          <th style="border-left: 2px solid #c7d4ed; text-align: center;"><span>Departamento</span></th>
+          <th style="text-align: center;"><span>Municipio</span></th>
+          <th style="text-align: center;"><span>Centro poblado</span></th>
+          <th style="border-left: 2px solid #c7d4ed; text-align: center;"><span>Departamento</span></th>
+          <th style="text-align: center;"><span>Municipio</span></th>
+          <th style="border-right: 2px solid #c7d4ed; text-align: center;"><span>Centro poblado</span></th>
         </tr>
       </thead>
       <tbody>
-        <tr class="fila"
-          *ngFor="let ruta of rutas | paginate: { itemsPerPage: itemsPerPageRutas, currentPage: pageRutas, id:'Ruta' }; let i = index"
-          [class.selected]="i === rutaSeleccionada" [class.faltante]="ruta.errorRutas"
-          [ngClass]="{'highlight': ruta.id_unico_ruta === filteredID || ruta.id_unico_ruta === highlightID}">
-          <td (click)="seleccionarRuta(ruta, i)">
-            {{ruta.id_unico_ruta}}
-          </td>
-          <!-- <td (click)="seleccionarRuta(ruta, i)">
-            <label *ngIf="ruta.ida_o_vuelta === 'B'">REGRESO</label>
-            <label *ngIf="ruta.ida_o_vuelta === 'A'">IDA</label>
-          </td> -->
-          <td (click)="seleccionarRuta(ruta, i)">
-            <div *ngIf="ruta.departamento_origen">{{ruta.departamento_origen}}</div>
-            <select *ngIf="!ruta.departamento_origen" [id]="'depOrigen'+i" class="form-select" (change)="maestraMunicipios($event,undefined,1,ruta)"
-            [class.marcar-error]="!ruta.departamento_origen_codigo && compararFaltantes(ruta.id)" [(ngModel)]="ruta.departamento_origen_codigo">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of departamentos" [value]='opt.codigoDepartamento'>{{opt.nombre}}</option>
-            </select>
-          </td>
-          <td (click)="seleccionarRuta(ruta, i)">
-            <div *ngIf="ruta.municipio_origen">{{ruta.municipio_origen}}</div>
-            <select *ngIf="!ruta.municipio_origen" [id]="'munOrigen'+i" class="form-select"
-            (change)="maestraCP($event,undefined,1,true,ruta)" [disabled]="ruta.departamento_origen_codigo == null"
-            [class.marcar-error]="!ruta.municipio_origen_codigo && compararFaltantes(ruta.id)" [(ngModel)]="ruta.municipio_origen_codigo">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of ruta.municipiosOrigen" [value]='opt.codigoMunicipio'>{{opt.nombre}}</option>
-            </select>
-          </td>
-          <td (click)="seleccionarRuta(ruta, i)">
-            <div *ngIf="ruta.cp_origen">{{ruta.cp_origen}}</div>
-            <select *ngIf="!ruta.cp_origen" [id]="'cpOrigen'+i" class="form-select" [disabled]="ruta.municipio_origen_codigo == null"
-            [class.marcar-error]="!ruta.cp_origen_codigo && compararFaltantes(ruta.id)" [(ngModel)]="ruta.cp_origen_codigo">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of ruta.cpOrigen" [value]='opt.codigoCentroPoblado'>{{opt.nombre}}</option>
-            </select>
-          </td>
-          <td (click)="seleccionarRuta(ruta, i)">
-            <div *ngIf="ruta.departamento_destino">{{ruta.departamento_destino}}</div>
-            <select *ngIf="!ruta.departamento_destino" [id]="'depDestino'+i" class="form-select" (change)="maestraMunicipios($event,undefined,2,ruta)"
-            [class.marcar-error]="!ruta.departamento_destino_codigo && compararFaltantes(ruta.id)" [(ngModel)]="ruta.departamento_destino_codigo">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of departamentos" [value]='opt.codigoDepartamento'>{{opt.nombre}}</option>
-            </select>
-          </td>
-          <td (click)="seleccionarRuta(ruta, i)">
-            <div *ngIf="ruta.municipio_destino">{{ruta.municipio_destino}}</div>
-            <select *ngIf="!ruta.municipio_destino" [id]="'munDestino'+i" class="form-select"
-            (change)="maestraCP($event,undefined,2,true,ruta)" [disabled]="ruta.departamento_destino_codigo == null"
-            [class.marcar-error]="!ruta.municipio_destino_codigo && compararFaltantes(ruta.id)" [(ngModel)]="ruta.municipio_destino_codigo">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of ruta.municipiosDestino" [value]='opt.codigoMunicipio'>{{opt.nombre}}</option>
-            </select>
-          </td>
-          <td (click)="seleccionarRuta(ruta, i)">
-            <div *ngIf="ruta.cp_destino">{{ruta.cp_destino}}</div>
-            <select *ngIf="!ruta.cp_destino" [id]="'cpDestino'+i" class="form-select"
-            (change)="manejarTipoLlegadaNueva(ruta)" [disabled]="ruta.municipio_destino_codigo == null"
-            [class.marcar-error]="!ruta.cp_destino_codigo && compararFaltantes(ruta.id)" [(ngModel)]="ruta.cp_destino_codigo">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of ruta.cpDestino" [value]='opt.codigoCentroPoblado'>{{opt.nombre}}</option>
-            </select>
-          </td>
-          <td><!-- (click)="seleccionarRuta(ruta, i)"SELECT TIPO DE LLEGADA -->
-            <!-- {{ruta.tipo_llegada}} -->
-            <select [(ngModel)]="ruta.tipo_llegada_id" name="tipo_llegada_{{i}}" class="form-select"
-              [class.marcar-error]="!ruta.tipo_llegada_id && compararFaltantes(ruta.id)" [disabled]="ruta.cp_destino_codigo === null || editable"
-              (change)="maestraDireccion(ruta.tipo_llegada_id,ruta.cp_destino_codigo, i, true, ruta.id)">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of tipoLlegada" [value]='opt.id'>{{opt.descripcion}}</option>
-            </select>
-          </td>
-          <td><!-- (click)="seleccionarRuta(ruta, i)"SELECT DIRECCIONES -->
-            <!-- {{ruta.direccion}} -->
-            <select [(ngModel)]="ruta.direccion_id" name="direccion_{{i}}" class="form-select"
-              (change)="manejarDirecciones($event,ruta.tipo_llegada_id,ruta.cp_destino_codigo,i,ruta)"
-              [disabled]="ruta.tipo_llegada_id === null || editable"
-              [class.marcar-error]="!ruta.direccion_id && compararFaltantes(ruta.id)">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let direccion of ruta.direcciones" [value]='direccion.id'>{{direccion.descripcion}}
-              </option>
-              <option value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal *ngIf="ruta.tipo_llegada_id !== 1"-->
-            </select>
-          </td>
-          <td style="width: 130px;"><!-- (click)="seleccionarRuta(ruta, i)" VIA -->
-            <div *ngIf="ruta.via && ruta.via !== '-'">{{ruta.via}}</div>
-            <input *ngIf="!ruta.via || ruta.via === '-'" [(ngModel)]="ruta.viaNueva" name="via_{{i}}" type="text" class="form-control"
-              (change)="manejarCambios()"
-              placeholder="-">
-          </td>
-          <td>
-            <select [(ngModel)]="ruta.estado" name="ruta_activa_{{i}}" class="form-select"
-              [disabled]="editable  || ruta.ida_o_vuelta === 'B'" (change)="estadoRuta(ruta.estado,i,ruta)"
-              [class.marcar-error]="ruta.estado === null && compararFaltantes(ruta.id,i)">
-              <option [value]='null'>Seleccione una opción</option>
-              <option [value]='true'>Si</option>
-              <option [value]='false'>No</option>
-            </select>
-          </td>
-          <td>{{ruta.resolucion}}</td>
-          <td>
-            <select [(ngModel)]="ruta.corresponde" name="resolucion_corresponde_{{i}}" class="form-select" type="number"
-              (change)="corresponde(ruta.corresponde,i,ruta)"
-              [disabled]="!ruta.estado || editable  || ruta.ida_o_vuelta === 'B'"
-              [class.marcar-error]="!ruta.corresponde && compararFaltantes(ruta.id,i)">
-              <option [value]='null'>Seleccione una opción</option>
-              <option [value]='1'>Si</option>
-              <option [value]='2'>No</option>
-            </select>
-          </td>
-          <td>
-            <input [(ngModel)]="ruta.resolucion_actual" name="n_resolucion_actual_{{i}}" type="text" placeholder="-"
-              class="form-control"
-              [disabled]="ruta.corresponde === null || ruta.corresponde === 1 || editable  || ruta.ida_o_vuelta === 'B'"
-              (ngModelChange)="manejarCambios()">
-          </td>
-          <td>{{ruta.direccion_territorial}}</td>
-          <td>
-            <label class="input-archivo d-flex" [for]="'Archivo'+i"
-              [class.marcar-error]="!ruta.nombre_original && compararFaltantes(ruta.id,i)"
-              [ngClass]="{'disabled':editable || ruta.ida_o_vuelta === 'B'}">
-              <div class="boton-adjuntar d-flex align-items-center justify-content-center">Seleccionar archivo</div>
-              <div class="archivos">
-                <div class="archivo d-flex" *ngIf="ruta.nombre_original">
-                  <span class="nombre-archivo">{{ ruta.nombre_original }}</span>
-                  <button class="eliminar-archivo" (click)="manejarRemoverArchivo(input,$event,1,i,ruta)"
-                    [disabled]="editable || ruta.ida_o_vuelta === 'B'">
-                    <i class="bi bi-trash"></i></button>
-                </div>
-                <div class="sin-archivo d-flex"
-                  *ngIf="!ruta.nombre_original || ruta.nombre_original == null || ruta.nombre_original == ''">
-                  <span>Sin archivo seleccionado</span>
-                </div>
-              </div>
-              <input #input type="file" [id]="'Archivo'+i" name="adjuntar" accept=".pdf"
-                (change)="guardarArchivo($event,i,1,5,undefined, ruta)"
-                [disabled]="editable || ruta.ida_o_vuelta === 'B'">
-            </label>
-            <a *ngIf="ruta.nombre_original" class="a"
-              (click)="descargarArchivo(ruta.nombre_original,ruta.documento,ruta.ruta_archivo)">
-              Descargar {{ruta.nombre_original}}
-            </a>
-          </td>
-          <td *ngIf="verificacionVisible">
-            <input type="checkbox" [disabled]="verificacionEditable">
-          </td>
-          <td *ngIf="!verificacionVisible"></td>
-          <td *ngIf="!verificacionVisible"></td>
-          <!-- <td>
-            <button (click)="eliminarRuta(i)" type="button" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
-          </td> -->
-        </tr>
-        <tr *ngIf="rutas.length <= 0">
-          <td colspan="18">
-            <h6 class="sin-registros"> -- No hay rutas para mostrar. --</h6>
-          </td>
-        </tr>
-
-        <!-- //////////// AGREGAR NUEVA RUTA ///////////////////// -->
-        <tr *ngIf="!verificacionVisible && rutaNuevaHabilitada"><!--  -->
-          <td>
-            <input type="text" name="id_ruta" id="" class="form-control" placeholder="-"
-              [disabled]="true"><!-- [class.marcar-error]="!rutaNueva.id_ruta && error" -->
-          </td>
-          <!-- <td>
-            <input type="text" name="tipo" id="" class="form-control" placeholder="-"
-              [disabled]="true">
-          </td> -->
-          <td>
-            <!-- SELECT DEPARTAMENTOS ORIGEN -->
-            <select id="dep origen" class="form-select" (change)="maestraMunicipios($event,'mun origen',1)"
-              [class.marcar-error]="validarCampo('dep origen') && error">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of departamentos" [value]='opt.codigoDepartamento'>{{opt.nombre}}</option>
-            </select>
-          </td>
-          <td>
-            <!-- SELECT MUNICIPIOS ORIGEN -->
-            <select id="mun origen" class="form-select" (change)="maestraCP($event,'cp origen',1)" disabled
-              [class.marcar-error]="validarCampo('mun origen') && error">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of municipiosOrigen" [value]='opt.codigoMunicipio'>{{opt.nombre}}</option>
-            </select>
-          </td>
-          <td>
-            <!-- SELECT CENTROS POBLADOR ORIGEN -->
-            <select [(ngModel)]="rutaNueva.centro_poblado_origen" id="cp origen" class="form-select" disabled
-              [class.marcar-error]="!rutaNueva.centro_poblado_origen && error">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of centroPobladoOrigen" [value]='opt.codigoCentroPoblado'>{{opt.nombre}}</option>
-            </select>
-          </td>
-          <td>
-            <!-- SELECT DEPARTAMENTOS DESTINO -->
-            <select id="dep destino" class="form-select" (change)="maestraMunicipios($event,'mun destino',2)"
-              [class.marcar-error]="validarCampo('dep destino') && error">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of departamentos" [value]='opt.codigoDepartamento'>{{opt.nombre}}</option>
-            </select>
-          </td>
-          <td><!-- SELECT MUNICIPIOS DESTINO -->
-            <select id="mun destino" class="form-select" (change)="maestraCP($event,'cp destino',2,true)" disabled
-              [class.marcar-error]="validarCampo('mun destino') && error">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of municipiosDestino" [value]='opt.codigoMunicipio'>{{opt.nombre}}</option>
-            </select>
-          </td>
-          <td><!-- SELECT CENTROS POBLADOR DESTINO -->
-            <select [(ngModel)]="rutaNueva.centro_poblado_destino" id="cp destino" class="form-select" disabled
-              [class.marcar-error]="!rutaNueva.centro_poblado_destino && error" (change)="manejarTipoLlegadaNueva()">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of centroPobladoDestino" [value]='opt.codigoCentroPoblado'>{{opt.nombre}}</option>
-            </select>
-          </td>
-          <td><!-- SELECT TIPO DE LLEGADA -->
-            <select [(ngModel)]="rutaNueva.tipo_llegada" name="tipo_llegada" class="form-select"
-              (change)="maestraDireccion(rutaNueva.tipo_llegada,rutaNueva.centro_poblado_destino)"
-              [class.marcar-error]="!rutaNueva.tipo_llegada && error"
-              [disabled]="rutaNueva.centro_poblado_destino === 'null' || rutaNueva.centro_poblado_destino === null">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let opt of tipoLlegada" [value]='opt.id'>{{opt.descripcion}}</option>
-            </select>
-          </td>
-          <td><!-- SELECT DIRECCIONES -->
-            <select [(ngModel)]="rutaNueva.direccion" name="direccion" class="form-select"
-              [disabled]="rutaNueva.tipo_llegada === null" [class.marcar-error]="!rutaNueva.direccion && error"
-              (change)="manejarDirecciones($event,rutaNueva.tipo_llegada,rutaNueva.centro_poblado_destino,undefined)">
-              <option [value]="null">Seleccione una opción</option>
-              <option *ngFor="let direccion of direcciones" [value]='direccion.id'>{{direccion.descripcion}}</option>
-              <option  value="abrirModal">Añadir nueva dirección</option> <!-- Opción para abrir el modal *ngIf="rutaNueva.tipo_llegada === 4"-->
-            </select>
-          </td>
-          <td style="width: 130px;"> <!-- INPUT VIA -->
-            <input [(ngModel)]="rutaNueva.via" name="via" type="text" class="form-control"
-              [class.marcar-error]="!rutaNueva.via && error" placeholder="Vía">
-          </td>
-          <td><!-- SELECT RUTA ACTIVA [class.marcar-error]="!rutaNueva.ruta_activa && error" -->
-            <select [(ngModel)]="rutaNueva.ruta_activa" name="ruta_activa" class="form-select" [disabled]="true"
-              (change)="estadoRuta(rutaNueva.ruta_activa,undefined)">
-              <option [value]='null'>-</option>
-              <option [value]='true'>Si</option>
-              <option [value]='false'>No</option>
-            </select>
-          </td>
-          <td><!-- [class.marcar-error]="!rutaNueva.n_resolucion_bd && error" -->
-            <input type="text" name="num BD" id="" class="form-control" [disabled]="true" placeholder="-">
-          </td>
-          <td>
-            <!-- rutaNueva.ruta_activa === null || rutaNueva.ruta_activa === '2' // [class.marcar-error]="!rutaNueva.resolucion_corresponde && error"-->
-            <select name="resolucion_corresponde" class="form-select" type="number" [disabled]="true">
-              <option [value]='null'>-</option>
-              <option [value]='1'>Si</option>
-              <option [value]='2'>No</option>
-            </select>
-          </td>
-          <td><!-- INPUT NUMERO RESOLUCION -->
-            <!-- [disabled]="rutaNueva.resolucion_corresponde === null || rutaNueva.resolucion_corresponde === '1'" -->
-            <input [(ngModel)]="rutaNueva.n_resolucion_actual" name="n_resolucion_actual" type="text"
-              class="form-control" [class.marcar-error]="!rutaNueva.n_resolucion_actual && error"
-              placeholder="N° de la resolución">
-          </td>
-          <td><!-- INPUT DIRECCION TERRITORIAL -->
-            <input [(ngModel)]="rutaNueva.dir_territorial" type="text" name="dir_territorial" id="" class="form-control"
-              [class.marcar-error]="!rutaNueva.dir_territorial && error" placeholder="Dirección territorial">
-          </td>
-          <td><!-- INPUT ARCHIVO -->
-            <label [class.marcar-error]="!rutaNueva.nombreOriginal && error" class="input-archivo d-flex"
-              for="adjuntar">
-              <div class="boton-adjuntar d-flex align-items-center justify-content-center">Seleccionar archivo</div>
-              <div class="archivos">
-                <div class="archivo d-flex" *ngIf="rutaNueva.nombreOriginal">
-                  <span class="nombre-archivo">{{ rutaNueva.nombreOriginal}}</span>
-                  <button class="eliminar-archivo" (click)="manejarRemoverArchivo(input,$event,2)">
-                    <i class="bi bi-trash"></i></button>
-                </div>
-                <div class="sin-archivo d-flex"
-                  *ngIf="!rutaNueva.nombreOriginal || rutaNueva.nombreOriginal == null || rutaNueva.nombreOriginal == ''">
-                  <span>Sin archivo seleccionado</span>
-                </div>
-              </div>
-              <input #input type="file" id="adjuntar" name="adjuntar" accept=".pdf"
-                (change)="guardarArchivo($event,undefined,2,5)">
-            </label>
-            <a *ngIf="rutaNueva.nombreOriginal" class="a"
-              (click)="descargarArchivo(rutaNueva.nombreOriginal,rutaNueva.nombreDocumento,rutaNueva.ruta)">
-              Descargar {{rutaNueva.nombreOriginal}}
-            </a>
-          </td>
-          <td>
-            <button (click)="agregarRuta()" type="button" class="eliminar-ruta fw-semibold"><i
-                class="bi bi-floppy"></i></button>
-          </td>
-          <td>
-            <button (click)="estadoAgregarRuta(false)" type="button" class="eliminar-ruta fw-semibold"><i
-                class="bi bi-trash"></i></button>
-          </td>
-        </tr>
-        <!-- ///////////// BOTÓN PARA HABILITAR EL AGREGAR NUEVA RUTA -->
-        <tr *ngIf="!editable">
-          <td colspan="19">
-            <button type="button" class="boton primario relleno" (click)="estadoAgregarRuta(true)">
-              Agregar ruta <i class="bi bi-plus-circle"></i>
+        <tr
+          *ngFor="let ruta of rutasMostradas | paginate: { itemsPerPage: itemsPerPageRutas, currentPage: pageRutas, id:'Ruta' }; let i = index"
+          [class.faltante]="ruta.errorRutas">
+          <td>{{ruta.index}}</td>
+          <td style="text-align: center;">{{ruta.numeroVias}}</td>
+          <td style="text-align: center;">{{ruta.departamentoOrigen}}</td>
+          <td style="text-align: center;">{{ruta.municipioOrigen}}</td>
+          <td style="text-align: center;">{{ruta.descripcionOrigen}}</td>
+          <td style="text-align: center;">{{ruta.departamentoDestino}}</td>
+          <td style="text-align: center;">{{ruta.municipioDestino}}</td>
+          <td style="text-align: center;">{{ruta.descripcionDestino}}</td>
+          <td style="text-align: center;"  [class.revisada]="ruta.revisada">
+            <button type="button" class="boton primario relleno" (click)="revisarRuta(ruta)">
+              Revisar <i class="bi bi-pen"></i>
             </button>
           </td>
         </tr>
-      </tbody>
-      <!-- <tfoot>
-        <tr style="margin-top: 10px; margin-left: 10px;">
-          <td colspan="14"><button type="button" class="boton primario relleno">Agregar ruta <i class="bi bi-plus-circle"></i></button></td>
+        <tr *ngIf="rutasMostradas.length <= 0">
+          <td colspan="8">
+            <h6 class="sin-registros"> -- No hay rutas para mostrar. --</h6>
+          </td>
         </tr>
-      </tfoot> -->
+      </tbody>
     </table>
   </div>
-  <div class="d-flex justify-content-end" style="margin-right: 20px;">
+  <div class="d-flex justify-content-center">
     <!-- Paginador -->
     <pagination-controls class="pagination-controls"
-      (pageChange)="[pageRutas = $event, rutaSeleccionada = null, rutaConsultada = false]" previousLabel="Ant."
-      nextLabel="Sig." [maxSize]="7" [directionLinks]="true" [autoHide]="false" #paginador1 id="Ruta">
+      (pageChange)="[pageRutas = $event, rutaSeleccionada = null, rutaConsultada = false]" previousLabel="Anterior"
+      nextLabel="Siguiente" [maxSize]="7" [directionLinks]="true" [autoHide]="false" #paginador1 id="Ruta">
     </pagination-controls>
-    <!--  <ngb-pagination [collectionSize]="paginadorReportes.totalRegistros ?? 0" [page]="paginadorReportes.pagina"
-      [pageSize]="paginadorReportes.limite" (pageChange)="paginadorReportes.cambiarPagina($event)" [maxSize]="5">
-      <ng-template ngbPaginationFirst>Prim.</ng-template>
-      <ng-template ngbPaginationLast>Ult.</ng-template>
-      <ng-template ngbPaginationPrevious>Ant.</ng-template>
-      <ng-template ngbPaginationNext>Sig.</ng-template>
-    </ngb-pagination> -->
   </div>
 </div>
-<hr>
-<div *ngIf="rutaConsultada" style="margin-bottom: 10px;">
-  <app-paradas
-    (paradasGuardar)="recibirParadas($event)"
-    (hayCambios)="recibirHayCambioa($event)"
-    [rutaId]="rutaId" [editable]="editable"
-    [verificacionVisible]="verificacionVisible"
-    [ruta]="rutaInfo">
-  </app-paradas>
-</div>
-<div *ngIf="rutaConsultada" style="margin-bottom: 10px;">
-  <app-clases
-    (clasesGuardar)="recibirClases($event)"
-    (hayCambios)="recibirHayCambioa($event)"
-    [rutaId]="rutaId"
-    [editable]="editable"
-    [ruta]="rutaInfo">
-  </app-clases>
-</div>
+

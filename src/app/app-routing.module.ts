@@ -20,6 +20,8 @@ import { ListadoSolicitudesComponent } from './proveedores-tecnologicos/componen
 import { AsignacionesComponent } from './asignaciones/componentes/asignaciones.component';
 import { InicioVigia2Component } from './autenticacion/componentes/inicio-vigia2/inicio-vigia2.component';
 import { TerminalesComponent } from './terminales/componentes/terminales.component';
+import { RevisarRutasComponent } from './terminales/componentes/revisar-rutas/revisar-rutas.component';
+import { CrearRutaComponent } from './terminales/componentes/crear-ruta/crear-ruta.component';
 
 
 
@@ -77,6 +79,14 @@ const routes: Routes = [
         path: 'terminales',
         component: TerminalesComponent
       },
+      {
+        path: 'revisar-ruta',
+        component: RevisarRutasComponent
+      },
+      {
+        path: 'crear-ruta',
+        component: CrearRutaComponent
+      }
     ]
   },
   {

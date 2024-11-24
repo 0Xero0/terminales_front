@@ -43,8 +43,8 @@ export class AutenticacionService {
     localStorage.removeItem(this.llaveUsuarioLocalStorage)
     localStorage.removeItem(this.llaveTokenLocalStorage)
     localStorage.removeItem(this.llaveRolesLocalStorage)
-    localStorage.removeItem(this.aplicativos)
-    localStorage.removeItem('solicitud')
+    //localStorage.removeItem('solicitud')
+    localStorage.removeItem('rutasRevisadas');
   }
 
   public guardarInformacionInicioSesion(jwt:string, rol:object, Usuario: object, aplicativos?: object):void{

@@ -1,69 +1,28 @@
-.search-container {
-  margin-bottom: 1em;
+.informacion {
+  width: 780px;
+  border-color: 1px solid black !important;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 5px;
 }
 
-.search-container label {
+.titulo-fila {
+  width: 130px;
+  background-color: #e6effd;
+  color: #4b4b4b;
   font-weight: bold;
-  margin-left: 10px;
-  margin-bottom: 0.5em;
+  font-size: 16px;
 }
 
-.contenedor-input-botones{
-  display: flex;
-  gap: 0.5em;
-}
-
-.input-filtrar {
-  width: 100%;
-  padding: 10px 35px 10px 15px; /* Espacio para el icono y el texto */
-  font-size: 1em;
-  border: 1px solid #ccc;
-  border-radius: 20px; /* Bordes redondeados */
-  outline: none;
-}
-
-/* Estilo para el contenedor del input y el icono */
-.search-input-wrapper {
-  position: relative;
-  width: 100%;
-  max-width: 250px; /* Ancho del input */
-}
-
-.search-button {
-  position: absolute;
-  right: 3px;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: #3366CC; /* Color de fondo del botón */
-  border: none;
-  border-radius: 50%; /* Forma circular */
-  width: 30px; /* Ancho del botón */
-  height: 30px; /* Alto del botón */
-  cursor: pointer;
-  font-size: 1em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white; /* Color del icono */
-}
-
-.search-button:hover {
-  background-color: #004884;
-}
-
-@keyframes highlight {
-  0% { background-color: rgb(251, 250, 206); }
-  50% { background-color: transparent; }
-  100% { background-color: rgb(251, 250, 206); }
-}
-::ng-deep .highlight {
-  background-color: rgb(251, 250, 206); /* O el color que prefieras */
-}
-/******************************************************************************/
 .ruta {
   overflow: auto;
   margin-top: 10px;
   box-shadow: 0px 3px 6px #00000029;
+}
+.via-clase{
+  overflow: auto;
+  margin-top: 10px;
+  box-shadow: 0px 3px 6px #00000029;
+  /* max-width: 900px !important; */
 }
 .titulo-ruta {
   margin-top: 15px;
@@ -76,9 +35,6 @@
   color: #004884;
   opacity: 1;
 }
-/* .clasificacion:hover {
-  background-color: #f8f8f8;
-} */
 table {
   border-collapse: collapse;  /* Elimina los espacios entre las celdas */
   width: 100%;  /* Asegura que la tabla ocupe todo el ancho del contenedor */
@@ -87,7 +43,7 @@ table {
 th, td {
   /* border: 1px solid #ccc;  Bordes para las celdas */
   padding: 8px;  /* Espacio interno de las celdas */
-  text-align: left;  /* Alineación de texto a la izquierda */
+  text-align: center;  /* Alineación de texto a la izquierda */
   vertical-align: middle; /* Alineación vertical al centro */
 }
 .encabezado {
@@ -97,69 +53,12 @@ th, td {
   color: #004884;
   font-weight: 600;
 }
-.table th, .tabla, .table td{
-  font-size: 14px;
-  padding: 10px;
-  align-items: center;
-}
-.table th{
-  color: var(--azul-oscuro);
-  background-color: var(--azul-claro);
-}
 .table-container {
   width: 100%;  /* El ancho del contenedor */
   overflow-x: auto;  /* Habilita el scroll horizontal */
 }
 .fila{
   align-items: center;
-}
-
-.selected {
-  /*background-color: #f0d78371;  Color de fondo para el registro seleccionado */
-  border: 2px solid #004884 !important;
-  background-color: #eff5fe;
-  color: #004884;
-  font-weight: bold; /* O bien un valor numérico */
-}
-
-.faltante {
-  border: 2px solid #A80521;
-}
-.revisada {
-  border: 2px solid #004884;
-  background-color: #f1f6ff;
-}
-
-.campo-seleccionar {
-  cursor: pointer; /* Cambia el cursor a una mano */
-}
-.campo-seleccionar:hover {
-  background-color: #f0d78371; /* Cambia el color de fondo al pasar el puntero */
-}
-
-.fila td:nth-child(-n+7):hover, /* Aplica el hover solo a los primeros 7 campos */
-.fila:hover td:nth-child(-n+7) {
-  /* Cambia el estilo de los primeros 5 campos cuando cualquier campo tiene hover */
-  cursor: pointer !important; /* Cambia el cursor a una mano */
-  background-color: #e6effd !important; /* Cambia este color al que desees */
-}
-.eliminar-ruta{
-  display: flex;
-  align-items: center;
-  outline: none;
-  border: none;
-  background-color: white;
-  font-size: 25px;
-  color: #004884;
-}
-
-.marcar-error{
-  border: 2px solid #A80521 !important;
-}
-
-.sin-registros{
-  margin-left: 40px;
-  margin-top: 20px;
 }
 
 /*-------------------------*/
@@ -201,7 +100,7 @@ input[type="file"]{
 
 .input-archivo .boton-adjuntar{
   box-sizing: border-box;
-  width: 180px;
+  width: 100px;
   padding: 5px 10px;
   border: 1px solid var(--azul);
   color: #ffff;
@@ -276,19 +175,44 @@ input[type="file"]{
   color: #878787;
   border-color: #C4C4C4;
 }
+/* ////////////////////////////////////////////// */
+
+.botones-agregar{
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  min-width: 170px; /* Ancho mínimo */
+  margin-right: 20px;
+}
+
+.iconos{
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  outline: none;
+  border: none;
+  background-color: white;
+  font-size: 25px;
+  color: #004884;
+}
 
 /* NUEVO */
 .origen{
   text-align: center;
   border-bottom: 2px solid #c7d4ed;
-  border-left: 2px solid #c7d4ed;
+  /* border-left: 2px solid #3366cc; */
   border-right: 2px solid #c7d4ed;
 }
 .destino{
   text-align: center;
   border-bottom: 2px solid #c7d4ed;
   border-left: 2px solid #c7d4ed;
-  border-right: 2px solid #c7d4ed;
+ /*  border-right: 2px solid #3366cc; */
+}
+
+/* ESTILOS EN LA TABLA PARADAS */
+.centrado {
+  position: absolute;
+  left: 50%; /* Mueve al centro del contenedor */
+  transform: translateX(-50%); /* Ajusta para centrar completamente */
 }
 
 /* PAGINACIÓN */

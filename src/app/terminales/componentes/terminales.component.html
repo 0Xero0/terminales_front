@@ -3,10 +3,18 @@
     <table class="informacion tabla-informacion ">
       <thead>
         <tr>
-          <th colspan="2" style="text-align: center !important;">Información del formulario.</th>
+          <th colspan="2" style="text-align: center !important;">Información del formulario</th>
         </tr>
       </thead>
       <tbody>
+        <tr>
+          <td class="fw-semibold titulo-fila" style="width: 150px !important;">Nit</td>
+          <td>
+            <ng-container>
+              {{usuario?.usuario}}
+            </ng-container>
+          </td>
+        </tr>
         <tr>
           <td class="fw-semibold titulo-fila" style="width: 150px !important;">Razón social</td>
           <td>
@@ -15,8 +23,21 @@
             </ng-container>
           </td>
         </tr>
-        <tr>
+        <!-- <tr>
           <td class="fw-semibold titulo-fila">N° de Rutas</td>
+          <td>
+            <ng-container *ngIf="cantidadRutas">
+              {{cantidadRutas.TotalRegistros}}
+            </ng-container>
+          </td>
+        </tr> -->
+      </tbody>
+    </table>
+    <br>
+    <table class="informacion tabla-informacion ">
+      <tbody>
+        <tr>
+          <td class="fw-semibold titulo-fila" style="width: 150px !important;">N° de trayectos</td>
           <td>
             <ng-container *ngIf="cantidadRutas">
               {{cantidadRutas.TotalRegistros}}
@@ -31,18 +52,14 @@
     <button type="button" class="boton primario relleno" [disabled]="hayCambios || editable" (click)="enviarST()">
       Enviar
     </button>
-    <button type="button" class="boton primario relleno" style="margin-left: 300px;" [disabled]="!hayCambios || editable"
+    <!-- <button type="button" class="boton primario relleno" style="margin-left: 300px;" [disabled]="!hayCambios || editable"
       (click)="guardar()">
       Guardar
-    </button>
+    </button> -->
   </div>
   <div class="d-flex mt-4" *ngIf="rol?.id !== 3">
     <button type="button" class="boton primario relleno" [disabled]="hayCambios || editable" (click)="enviarST()">
       Enviar
-    </button>
-    <button type="button" class="boton primario relleno" style="margin-left: 300px;" [disabled]="!hayCambios || editable"
-      (click)="guardar()">
-      Guardar
     </button>
     <button type="button" class="boton primario delineado" style="margin-left: 300px;">
       Volver
