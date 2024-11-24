@@ -412,7 +412,6 @@ export class RevisarRutasComponent {
     if (validarCampos(JSONviaNueva)) {
       Swal.fire({
         titleText: "¿Está usted seguro de querer agregar una via nueva?",
-        text: "Después de agregar una via nueva, no podrá eliminarla.",
         confirmButtonText: "Agregar",
         icon: "warning",
         showCancelButton: true,
@@ -454,7 +453,6 @@ export class RevisarRutasComponent {
     if (validarCampos(JSONClaseNueva)) {
       Swal.fire({
         titleText: "¿Está usted seguro de querer agregar una clase nueva?",
-        text: "Después de agregar una clase nueva, no podrá eliminarla.",
         confirmButtonText: "Agregar",
         icon: "warning",
         showCancelButton: true,
@@ -497,7 +495,6 @@ export class RevisarRutasComponent {
     if (validarCampos(JSONParadaNueva)) {
       Swal.fire({
         titleText: "¿Está seguro de querer agregar una parada nueva?",
-        text: "Después de agregar una parada nueva, no podrá eliminarla.",
         confirmButtonText: "Agregar",
         icon: "warning",
         showCancelButton: true,
