@@ -15,6 +15,8 @@ import { TerminalesComponent } from './componentes/terminales.component';
 import { ClasesComponent } from './componentes/clases/clases.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ListadoComponent } from './componentes/listado/listado.component';
+import { RevisarRutasComponent } from './componentes/revisar-rutas/revisar-rutas.component';
+import { CrearRutaComponent } from './componentes/crear-ruta/crear-ruta.component';
 
 
 
@@ -24,7 +26,9 @@ import { ListadoComponent } from './componentes/listado/listado.component';
     RutasComponent,
     ParadasComponent,
     ClasesComponent,
-    ListadoComponent
+    ListadoComponent,
+    RevisarRutasComponent,
+    CrearRutaComponent
   ],
   imports: [
     CommonModule,

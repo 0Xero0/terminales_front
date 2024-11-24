@@ -1,0 +1,448 @@
+<div class="py-2 px-sm-3 px-md-4 px-lg-5 margen">
+  <div class="d-block mb-3">
+    <div class="d-flex">
+      <table class="informacion tabla-informacion ">
+        <tbody>
+          <tr>
+            <td class="fw-semibold titulo-fila">Nit</td>
+            <td><ng-container>{{usuario?.usuario}}</ng-container></td>
+            <td class="fw-semibold titulo-fila">Razón sicial</td>
+            <td><ng-container>{{usuario?.nombre}}</ng-container></td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="button" class="boton primario relleno" style="margin-left: 15px;" (click)="guardarRutaCompleta()">Guardar</button>
+      <button type="button" class="boton primario relleno" [routerLink]="['/administrar','terminales']" style="margin-left: auto;">
+        Volver <i class="bi bi-arrow-return-left"></i>
+      </button>
+    </div>
+    <br>
+    <!-- ------------- TABLA DE RUTA ---------------- -->
+    <div class="titulo-ruta">
+      <label for="">Ruta</label>
+    </div>
+    <div class="ruta w-100 custom-scroll">
+      <div class="d-flex mx-0 table-container">
+        <table class="table custom-scroll">
+          <thead class="encabezado">
+            <tr>
+              <th colspan="3" class="origen"><span class="fs-14px">Origen</span></th>
+              <th colspan="3" class="destino"><span class="fs-14px">Destino</span></th>
+            </tr>
+            <tr>
+              <th style=" text-align: center;"><span>Departamento</span></th>
+              <th style="text-align: center;"><span>Municipio</span></th>
+              <th style="text-align: center;"><span>Centro poblado</span></th>
+              <th style="border-left: 2px solid #c7d4ed; text-align: center;"><span>Departamento</span></th>
+              <th style="text-align: center;"><span>Municipio</span></th>
+              <th style=" text-align: center;"><span>Centro poblado</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align: center;">{{ruta.departamentoOrigen}}</td>
+              <td style="text-align: center;">{{ruta.municipioOrigen}}</td>
+              <td style="text-align: center;">{{ruta.descripcionOrigen}}</td>
+              <td style="text-align: center;">{{ruta.departamentoDestino}}</td>
+              <td style="text-align: center;">{{ruta.municipioDestino}}</td>
+              <td style="text-align: center;">{{ruta.descripcionDestino}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <br>
+    <!-- --------TABLA INFO RUTA---------- -->
+    <div class="ruta w-100 custom-scroll">
+      <div class="d-flex mx-0 table-container">
+        <table class="table custom-scroll">
+          <thead class="encabezado">
+            <tr>
+              <th colspan="7"><span class="fs-16px">Información de la ruta</span></th>
+            </tr>
+            <tr>
+              <th><span>¿La ruta está activa?</span></th>
+              <th><span>Tipo de llegada</span></th>
+              <th><span>Dirección</span></th>
+              <th><span>Resolución en BD</span></th>
+              <th><span>¿El número de Resolución correcsponde?</span></th>
+              <th><span>Número de Resolución nueva</span></th>
+              <th><span>Resolución PDF - Máx. 5Mb</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><!-- ESTADO DE LA RUTA -->
+                <select name="estadoRuta" id="estadoRuta" class="form-select" [(ngModel)]="rutaInfo.rutaActiva"
+                  (change)="manejarEstadoRuta(rutaInfo)">
+                  <option [value]="null">Seleccione una opción</option>
+                  <option [value]="true">Si</option>
+                  <option [value]="false">No</option>
+                </select>
+              </td>
+              <td><!-- TIPO DE LLEGADA -->
+                <select name="tipoLlegada" id="tipoLlegada" class="form-select" [(ngModel)]="rutaInfo.idTipoLlegada"
+                  (change)="maestraDirecciones(ruta,rutaInfo)" [disabled]="!rutaInfo.rutaActiva">
+                  <option [value]="null">Seleccione una opción</option>
+                  <option *ngFor="let tipo of tipoLlegada" [value]="tipo.id">{{tipo.descripcion}}</option>
+                </select>
+              </td>
+              <td><!-- DIRECCIÓN -->
+                <select name="direccion" id="direccion" class="form-select" [(ngModel)]="rutaInfo.Iddireccion"
+                  [disabled]="!rutaInfo.rutaActiva || rutaInfo.idTipoLlegada === null" (change)="manejarDirecciones(rutaInfo)">
+                  <option [value]="null">Seleccione una opción</option>
+                  <option *ngFor="let direccion of direcciones" [value]="direccion.id">{{direccion.descripcion}}</option>
+                  <option value="abrirModal">Añadir nueva dirección</option>
+                  <!-- Opción para abrir el modal *ngIf="ruta.tipo_llegada_id !== 1"-->
+                </select>
+              </td>
+              <td><!-- RESOLUCIÓN EN BASE DE DATOS -->
+                {{rutaInfo.resolucion}}
+              </td>
+              <td><!-- RESOLUCIÓN CORRESPONDE -->
+                <select name="corresponde?" id="corresponde" class="form-select" [(ngModel)]="rutaInfo.corresponde"
+                  [disabled]="!rutaInfo.rutaActiva" (change)="manejarCorresponde(rutaInfo)">
+                  <option [value]="null">Seleccione una opción</option>
+                  <option [value]="1">Si</option>
+                  <option [value]="2">No</option>
+                </select>
+              </td>
+              <td><!-- NÚMERO DE RESOLUCIÓN NUEVA -->
+                <input type="text" name="resolucionNueva" id="resolucionNueva" placeholder="-" class="form-control"
+                  [(ngModel)]="rutaInfo.resolucionActual"
+                  [disabled]="!rutaInfo.rutaActiva || rutaInfo.corresponde !== 2">
+              </td>
+              <td><!-- INPUT ARCHIVO PDF RESOLUCION-->
+                <label class="input-archivo d-flex" for="adjuntar">
+                  <!-- [class.marcar-error]="!rutaInfo.nombreOriginal && error" -->
+                  <div class="boton-adjuntar d-flex align-items-center justify-content-center">Seleccionar archivo</div>
+                  <div class="archivos">
+                    <div class="archivo d-flex" *ngIf="rutaInfo.nombreOriginal">
+                      <span class="nombre-archivo">{{ rutaInfo.nombreOriginal}}</span>
+                      <button class="eliminar-archivo" (click)="manejarRemoverArchivo(input,$event)">
+                        <i class="bi bi-trash"></i></button>
+                    </div>
+                    <div class="sin-archivo d-flex"
+                      *ngIf="!rutaInfo.nombreOriginal || rutaInfo.nombreOriginal == null || rutaInfo.nombreOriginal == ''">
+                      <span>Sin archivo seleccionado</span>
+                    </div>
+                  </div>
+                  <input #input type="file" id="adjuntar" name="adjuntar" accept=".pdf"
+                    (change)="guardarArchivo($event,5)">
+                </label>
+                <a *ngIf="rutaInfo.nombreOriginal" class="a"
+                  (click)="descargarArchivo(rutaInfo.nombreOriginal,rutaInfo.documento,rutaInfo.rutaDocumento)">
+                  Descargar {{rutaInfo.nombreOriginal}}
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <br>
+    <div class="d-flex">
+      <!-- ------------- TABLA DE VIAS ---------------- -->
+      <div class="via-clase w-100 custom-scroll" style="margin-right: 20px;">
+        <label for="" style="color: brown; margin-left: 10px; font-size: small;" *ngIf="vias.length <= 0">
+          Debe registrar al menos una via
+        </label>
+        <div class="d-flex mx-0 table-container">
+          <table class="table custom-scroll">
+            <thead class="encabezado">
+              <tr>
+                <th colspan="3" style="text-align: center;">Información de las vias</th>
+                <th style="width: 65px !important;"></th>
+              </tr>
+              <tr>
+                <th>Via en BD</th>
+                <th>¿Corresponde la via?</th>
+                <th>Via actual</th>
+                <th style="width: 65px !important;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let via of vias | paginate: { itemsPerPage: itemsPerPageVia, currentPage: pageVias, id:'Via' }; let i = index">
+                <td>{{via.via}}</td>
+                <td>
+                  <select name="correspondeVia" [id]="'correspondeVia'+i" class="form-select"
+                    [(ngModel)]="via.corresponde" [disabled]="!rutaInfo.rutaActiva"
+                    (change)="manejarCorrespondeVia(via)">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option [value]="1">Si</option>
+                    <option [value]="2">No</option>
+                  </select>
+                </td>
+                <td>
+                  <input type="text" name="viaNueva" [id]="'viaNueva'+i" placeholder="-" class="form-control"
+                    [(ngModel)]="via.viaNueva" [disabled]="!rutaInfo.rutaActiva || via.corresponde !==2">
+                </td>
+                <td style="width: 65px !important;">
+                  <button type="button" class="boton relleno primario" (click)="eliminarRegistro(via,'via')"
+                    [disabled]="!rutaInfo.rutaActiva">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="vias.length <= 0">
+                <td colspan="4">
+                  <h6 class="sin-registros"> -- No hay vias para mostrar. --</h6>
+                </td>
+              </tr>
+              <tr *ngIf="rutaInfo.rutaActiva" style="margin-top: 10px; margin-left: 10px;">
+                <td colspan="4">
+                  <div class="d-flex">
+                    <button type="button" class="boton primario relleno botones-agregar"
+                      (click)="habilitarAgregarNuevo('via')">
+                      Agregar via <i class="bi bi-plus-circle"></i>
+                    </button>
+                    <div *ngIf="habilitarViaNueva" class="d-flex" style="width: 100%; margin-left: auto;">
+                      <!-- <label for="viaNueva" class="fs-14px">Nombre de la nueva via</label> -->
+                      <input type="text" class="form-control" id="viaNueva" [(ngModel)]="viaNueva"
+                        placeholder="Agregar via nueva." style="margin-right: 10px;">
+                      <button type="button" class="iconos" (click)="agregarRegistro(viaNueva,'via')">
+                        <i class="bi bi-floppy"></i>
+                      </button>
+                      <button type="button" class="iconos" (click)="deshabilitarAgregarNuevo('via')">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="d-flex justify-content-center" style="width: auto;">
+          <pagination-controls class="pagination-controls" (pageChange)="pageVias = $event" previousLabel="Anterior"
+            nextLabel="Siguiente" [maxSize]="7" [directionLinks]="true" [autoHide]="false" #paginadorVia id="Via">
+          </pagination-controls>
+        </div>
+      </div>
+      <!-- ------------ TABLA DE CLASES DE VEHICULOS ------------ -->
+      <div class="via-clase w-100 custom-scroll">
+        <label for="" style="color: brown; margin-left: 10px; font-size: small;" *ngIf="clases.length <= 0">
+          Debe registrar al menos una clase
+        </label>
+        <div class="d-flex mx-0 table-container">
+          <table class="table custom-scroll">
+            <thead class="encabezado">
+              <tr>
+                <th colspan="2" style="text-align: center;">Información de las clases de vehiculos</th>
+                <th style="width: 65px !important;"></th>
+              </tr>
+              <tr>
+                <th>Grupo</th>
+                <th>Clase de vehículo</th>
+                <th style="width: 65px !important;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let clase of clases | paginate: { itemsPerPage: itemsPerPageClase, currentPage: pageClases, id:'Clases' };
+              let i = index">
+                <td>{{clase.clase}}</td>
+                <td>
+                  <select name="tipoVehiculo" [id]="'tipoVehiculo'+i" class="form-select" (change)="manejarTipoVehiculo(tipo,$event,i)"
+                    [(ngModel)]="clase.tipo_vehiculo_id" [disabled]="!rutaInfo.rutaActiva" #tipo>
+                    <option [value]="null">Seleccione una opción</option>
+                    <option *ngFor="let tipo of clase.tipoVehiculo" [value]="tipo.id">{{tipo.descripcion}}</option>
+                  </select>
+                </td>
+                <td style="width: 65px !important;">
+                  <button type="button" class="boton relleno primario" (click)="eliminarRegistro(clase,'clase')"
+                    [disabled]="!rutaInfo.rutaActiva">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="clases.length <= 0">
+                <td colspan="3">
+                  <h6 class="sin-registros"> -- No hay clases de vehículos para mostrar. --</h6>
+                </td>
+              </tr>
+              <tr *ngIf="rutaInfo.rutaActiva" style="margin-top: 10px">
+                <td colspan="3">
+                  <div class="d-flex">
+                    <button type="button" class="boton primario relleno botones-agregar"
+                      (click)="habilitarAgregarNuevo('clase')">
+                      Agregar clase <i class="bi bi-plus-circle"></i>
+                    </button>
+                    <div *ngIf="habilitarClaseNueva"
+                      style="margin-right: 5px; align-items: center; width: 100%; display: flex;">
+                      <!-- <label for="grupoClase" class="fs-14px">Grupo</label> -->
+                      <select class="form-select" id="grupoClase" [(ngModel)]="clase.clase_id"
+                        style="margin-right: 10px; max-width: 270px;" (change)="maestraTipoVehiculo(clase,2)">
+                        <option [value]="null">Seleccione un Grupo.</option>
+                        <option *ngFor="let grupo of grupos" [value]="grupo.id">{{grupo.descripcion}}</option>
+                      </select>
+                      <!-- <label for="tipoVehiculo" class="fs-14px">Clase de vehículo</label> -->
+                      <select class="form-select" id="tipoVehiculo" [(ngModel)]="clase.tipo_vehiculo_id"
+                        (change)="manejarTipoVehiculo(tipo2,$event)" style="margin-right: 10px; max-width: 270px;"
+                        [disabled]="clase.clase_id === null || clase.clase_id === 'null'" #tipo2>
+                        <option [value]="null">Seleccione una Clase de vehículo.</option>
+                        <option *ngFor="let tipo of tiposVehiculos" [value]="tipo.id">{{tipo.descripcion}}</option>
+                      </select>
+                      <button type="button" class="iconos" (click)="agregarRegistro(clase,'clase')">
+                        <i class="bi bi-floppy"></i>
+                      </button>
+                      <button type="button" class="iconos" (click)="deshabilitarAgregarNuevo('clase')">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="d-flex justify-content-center">
+          <pagination-controls class="pagination-controls" (pageChange)="pageClases = $event" previousLabel="Anterior"
+            nextLabel="Siguiente" [maxSize]="7" [directionLinks]="true" [autoHide]="false" #paginadorClases id="Clases">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+    <br>
+    <!-- ------------- TABLA DE PARADAS ------------- -->
+    <div *ngIf="rutaInfo.rutaActiva">
+      <div *ngFor="let via of vias; let v = index" class="ruta w-100 custom-scroll">
+        <div class="d-flex mx-0 table-container">
+          <table class="table custom-scroll">
+            <thead class="encabezado">
+              <tr>
+                <th colspan="5" style="position: relative;">
+                  <div class="d-flex">
+                    Via: <span style="color: black;">{{via.via}}</span>
+                    <span class="centrado">Información de las paradas</span>
+                  </div>
+                </th>
+                <th style="width: 65px !important;"></th>
+              </tr>
+              <tr>
+                <th><span>Departamento</span></th>
+                <th><span>Municipio</span></th>
+                <th><span>Centro poblado</span></th>
+                <th><span>Tipo de llegada</span></th>
+                <th><span>Dirección</span></th>
+                <th style="width: 65px !important;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let parada of via.paradas! | paginate: { itemsPerPage: via.itemsPerPageParadas, currentPage: via.pageParadas, id:via.idPaginador};let i = index">
+                <td>{{parada.departamento}}</td>
+                <td>{{parada.municipio}}</td>
+                <td>{{parada.centro_poblado}}</td>
+                <td style="text-align: center;"><!-- TIPO DE LLEGADA -->
+                  <select name="tipoLlegada" [id]="'tipoLlegadaP'+i" class="form-select"
+                    [(ngModel)]="parada.tipollegada_id" (change)="maestraDireccionesP(undefined, parada)"
+                    [disabled]="!rutaInfo.rutaActiva">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option *ngFor="let tipo of parada.tiposLlegada" [value]="tipo.id">{{tipo.descripcion}}</option>
+                  </select>
+                </td>
+                <td style="text-align: center;"><!-- DIRECCIÓN -->
+                  <select name="direccion" [id]="'direccionP'+i" class="form-select" [(ngModel)]="parada.direccion_id"
+                    [disabled]="!rutaInfo.rutaActiva || parada.tipollegada_id === null">
+                    <option [value]="null">Seleccione una opción</option>
+                    <option *ngFor="let direccion of parada.direcciones" [value]="direccion.id">
+                      {{direccion.descripcion}}</option>
+                    <option value="abrirModal">Añadir nueva dirección</option>
+                    <!-- Opción para abrir el modal *ngIf="ruta.tipo_llegada_id !== 1"-->
+                  </select>
+                </td>
+                <td style="width: 65px !important;">
+                  <button type="button" class="boton relleno primario" (click)="eliminarRegistro(parada,'parada')"
+                    [disabled]="!rutaInfo.rutaActiva">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="!via.paradas || via.paradas.length <= 0">
+                <td colspan="6">
+                  <h6 class="sin-registros"> -- No hay paradas para mostrar. --</h6>
+                </td>
+              </tr>
+              <tr style="margin-top: 10px; margin-left: 10px;"> <!-- PARADA NUEVA -->
+                <td colspan="6">
+                  <div class="d-flex">
+                    <button type="button" class="boton primario relleno botones-agregar"
+                      (click)="habilitarAgregarNuevo('parada',via)">
+                      Agregar parada <i class="bi bi-plus-circle"></i>
+                    </button>
+                    <div *ngIf="via.paradaNueva.habilitarParadaNueva"
+                      style="margin-right: 5px; align-items: center; width: 100%; display: flex;">
+                      <!-- <label for="grupoClase" class="fs-14px">Grupo</label> -->
+                      <select class="form-select" [id]="'departamento'+v" [(ngModel)]="via.paradaNueva.departamento_id"
+                        style="margin-right: 10px; max-width: 270px;" (change)="maestraMunicipios(via.paradaNueva)">
+                        <option [value]="null">Seleccione un Departamento</option>
+                        <option *ngFor="let dep of via.paradaNueva.departamentos" [value]="dep.codigoDepartamento">
+                          {{dep.nombre}}
+                        </option>
+                      </select>
+                      <!-- <label for="tipoVehiculo" class="fs-14px">Clase de vehículo</label> -->
+                      <select class="form-select" [id]="'municipio'+v" [(ngModel)]="via.paradaNueva.municipio_id"
+                        (change)="maestraCP(via.paradaNueva)" style="margin-right: 10px; max-width: 270px;"
+                        [disabled]="via.paradaNueva.departamento_id === null || via.paradaNueva.departamento_id === 'null'">
+                        <option [value]="null">Seleccione un Municipio</option>
+                        <option *ngFor="let mun of via.paradaNueva.municipios" [value]="mun.codigoMunicipio">
+                          {{mun.nombre}}
+                        </option>
+                      </select>
+                      <!-- <label for="tipoVehiculo" class="fs-14px">Clase de vehículo</label> -->
+                      <select class="form-select" [id]="'centroPoblado'+v"
+                        [(ngModel)]="via.paradaNueva.centro_poblado_id" (change)="maestraTipoLlegada(via.paradaNueva)"
+                        style="margin-right: 10px; max-width: 270px;"
+                        [disabled]="via.paradaNueva.municipio_id === null || via.paradaNueva.municipio_id === 'null'">
+                        <option [value]="null">Seleccione un Centro Poblado</option>
+                        <option *ngFor="let cp of via.paradaNueva.centrosPoblados" [value]="cp.codigoCentroPoblado">
+                          {{cp.nombre}}
+                        </option>
+                      </select>
+                      <!-- <label for="tipoVehiculo" class="fs-14px">Clase de vehículo</label> -->
+                      <select class="form-select" [id]="'tipoLlegada'+v" [(ngModel)]="via.paradaNueva.tipollegada_id"
+                        (change)="maestraDireccionesP(via.paradaNueva)" style="margin-right: 10px; max-width: 270px;"
+                        [disabled]="via.paradaNueva.centro_poblado_id === null || via.paradaNueva.centro_poblado_id === 'null'">
+                        <option [value]="null">Seleccione un Tipo de Llegada</option>
+                        <option *ngFor="let tipo of via.paradaNueva.tiposLlegada" [value]="tipo.id">
+                          {{tipo.descripcion}}
+                        </option>
+                      </select>
+                      <!-- <label for="tipoVehiculo" class="fs-14px">Clase de vehículo</label> -->
+                      <select class="form-select" [id]="'direccion'+v" [(ngModel)]="via.paradaNueva.direccion_id"
+                        (change)="manejarDirecciones(undefined,via.paradaNueva)" style="margin-right: 10px; max-width: 270px;"
+                        [disabled]="via.paradaNueva.tipollegada_id === null || via.paradaNueva.tipollegada_id === 'null'">
+                        <option [value]="null">Seleccione una Dirección</option>
+                        <option *ngFor="let dir of via.paradaNueva.direcciones" [value]="dir.id">
+                          {{dir.descripcion}}
+                        </option>
+                        <option value="abrirModal">Añadir nueva dirección</option>
+                        <!-- Opción para abrir el modal *ngIf="ruta.tipo_llegada_id !== 1"-->
+                      </select>
+                      <button type="button" class="iconos" (click)="agregarRegistro(via,'parada')">
+                        <i class="bi bi-floppy"></i>
+                      </button>
+                      <button type="button" class="iconos" (click)="deshabilitarAgregarNuevo('parada', via)">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="d-flex justify-content-center">
+          <pagination-controls class="pagination-controls" (pageChange)="via.pageParadas = $event" previousLabel="Anterior"
+            nextLabel="Siguiente" [maxSize]="7" [directionLinks]="true" [autoHide]="false" #paginadorClases [id]="'Paradas'+v">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+    <div style="align-items: center; text-align: center; margin-top: 10px;">
+      <button type="button" class="boton primario relleno" style="margin-left: 15px;" (click)="guardarRutaCompleta()">
+        Guardar
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
-import { Ruta } from '../modelos/ruta';
+import { Faltantes, Ruta, Ruta2 } from '../modelos/ruta';
 import { Paradas } from '../modelos/paradas';
 import { Clases } from '../modelos/clases';
 import { TerminalesService } from '../servicios/terminales.service';
@@ -28,10 +28,10 @@ export class TerminalesComponent implements OnInit {
   rol: Rol | null
   cantidadRutas: any
 
-  rutas: Array<Ruta> = []
+  rutas: Array<Ruta2> = []
   paradas: Array<Paradas> = []
   clases: Array<Clases> = []
-  faltantes: Array<number> = []
+  faltantes: Array<Faltantes> = []
 
   constructor(private servicioTerminales: TerminalesService, servicioLocalStorage: ServicioLocalStorage) {
     this.usuario = servicioLocalStorage.obtenerUsuario()
@@ -49,7 +49,7 @@ export class TerminalesComponent implements OnInit {
     console.log(hayCambios)
   }
 
-  recibirRutas(rutas: Ruta[]) {
+  recibirRutas(rutas: Ruta2[]) {
     this.rutas = rutas
     //console.log('Rutas: ', this.rutas)
   }
@@ -76,83 +76,6 @@ export class TerminalesComponent implements OnInit {
     this.editable = editable
   }
 
-  guardar() {
-    let JSONTerminales: {
-      Rutas: Array<any>, Paradas: Array<any>, Clases: Array<any>
-    } = {
-      Rutas: [], Paradas: [], Clases: []
-    }
-    let JSONRutas: Array<any> = []
-    let JSONParadas: Array<any> = []
-    let JSONClases: Array<any> = []
-    for (let ruta of this.rutas) {
-      if(ruta.via === '-' || ruta.via === null || ruta.via === 'null' || !ruta.via) ruta.via = ruta.viaNueva
-      JSONRutas.push({
-        id: ruta.id,
-        idaOVuelta: ruta.ida_o_vuelta,
-        idRuta: ruta.id_ruta,
-        idUnicoRuta: ruta.id_unico_ruta,
-        centroPobladoOrigen: ruta.cp_origen_codigo,
-        centroPobladoDestino: ruta.cp_destino_codigo,
-        tipoLLegada: ruta.tipo_llegada_id,
-        direccion: ruta.direccion_id,
-        via: ruta.via,
-        rutaHabilitada: ruta.estado,
-        corresponde: ruta.corresponde,
-        resolucionActual: ruta.resolucion_actual,
-        direccionTerritorial: ruta.direccion_territorial,
-        documento: ruta.documento,
-        nombreOriginal: ruta.nombre_original,
-        rutaArchivo: ruta.ruta_archivo
-
-      })
-    }
-    if (this.paradas.length > 0) {
-      for (let parada of this.paradas) {
-        JSONParadas.push({
-          idParada: parada.parada_id,
-          idRuta: parada.ruta_id,
-          centroPobladoId: parada.codigo_cp,
-          direccionId: parada.direccion_id,
-          estado: true
-        })
-      }
-    }
-    if (this.clases.length > 0) {
-      for (let clase of this.clases) {
-        JSONClases.push({
-          id: clase.id_ruta_vehiculos,
-          idRuta: clase.ruta_id,
-          idClaseVehiculo: clase.tipo_vehiculo_id,
-          estado: clase.estado
-        })
-      }
-    }
-    JSONTerminales = { Rutas: JSONRutas, Paradas: JSONParadas, Clases: JSONClases }
-    //console.log(JSONTerminales)
-    Swal.fire({
-      icon: 'info',
-      allowOutsideClick: false,
-      text: 'Espere por favor...',
-    });
-    Swal.showLoading(null);
-    this.servicioTerminales.guardar(JSONTerminales).subscribe({
-      next: (respuesta: any) => {
-        Swal.fire({ icon: 'success', titleText: '¡Guardado exitosamente!' });
-        //console.log(respuesta)
-        this.hayCambios = false
-        this.todoGuardado = !this.todoGuardado
-      },
-      error: (error: HttpErrorResponse) => {
-        if (error.status == 400) {
-          Swal.fire('¡Fallo al guardar!', 'Por favor, vuelva a intentarlo más tarde.', 'error');
-        } else {
-          Swal.fire('¡Error desconocido!', 'Por favor, vuelva a intentarlo más tarde.', 'error');
-        }
-      }
-    })
-  }
-
   enviarST() {
     Swal.fire({
       icon: 'info',
@@ -160,20 +83,23 @@ export class TerminalesComponent implements OnInit {
       text: 'Espere por favor...',
     });
     Swal.showLoading(null);
-    this.servicioTerminales.enviarST().subscribe({
+    this.servicioTerminales.enviarST(this.usuario?.id).subscribe({
       next: (respuesta: any) => {
         this.faltantes = respuesta.faltantes
         this.todoGuardado = respuesta.aprobado
-
+        localStorage.removeItem('rutasRevisadas'); // Elimina solo la clave "rutasRevisadas"
         if (this.faltantes.length <= 0) {
           Swal.fire('¡Envio exitoso!', 'Enviado a la Superintendencia de transporte.', 'success');
         }
         else {
-          Swal.fire('¡Errores encontrados!', 'Por favor, corrija antes de vlver a enviar.', 'error');
+          Swal.fire('¡Errores encontrados!', 'Por favor, corrija antes de volver a enviar.', 'error');
           for (let ruta of this.rutas) {
-            if (this.faltantes?.includes(ruta.id)) ruta.errorRutas = true
+            if (this.faltantes.some((faltante:Faltantes) => ruta.idRuta === faltante.idRuta)) ruta.errorRutas = true
             //console.log(ruta.errorRutas)
           }
+          this.mostrarFaltantes(this.faltantes, this.rutas)
+          //console.log(this.rutas);
+
         }
       },
       error: (error: HttpErrorResponse) => {
@@ -184,6 +110,47 @@ export class TerminalesComponent implements OnInit {
         }
       }
     })
+  }
+
+  mostrarFaltantes(faltantes: any[], rutas: Ruta2[]) {
+    // Crear una tabla HTML con los datos de las rutas faltantes
+    let tablaHTML = `
+      <div style="padding: 30px;">
+        <table style="width: 100%; border-collapse: collapse; box-shadow: 0px 3px 6px #00000029;">
+          <thead style="background: #e6effd 0% 0% no-repeat padding-box; color: #004884; font-weight: 600;">
+            <tr>
+              <th style="border: 1px solid transparent; padding: 10px;">Ruta</th>
+              <th style="border: 1px solid transparent; padding: 10px;">Falta información en la ruta</th>
+              <th style="border: 1px solid transparent; padding: 10px;">Falta agregar via</th>
+              <th style="border: 1px solid transparent; padding: 10px;">Falta agregar clase</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    // Recorrer los datos para llenar las filas de la tabla
+    for (const registro of faltantes) {
+      const ruta = rutas.find((r: any) => r.idRuta === registro.idRuta);
+      const indice = ruta?.index || 'N/A'; // Obtener el índice desde el arreglo de rutas
+      tablaHTML += `
+        <tr>
+          <td style="border: 1px solid transparent;border-bottom: 2px solid #dee2e6; padding: 5px; text-align: center;">${indice}</td>
+          <td style="border: 1px solid transparent;border-bottom: 2px solid #dee2e6; padding: 5px; text-align: center;">${registro.rutasFaltantes ? 'Sí' : 'No'}</td>
+          <td style="border: 1px solid transparent;border-bottom: 2px solid #dee2e6; padding: 5px; text-align: center;">${registro.viasFaltantes ? 'Sí' : 'No'}</td>
+          <td style="border: 1px solid transparent;border-bottom: 2px solid #dee2e6; padding: 5px; text-align: center;">${registro.clasesFaltantes ? 'Sí' : 'No'}</td>
+        </tr>
+      `;
+    }
+
+    tablaHTML += '</tbody></table></div>';
+
+    // Mostrar el modal con la tabla
+    Swal.fire({
+      title: 'Información faltante encontrada',
+      html: tablaHTML,
+      width: '90%',
+      confirmButtonText: 'Cerrar',
+    });
   }
 
   volver() {

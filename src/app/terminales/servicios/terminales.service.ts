@@ -13,104 +13,130 @@ export class TerminalesService extends Autenticable {
   private readonly host = environment.urlBackend
   constructor(private http: HttpClient) {
     super()
-   }
-/* ///////// Maestras ///////// */
-  maestraDepartamentos(){
+  }
+  consultarRuta(idRuta: any, codigoUnicoRuta: any, vigiladoId: any) {
+    const endpoint = `/api/v1/terminales/visualizar-ruta?idRuta=${idRuta}&codigoUnicoRuta=${codigoUnicoRuta}&vigiladoId=${vigiladoId}`
+    return this.http.get(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
+  }
+  /* ///////// Maestras ///////// */
+  maestraDepartamentos() {
     const endpoint = `/api/v1/maestras/departamentos`
-    return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
+    return this.http.get(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  maestraMunicipios(codigoDepartamento:any){
+  maestraMunicipios(codigoDepartamento: any) {
     const endpoint = `/api/v1/maestras/municipios?codigoDepartamento=${codigoDepartamento}`
-    return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
+    return this.http.get(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  maestraCentrosPoblados(codigoMunicipio:any){
+  maestraCentrosPoblados(codigoMunicipio: any) {
     const endpoint = `/api/v1/maestras/centros-poblados?codigoMunicipio=${codigoMunicipio}`
-    return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
+    return this.http.get(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  maestraTiposLlegadas(){
+  maestraTiposLlegadas() {
     const endpoint = `/api/v1/maestras/tipo-llegada`
-    return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
+    return this.http.get(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  maestraDirecciones(idTipoLlegada:any,cp_destino_codigo:any){
+  maestraDirecciones(idTipoLlegada: any, cp_destino_codigo: any) {
     const endpoint = `/api/v1/maestras/direcciones?codigoTipollegada=${idTipoLlegada}&codigoCp=${cp_destino_codigo}`
-    return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
+    return this.http.get(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  maestraTiposVehiculos(idClasePorGrupo:any){
+  maestraTiposVehiculos(idClasePorGrupo: any) {
     const endpoint = `/api/v1/maestras/tipo-vehiculo?idClasePorGrupo=${idClasePorGrupo}`
-    return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
+    return this.http.get(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  maestraGrupos(){
+  maestraGrupos() {
     const endpoint = `/api/v1/maestras/clase-grupo`
-    return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
+    return this.http.get(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  cantidadRutas(idUsuario:any){
+  cantidadRutas(idUsuario: any) {
     const endpoint = `/api/v1/terminales/total-rutas`
-    return this.http.get(`${this.host}${endpoint}`,{ headers: this.obtenerCabeceraAutorizacion() })
+    return this.http.get(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
   // LISTAS ////////////////////////////////////////////////////////////////////////////////////
 
-  listarRutas(vigiladoId?:any, pagina?: number, limite?: number, filtros?: any){/* ?pagina=${pagina}&limite=${limite} */
+  listarRutas(vigiladoId?: any, pagina?: number, limite?: number, filtros?: any) {/* ?pagina=${pagina}&limite=${limite} */
     //let endpoint = `/api/v1/terminales/visualizar-rutas`
     let endpoint = `/api/v1/terminales/visualizar-rutas-vigilado?vigiladoId=${vigiladoId}`
-    if(filtros){
-      if(filtros.termino) endpoint+=`&filtro=${filtros.termino}`;
+    if (filtros) {
+      if (filtros.termino) endpoint += `&filtro=${filtros.termino}`;
     }
     return this.http.get<{ rutas: Ruta[], paginacion: Paginacion }>(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  listarParadas(ruta_id:number, pagina?: number, limite?: number, filtros?: any){
+  listarParadas(ruta_id: any, pagina?: number, limite?: number, filtros?: any) {
     let endpoint = `/api/v1/terminales/visualizar-paradas?rutaId=${ruta_id}`
-    if(filtros){
-      if(filtros.termino) endpoint+=`&filtro=${filtros.termino}`;
+    if (filtros) {
+      if (filtros.termino) endpoint += `&filtro=${filtros.termino}`;
     }
     return this.http.get<{ paradas: any[], paginacion: Paginacion }>(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  listarClases(ruta_id:number, pagina?: number, limite?: number, filtros?: any){
+  listarClases(ruta_id: any, pagina?: number, limite?: number, filtros?: any) {
     let endpoint = `/api/v1/terminales/visualizar-clases?rutaId=${ruta_id}`
-    if(filtros){
-      if(filtros.termino) endpoint+=`&filtro=${filtros.termino}`;
+    if (filtros) {
+      if (filtros.termino) endpoint += `&filtro=${filtros.termino}`;
     }
     return this.http.get<{ clases: any[], paginacion: Paginacion }>(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  // ACCIONES ////////////////////////////////////////////////////////////////////////////////////
-
-  crearDireccion(JSONDatosDireccion:any){
+  // ACCIONES //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Crear
+  crearDireccion(JSONDatosDireccion: any) {
     const endpoint = `/api/v1/terminales/crear-direccion`
     return this.http.post<any>(`${this.host}${endpoint}`, JSONDatosDireccion, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  crearRuta(JSONRutaNueva:any){
+  crearRuta(JSONRutaNueva: any) {
     const endpoint = `/api/v1/terminales/guardar-ruta`
     return this.http.post<any>(`${this.host}${endpoint}`, JSONRutaNueva, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  crearParada(JSONParadaNueva:any){
+  crearParada(JSONParadaNueva: any) {
     const endpoint = `/api/v1/terminales/guardar-parada`
     return this.http.post<any>(`${this.host}${endpoint}`, JSONParadaNueva, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  crearClase(JSONClaseNueva:any){
+  crearClase(JSONClaseNueva: any) {
     const endpoint = `/api/v1/terminales/guardar-clase`
     return this.http.post<any>(`${this.host}${endpoint}`, JSONClaseNueva, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  guardar(JSONTerminales:any){
+  crearVia(JSONViaNueva: any) {
+    const endpoint = `/api/v1/terminales/guardar-via`
+    return this.http.post<any>(`${this.host}${endpoint}`, JSONViaNueva, { headers: this.obtenerCabeceraAutorizacion() })
+  }
+
+  //Eliminar
+  eliminarClase(claseId: any) {
+    let endpoint = `/api/v1/terminales/eliminar-clase?claseId=${claseId}`
+    return this.http.delete<any>(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
+  }
+
+  eliminarParada(idParada: any, nodoDespachoId: any) {
+    let endpoint = `/api/v1/terminales/eliminar-parada?idParada=${idParada}&nodoDespachoId=${nodoDespachoId}`
+    return this.http.delete<any>(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
+  }
+
+  eliminarVia(idVia: any) {
+    let endpoint = `/api/v1/terminales/eliminar-via?idVia=${idVia}`
+    return this.http.delete<any>(`${this.host}${endpoint}`, { headers: this.obtenerCabeceraAutorizacion() })
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  guardar(JSONTerminales: any) {
     const endpoint = `/api/v1/terminales/guardar`
     return this.http.patch<any>(`${this.host}${endpoint}`, JSONTerminales, { headers: this.obtenerCabeceraAutorizacion() })
   }
 
-  enviarST(){
-    const endpoint = `/api/v1/terminales/enviar-st`
+  enviarST(vigiladoId:any) {
+    const endpoint = `/api/v1/terminales/enviar-st?vigiladoId=${vigiladoId}`
     return this.http.post<any>(`${this.host}${endpoint}`, {}, { headers: this.obtenerCabeceraAutorizacion() })
   }
 }
