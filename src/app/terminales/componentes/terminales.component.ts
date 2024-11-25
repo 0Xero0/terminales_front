@@ -86,7 +86,7 @@ export class TerminalesComponent implements OnInit {
     this.servicioTerminales.enviarST(this.usuario?.id).subscribe({
       next: (respuesta: any) => {
         this.faltantes = respuesta.faltantes
-        this.todoGuardado = respuesta.aprobado
+        //this.todoGuardado = respuesta.aprobado
         localStorage.removeItem('rutasRevisadas'); // Elimina solo la clave "rutasRevisadas"
         if (this.faltantes.length <= 0) {
           Swal.fire('¡Envio exitoso!', 'Enviado a la Superintendencia de transporte.', 'success');
@@ -98,7 +98,7 @@ export class TerminalesComponent implements OnInit {
             //console.log(ruta.errorRutas)
           }
           this.mostrarFaltantes(this.faltantes, this.rutas)
-          //console.log(this.rutas);
+          console.log(this.rutas);
 
         }
       },
@@ -116,13 +116,13 @@ export class TerminalesComponent implements OnInit {
     // Crear una tabla HTML con los datos de las rutas faltantes
     let tablaHTML = `
       <div style="padding: 30px;">
-        <table style="width: 100%; border-collapse: collapse; box-shadow: 0px 3px 6px #00000029;">
-          <thead style="background: #e6effd 0% 0% no-repeat padding-box; color: #004884; font-weight: 600;">
+        <table style="width: 100%; border-collapse: collapse; box-shadow: 0px 3px 6px #00000029; display: block; max-height: 700px; overflow-y: auto; table-layout: fixed;">
+          <thead style="background: #e6effd 0% 0% no-repeat padding-box; color: #004884; font-weight: 600px; position: sticky; top: 0; z-index: 1;">
             <tr>
-              <th style="border: 1px solid transparent; padding: 10px;">Ruta</th>
-              <th style="border: 1px solid transparent; padding: 10px;">Falta información en la ruta</th>
-              <th style="border: 1px solid transparent; padding: 10px;">Falta agregar via</th>
-              <th style="border: 1px solid transparent; padding: 10px;">Falta agregar clase</th>
+              <th style="border: 1px solid e6effd; padding: 10px;">N°</th>
+              <th style="border: 1px solid e6effd; padding: 10px;">Falta información en la ruta</th>
+              <th style="border: 1px solid e6effd; padding: 10px;">Falta agregar vía</th>
+              <th style="border: 1px solid e6effd; padding: 10px;">Falta agregar clase</th>
             </tr>
           </thead>
           <tbody>
@@ -133,11 +133,11 @@ export class TerminalesComponent implements OnInit {
       const ruta = rutas.find((r: any) => r.idRuta === registro.idRuta);
       const indice = ruta?.index || 'N/A'; // Obtener el índice desde el arreglo de rutas
       tablaHTML += `
-        <tr>
-          <td style="border: 1px solid transparent;border-bottom: 2px solid #dee2e6; padding: 5px; text-align: center;">${indice}</td>
-          <td style="border: 1px solid transparent;border-bottom: 2px solid #dee2e6; padding: 5px; text-align: center;">${registro.rutasFaltantes ? 'Sí' : 'No'}</td>
-          <td style="border: 1px solid transparent;border-bottom: 2px solid #dee2e6; padding: 5px; text-align: center;">${registro.viasFaltantes ? 'Sí' : 'No'}</td>
-          <td style="border: 1px solid transparent;border-bottom: 2px solid #dee2e6; padding: 5px; text-align: center;">${registro.clasesFaltantes ? 'Sí' : 'No'}</td>
+        <tr style="text-align: center;">
+          <td style="border: 1px solid transparent;border-bottom: 2px solid #dee2e6; padding: 5px;">${indice}</td>
+          <td style="border: 1px solid transparent;border-bottom: 2px solid #dee2e6; padding: 5px;">${registro.rutasFaltantes ? 'Sí' : 'No'}</td>
+          <td style="border: 1px solid transparent;border-bottom: 2px solid #dee2e6; padding: 5px;">${registro.viasFaltantes ? 'Sí' : 'No'}</td>
+          <td style="border: 1px solid transparent;border-bottom: 2px solid #dee2e6; padding: 5px;">${registro.clasesFaltantes ? 'Sí' : 'No'}</td>
         </tr>
       `;
     }

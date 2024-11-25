@@ -11,7 +11,9 @@
           </tr>
         </tbody>
       </table>
-      <button type="button" class="boton primario relleno" style="margin-left: 15px;" (click)="guardarRutaCompleta()">Guardar</button>
+      <button type="button" class="boton primario relleno" style="margin-left: 15px;" (click)="guardarRutaCompleta()" [disabled]="editable">
+        Guardar
+      </button>
       <button type="button" class="boton primario relleno" [routerLink]="['/administrar','terminales']" style="margin-left: auto;">
         Volver <i class="bi bi-arrow-return-left"></i>
       </button>
@@ -74,7 +76,7 @@
             <tr>
               <td><!-- ESTADO DE LA RUTA -->
                 <select name="estadoRuta" id="estadoRuta" class="form-select" [(ngModel)]="rutaInfo.rutaActiva"
-                  (change)="manejarEstadoRuta(rutaInfo)">
+                  (change)="manejarEstadoRuta(rutaInfo)" [disabled]="editable">
                   <option [value]="null">Seleccione una opción</option>
                   <option [value]="true">Si</option>
                   <option [value]="false">No</option>
@@ -82,14 +84,14 @@
               </td>
               <td><!-- TIPO DE LLEGADA -->
                 <select name="tipoLlegada" id="tipoLlegada" class="form-select" [(ngModel)]="rutaInfo.idTipoLlegada"
-                  (change)="maestraDirecciones(ruta,rutaInfo)" [disabled]="!rutaInfo.rutaActiva">
+                  (change)="maestraDirecciones(ruta,rutaInfo, true)" [disabled]="!rutaInfo.rutaActiva || editable">
                   <option [value]="null">Seleccione una opción</option>
                   <option *ngFor="let tipo of tipoLlegada" [value]="tipo.id">{{tipo.descripcion}}</option>
                 </select>
               </td>
               <td><!-- DIRECCIÓN -->
                 <select name="direccion" id="direccion" class="form-select" [(ngModel)]="rutaInfo.Iddireccion"
-                  [disabled]="!rutaInfo.rutaActiva || rutaInfo.idTipoLlegada === null" (change)="manejarDirecciones(rutaInfo)">
+                  [disabled]="!rutaInfo.rutaActiva || rutaInfo.idTipoLlegada === null || editable" (change)="manejarDirecciones(rutaInfo)">
                   <option [value]="null">Seleccione una opción</option>
                   <option *ngFor="let direccion of direcciones" [value]="direccion.id">{{direccion.descripcion}}</option>
                   <option value="abrirModal">Añadir nueva dirección</option>
@@ -101,7 +103,7 @@
               </td>
               <td><!-- RESOLUCIÓN CORRESPONDE -->
                 <select name="corresponde?" id="corresponde" class="form-select" [(ngModel)]="rutaInfo.corresponde"
-                  [disabled]="!rutaInfo.rutaActiva" (change)="manejarCorresponde(rutaInfo)">
+                  [disabled]="!rutaInfo.rutaActiva || editable" (change)="manejarCorresponde(rutaInfo)">
                   <option [value]="null">Seleccione una opción</option>
                   <option [value]="1">Si</option>
                   <option [value]="2">No</option>
@@ -110,16 +112,16 @@
               <td><!-- NÚMERO DE RESOLUCIÓN NUEVA -->
                 <input type="text" name="resolucionNueva" id="resolucionNueva" placeholder="-" class="form-control"
                   [(ngModel)]="rutaInfo.resolucionActual"
-                  [disabled]="!rutaInfo.rutaActiva || rutaInfo.corresponde !== 2">
+                  [disabled]="!rutaInfo.rutaActiva || rutaInfo.corresponde !== 2 || editable" >
               </td>
               <td><!-- INPUT ARCHIVO PDF RESOLUCION-->
-                <label class="input-archivo d-flex" for="adjuntar">
+                <label class="input-archivo d-flex" for="adjuntar" [ngClass]="{'disabled':editable}">
                   <!-- [class.marcar-error]="!rutaInfo.nombreOriginal && error" -->
                   <div class="boton-adjuntar d-flex align-items-center justify-content-center">Seleccionar archivo</div>
                   <div class="archivos">
                     <div class="archivo d-flex" *ngIf="rutaInfo.nombreOriginal">
                       <span class="nombre-archivo">{{ rutaInfo.nombreOriginal}}</span>
-                      <button class="eliminar-archivo" (click)="manejarRemoverArchivo(input,$event)">
+                      <button class="eliminar-archivo" (click)="manejarRemoverArchivo(input,$event)" [disabled]="editable">
                         <i class="bi bi-trash"></i></button>
                     </div>
                     <div class="sin-archivo d-flex"
@@ -128,7 +130,7 @@
                     </div>
                   </div>
                   <input #input type="file" id="adjuntar" name="adjuntar" accept=".pdf"
-                    (change)="guardarArchivo($event,5)">
+                    (change)="guardarArchivo($event,5)" [disabled]="editable">
                 </label>
                 <a *ngIf="rutaInfo.nombreOriginal" class="a"
                   (click)="descargarArchivo(rutaInfo.nombreOriginal,rutaInfo.documento,rutaInfo.rutaDocumento)">
@@ -145,19 +147,19 @@
       <!-- ------------- TABLA DE VIAS ---------------- -->
       <div class="via-clase w-100 custom-scroll" style="margin-right: 20px;">
         <label for="" style="color: brown; margin-left: 10px; font-size: small;" *ngIf="vias.length <= 0">
-          Debe registrar al menos una via
+          Debe registrar al menos una vía
         </label>
         <div class="d-flex mx-0 table-container">
           <table class="table custom-scroll">
             <thead class="encabezado">
               <tr>
-                <th colspan="3" style="text-align: center;">Información de las vias</th>
+                <th colspan="3" style="text-align: center;">Información de las vías</th>
                 <th style="width: 65px !important;"></th>
               </tr>
               <tr>
-                <th>Via en BD</th>
-                <th>¿Corresponde la via?</th>
-                <th>Via actual</th>
+                <th>Vía en BD</th>
+                <th>¿Corresponde la vía?</th>
+                <th>Vía actual</th>
                 <th style="width: 65px !important;"></th>
               </tr>
             </thead>
@@ -167,7 +169,7 @@
                 <td>{{via.via}}</td>
                 <td>
                   <select name="correspondeVia" [id]="'correspondeVia'+i" class="form-select"
-                    [(ngModel)]="via.corresponde" [disabled]="!rutaInfo.rutaActiva"
+                    [(ngModel)]="via.corresponde" [disabled]="!rutaInfo.rutaActiva || editable"
                     (change)="manejarCorrespondeVia(via)">
                     <option [value]="null">Seleccione una opción</option>
                     <option [value]="1">Si</option>
@@ -176,31 +178,31 @@
                 </td>
                 <td>
                   <input type="text" name="viaNueva" [id]="'viaNueva'+i" placeholder="-" class="form-control"
-                    [(ngModel)]="via.viaNueva" [disabled]="!rutaInfo.rutaActiva || via.corresponde !==2">
+                    [(ngModel)]="via.viaNueva" [disabled]="!rutaInfo.rutaActiva || via.corresponde !==2 || editable">
                 </td>
                 <td style="width: 65px !important;">
                   <button type="button" class="boton relleno primario" (click)="eliminarRegistro(via,'via')"
-                    [disabled]="!rutaInfo.rutaActiva">
+                    [disabled]="!rutaInfo.rutaActiva || editable">
                     <i class="bi bi-trash"></i>
                   </button>
                 </td>
               </tr>
               <tr *ngIf="vias.length <= 0">
                 <td colspan="4">
-                  <h6 class="sin-registros"> -- No hay vias para mostrar. --</h6>
+                  <h6 class="sin-registros"> -- No hay vías para mostrar. --</h6>
                 </td>
               </tr>
               <tr *ngIf="rutaInfo.rutaActiva" style="margin-top: 10px; margin-left: 10px;">
-                <td colspan="4">
+                <td *ngIf="!editable" colspan="4">
                   <div class="d-flex">
                     <button type="button" class="boton primario relleno botones-agregar"
                       (click)="habilitarAgregarNuevo('via')">
-                      Agregar via <i class="bi bi-plus-circle"></i>
+                      Agregar vía <i class="bi bi-plus-circle"></i>
                     </button>
                     <div *ngIf="habilitarViaNueva" class="d-flex" style="width: 100%; margin-left: auto;">
                       <!-- <label for="viaNueva" class="fs-14px">Nombre de la nueva via</label> -->
                       <input type="text" class="form-control" id="viaNueva" [(ngModel)]="viaNueva"
-                        placeholder="Agregar via nueva." style="margin-right: 10px;">
+                        placeholder="Agregar vía nueva." style="margin-right: 10px;">
                       <button type="button" class="iconos" (click)="agregarRegistro(viaNueva,'via')">
                         <i class="bi bi-floppy"></i>
                       </button>
@@ -244,14 +246,14 @@
                 <td>{{clase.clase}}</td>
                 <td>
                   <select name="tipoVehiculo" [id]="'tipoVehiculo'+i" class="form-select" (change)="manejarTipoVehiculo(tipo,$event,i)"
-                    [(ngModel)]="clase.tipo_vehiculo_id" [disabled]="!rutaInfo.rutaActiva" #tipo>
+                    [(ngModel)]="clase.tipo_vehiculo_id" [disabled]="!rutaInfo.rutaActiva || editable" #tipo>
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let tipo of clase.tipoVehiculo" [value]="tipo.id">{{tipo.descripcion}}</option>
                   </select>
                 </td>
                 <td style="width: 65px !important;">
                   <button type="button" class="boton relleno primario" (click)="eliminarRegistro(clase,'clase')"
-                    [disabled]="!rutaInfo.rutaActiva">
+                    [disabled]="!rutaInfo.rutaActiva || editable">
                     <i class="bi bi-trash"></i>
                   </button>
                 </td>
@@ -262,7 +264,7 @@
                 </td>
               </tr>
               <tr *ngIf="rutaInfo.rutaActiva" style="margin-top: 10px">
-                <td colspan="3">
+                <td *ngIf="!editable" colspan="3">
                   <div class="d-flex">
                     <button type="button" class="boton primario relleno botones-agregar"
                       (click)="habilitarAgregarNuevo('clase')">
@@ -305,7 +307,7 @@
     </div>
     <br>
     <!-- ------------- TABLA DE PARADAS ------------- -->
-    <div *ngIf="rutaInfo.rutaActiva">
+    <div >
       <div *ngFor="let via of vias; let v = index" class="ruta w-100 custom-scroll">
         <div class="d-flex mx-0 table-container">
           <table class="table custom-scroll">
@@ -336,14 +338,14 @@
                 <td style="text-align: center;"><!-- TIPO DE LLEGADA -->
                   <select name="tipoLlegada" [id]="'tipoLlegadaP'+i" class="form-select"
                     [(ngModel)]="parada.tipollegada_id" (change)="maestraDireccionesP(undefined, parada)"
-                    [disabled]="!rutaInfo.rutaActiva">
+                    [disabled]="!rutaInfo.rutaActiva || editable">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let tipo of parada.tiposLlegada" [value]="tipo.id">{{tipo.descripcion}}</option>
                   </select>
                 </td>
                 <td style="text-align: center;"><!-- DIRECCIÓN -->
                   <select name="direccion" [id]="'direccionP'+i" class="form-select" [(ngModel)]="parada.direccion_id"
-                    [disabled]="!rutaInfo.rutaActiva || parada.tipollegada_id === null">
+                    [disabled]="!rutaInfo.rutaActiva || parada.tipollegada_id === null || editable">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let direccion of parada.direcciones" [value]="direccion.id">
                       {{direccion.descripcion}}</option>
@@ -353,7 +355,7 @@
                 </td>
                 <td style="width: 65px !important;">
                   <button type="button" class="boton relleno primario" (click)="eliminarRegistro(parada,'parada')"
-                    [disabled]="!rutaInfo.rutaActiva">
+                    [disabled]="!rutaInfo.rutaActiva || editable">
                     <i class="bi bi-trash"></i>
                   </button>
                 </td>
@@ -363,8 +365,8 @@
                   <h6 class="sin-registros"> -- No hay paradas para mostrar. --</h6>
                 </td>
               </tr>
-              <tr style="margin-top: 10px; margin-left: 10px;"> <!-- PARADA NUEVA -->
-                <td colspan="6">
+              <tr *ngIf="rutaInfo.rutaActiva" style="margin-top: 10px; margin-left: 10px;"> <!-- PARADA NUEVA -->
+                <td  *ngIf="!editable" colspan="6">
                   <div class="d-flex">
                     <button type="button" class="boton primario relleno botones-agregar"
                       (click)="habilitarAgregarNuevo('parada',via)">

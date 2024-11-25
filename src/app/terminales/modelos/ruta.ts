@@ -87,6 +87,18 @@ export interface Ruta2 {
   numeroVias?: number | null
   revisada?: boolean | null
 }
+export interface MostrarRutas {
+  departamentoDestino?: string | null,
+  departamentoOrigen?: string | null,
+  municipioDestino?: string | null,
+  municipioOrigen?: string | null,
+  descripcionDestino?: string | null,
+  descripcionOrigen?: string | null,
+  index?: number | null
+  errorRutas?: boolean | null
+  numeroVias?: number | null
+  revisada?: boolean | null
+}
 
 export interface RutaInfo {
   corresponde?: number | string | null,
