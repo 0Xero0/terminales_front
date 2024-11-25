@@ -270,16 +270,20 @@ export class CrearRutaComponent {
     }
 
   }
-  maestraDirecciones(rutaInfo?: RutaNueva2) {
-    if (rutaInfo?.idTipoLlegada !== 'null' || rutaInfo?.idTipoLlegada !== null) {
-      this.servicioTerminales.maestraDirecciones(rutaInfo?.idTipoLlegada, rutaInfo?.codCpDestino).subscribe({
+  maestraDirecciones(rutaInfo?: RutaNueva2, cambio?:boolean) {
+    if (this.rutaInfo.idTipoLlegada !== 'null') {
+      console.log(this.rutaInfo.idTipoLlegada !== 'null')
+      this.servicioTerminales.maestraDirecciones(this.rutaInfo.idTipoLlegada, this.rutaInfo.codCpDestino).subscribe({
         next: (respuesta: any) => {
           this.direcciones = respuesta.respuestaDirecciones
+          if(cambio) this.rutaInfo.Iddireccion = null
         }
       })
-    } else {
+    } else if (this.rutaInfo.idTipoLlegada === 'null') {
       this.direcciones = []
-      rutaInfo.Iddireccion = null
+      this.rutaInfo.Iddireccion = null
+      this.rutaInfo.idTipoLlegada = null
+      console.log(this.rutaInfo.idTipoLlegada, this.rutaInfo.Iddireccion)
     }
   }
   maestrasClases() { // Consulta las maestras que corresponda llenar en la lista de Clases
@@ -352,13 +356,13 @@ export class CrearRutaComponent {
       if (rutaInfo.Iddireccion === 'abrirModal') {
         this.abrirModalConSwal(Number(rutaInfo.idTipoLlegada), rutaInfo.codCpDestino, rutaInfo);
       }
+      if (rutaInfo.Iddireccion === 'null' || rutaInfo.Iddireccion === 0) rutaInfo.Iddireccion = null
     }
     if (paradaNueva) {
       if (paradaNueva.direccion_id === 'abrirModal') {
         this.abrirModalConSwal(Number(paradaNueva.tipollegada_id), paradaNueva.centro_poblado_id, undefined, paradaNueva); // Si selecciona la opción de 'Añadir nueva dirección'
-      } else {
-
       }
+      if (paradaNueva.direccion_id === 'null' || paradaNueva.direccion_id === 0) paradaNueva.direccion_id = null
     }
 
   }
@@ -466,7 +470,7 @@ export class CrearRutaComponent {
       this.servicioTerminales.eliminarVia(via.id).subscribe({
         next: (respuesta: any) => {
           this.obtenerRutaInfo()
-          Swal.fire('!Via eliminada!', 'success');
+          Swal.fire({titleText:'!Vía eliminada!', icon:'success'});
         },
         error: (error: HttpErrorResponse) => {
           if (error.status == 400) {
@@ -489,7 +493,7 @@ export class CrearRutaComponent {
     //console.log(JSONviaNueva)
     if (validarCampos(JSONviaNueva)) {
       Swal.fire({
-        titleText: "¿Está usted seguro de querer agregar una via nueva?",
+        titleText: "¿Está usted seguro de agregar una vía nueva?",
         confirmButtonText: "Agregar",
         icon: "warning",
         showCancelButton: true,
@@ -501,7 +505,7 @@ export class CrearRutaComponent {
               this.obtenerRutaInfo()
               //console.log(this.vias)
               this.deshabilitarAgregarNuevo('via')
-              Swal.fire('¡Via creada!', 'La nueva via ha sido añadida.', 'success');
+              Swal.fire('¡Vía creada!', 'La nueva va ha sido agregada.', 'success');
             }
           })
         } else if (result.isDismissed) {
@@ -510,7 +514,7 @@ export class CrearRutaComponent {
       })
     } else {
       //this.error = true
-      Swal.fire('¡Información incompleta!', 'Por favor, complete la información de la nueva Via antes de agregarla.', 'error');
+      Swal.fire('¡Información incompleta!', 'Por favor, complete la información de la nueva vía antes de agregarla.', 'error');
     }
   }
 
@@ -523,7 +527,7 @@ export class CrearRutaComponent {
     //console.log(JSONClaseNueva)
     if (validarCampos(JSONClaseNueva)) {
       Swal.fire({
-        titleText: "¿Está usted seguro de querer agregar una clase nueva?",
+        titleText: "¿Está usted seguro de agregar una clase nueva?",
         confirmButtonText: "Agregar",
         icon: "warning",
         showCancelButton: true,
@@ -534,7 +538,7 @@ export class CrearRutaComponent {
             next: (respuesta: any) => {
               this.listarClases()
               this.deshabilitarAgregarNuevo('clase')
-              Swal.fire('¡Clase creada!', 'La nueva clase ha sido añadida.', 'success');
+              Swal.fire('¡Clase creada!', 'La nueva clase ha sido agregada.', 'success');
             }
           })
         } else if (result.isDismissed) {
@@ -558,7 +562,7 @@ export class CrearRutaComponent {
     }
     if (validarCampos(JSONParadaNueva)) {
       Swal.fire({
-        titleText: "¿Está seguro de querer agregar una parada nueva?",
+        titleText: "¿Está seguro de agregar una parada nueva?",
         confirmButtonText: "Agregar",
         icon: "warning",
         showCancelButton: true,
@@ -570,7 +574,7 @@ export class CrearRutaComponent {
               this.listarParadas()
               this.inicializarParadaNueva(via)
               via.paradaNueva.habilitarParadaNueva = false
-              Swal.fire('¡Parada creada!', 'La nueva parada ha sido añadida.', 'success');
+              Swal.fire('¡Parada creada!', 'La nueva parada ha sido agregada.', 'success');
             }
           })
         } else if (result.isDismissed) {
@@ -601,13 +605,13 @@ export class CrearRutaComponent {
         select.value = ''
         event.preventDefault();
         //console.log(this.clase.tipo_vehiculo_id = null, event.preventDefault())
-        Swal.fire('¡Advertencia!', 'Este tipo de vehiculo ya existe, por favor escoja otro.', 'warning');
+        Swal.fire('¡Advertencia!', 'Este tipo de vehículo ya existe, por favor seleccione otro.', 'warning');
       }
       if (this.clases.some((clase: Clases, i) => i !== index && clase.tipo_vehiculo_id === Number(event.target.value))) {
         if (select) select.value = ''
         event.preventDefault();
         this.clases[index].tipo_vehiculo_id = null
-        Swal.fire('¡Advertencia!', 'Este tipo de vehiculo ya existe, por favor escoja otro.', 'warning');
+        Swal.fire('¡Advertencia!', 'Este tipo de vehículo ya existe, por favor seleccione otro.', 'warning');
       }
     }
   }
@@ -628,9 +632,10 @@ export class CrearRutaComponent {
       nombreOriginal: this.rutaInfo.nombreOriginal,
       rutaArchivo: this.rutaInfo.rutaDocumento
     }
+    console.log(JSONRutaNueva)
     if (validarCampos(JSONRutaNueva)) {
       Swal.fire({
-        titleText: "¿Está seguro que quiere agregar una ruta nueva?",
+        titleText: "¿Está seguro de agregar una ruta nueva?",
         text: "Después de agregar una ruta nueva, no podrá eliminarla.",
         confirmButtonText: "Agregar",
         icon: "warning",
@@ -640,7 +645,7 @@ export class CrearRutaComponent {
         if (result.isConfirmed) {
           this.servicioTerminales.crearRuta(JSONRutaNueva).subscribe({
             next: (respuesta: any) => {
-              Swal.fire('¡Ruta crada!', 'La nueva ruta ha sido añadida.', 'success');
+              Swal.fire('¡Ruta creada!', 'La nueva ruta ha sido agregada.', 'success');
               this.rutaInfo.idRuta = respuesta.ids.id
               this.rutaInfo.idCodigoRuta = respuesta.ids.idRuta
               this.rutaInfo.idCodigoUnicoRuta = respuesta.ids.idUnicoRuta
@@ -651,7 +656,7 @@ export class CrearRutaComponent {
         }
       })
     } else {
-      Swal.fire('¡Información incompleta!', 'Por favor, complete la información de la nueva Ruta antes de crearla.', 'error');
+      Swal.fire('¡Información incompleta!', 'Por favor, complete la información de la nueva ruta antes de crearla.', 'error');
     }
   }
   guardarRutaCompleta() {
@@ -661,8 +666,8 @@ export class CrearRutaComponent {
       idUnicoRuta: Number(this.rutaInfo.idCodigoUnicoRuta),
       centroPobladoOrigen: this.rutaInfo.codCpOrigen,
       centroPobladoDestino: this.rutaInfo.codCpDestino,
-      tipoLLegada: Number(this.rutaInfo.idTipoLlegada),
-      direccion: Number(this.rutaInfo.Iddireccion),
+      tipoLLegada: this.rutaInfo.idTipoLlegada !== 0 ? Number(this.rutaInfo.idTipoLlegada) : null,
+      direccion: Number(this.rutaInfo.Iddireccion) > 0 ? Number(this.rutaInfo.Iddireccion) : null,
       rutaHabilitada: true,
       corresponde: 1,
       resolucionActual: this.rutaInfo.resolucionActual,

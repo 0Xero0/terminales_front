@@ -27,6 +27,8 @@ export class RevisarRutasComponent {
   vias: Via[] = []
   clases: Clases[] = []
 
+  editable: boolean = true
+
   viaNueva?: string | null
   habilitarViaNueva?: boolean | null
   clase: Clases = { clase_id: null, tipo_vehiculo_id: null }
@@ -47,7 +49,9 @@ export class RevisarRutasComponent {
     private router: Router
   ) {
     this.usuario = servicioLocalStorage.obtenerUsuario()
-    this.ruta = history.state.ruta;//Ids necesarios para la consulta de la ruta.
+    console.log(history.state.info.editable)
+    this.ruta = history.state.info.ruta;//Ids necesarios para la consulta de la ruta.
+    this.editable = history.state.info.editable;
   }
 
   ngOnInit(): void {
@@ -218,16 +222,18 @@ export class RevisarRutasComponent {
     })
   }
 
-  maestraDirecciones(ruta?: Ruta2, rutaInfo?: RutaInfo) {
-    if (rutaInfo?.idTipoLlegada !== 'null' || rutaInfo?.idTipoLlegada !== null) {
+  maestraDirecciones(ruta?: Ruta2, rutaInfo?: RutaInfo, cambio?: boolean) {
+    if (rutaInfo?.idTipoLlegada !== 'null') {
       this.servicioTerminales.maestraDirecciones(rutaInfo?.idTipoLlegada, ruta?.codCpDestino).subscribe({
         next: (respuesta: any) => {
           this.direcciones = respuesta.respuestaDirecciones
+          if(cambio) rutaInfo!.Iddireccion = null
         }
       })
     } else {
       this.direcciones = []
       rutaInfo.Iddireccion = null
+      rutaInfo.idTipoLlegada = null
     }
   }
 
@@ -330,13 +336,13 @@ export class RevisarRutasComponent {
       if (rutaInfo.Iddireccion === 'abrirModal') {
         this.abrirModalConSwal(Number(rutaInfo.idTipoLlegada), this.ruta.codCpDestino, rutaInfo);
       }
+      if (rutaInfo.Iddireccion === 'null' || rutaInfo.Iddireccion === 0) rutaInfo.Iddireccion = null
     }
     if (paradaNueva) {
       if (paradaNueva.direccion_id === 'abrirModal') {
         this.abrirModalConSwal(Number(paradaNueva.tipollegada_id), paradaNueva.centro_poblado_id, undefined, paradaNueva); // Si selecciona la opción de 'Añadir nueva dirección'
-      } else {
-
       }
+      if (paradaNueva.direccion_id === 'null' || paradaNueva.direccion_id === 0) paradaNueva.direccion_id = null
     }
 
   }
@@ -411,7 +417,7 @@ export class RevisarRutasComponent {
     console.log(JSONviaNueva)
     if (validarCampos(JSONviaNueva)) {
       Swal.fire({
-        titleText: "¿Está usted seguro de querer agregar una via nueva?",
+        titleText: "¿Está usted seguro de querer agregar una vía nueva?",
         confirmButtonText: "Agregar",
         icon: "warning",
         showCancelButton: true,
@@ -423,7 +429,7 @@ export class RevisarRutasComponent {
               this.obtenerRutaInfo()
               console.log(this.vias)
               this.deshabilitarAgregarNuevo('via')
-              Swal.fire('¡Via creada!', 'La nueva via ha sido añadida.', 'success');
+              Swal.fire({titleText: '¡Vía creada!', text: 'La nueva vía ha sido añadida.', icon: 'success'});
             },
             error: (error: HttpErrorResponse) => {
               if (error.status == 400) {
@@ -439,7 +445,7 @@ export class RevisarRutasComponent {
       })
     } else {
       //this.error = true
-      Swal.fire('¡Información incompleta!', 'Por favor, complete la información de la nueva Via antes de agregarla.', 'error');
+      Swal.fire('¡Información incompleta!', 'Por favor, complete la información de la nueva vía antes de agregarla.', 'error');
     }
   }
 
@@ -587,7 +593,7 @@ export class RevisarRutasComponent {
       this.servicioTerminales.eliminarVia(via.id).subscribe({
         next: (respuesta: any) => {
           this.obtenerRutaInfo()
-          Swal.fire('!Via eliminada!', 'La via ha sido eliminada.', 'success');
+          Swal.fire('!Vía eliminada!', 'La vía ha sido eliminada.', 'success');
         },
         error: (error: HttpErrorResponse) => {
           if (error.status == 400) {
@@ -608,10 +614,10 @@ export class RevisarRutasComponent {
       idUnicoRuta: Number(this.ruta.idCodigoUnicoRuta),
       centroPobladoOrigen: this.ruta.codCpOrigen,
       centroPobladoDestino: this.ruta.codCpDestino,
-      tipoLLegada: Number(this.rutaInfo.idTipoLlegada),
-      direccion: Number(this.rutaInfo.Iddireccion),
-      rutaHabilitada: true,
-      corresponde: 1,
+      tipoLLegada: this.rutaInfo.idTipoLlegada !== 0 ? Number(this.rutaInfo.idTipoLlegada) : null,
+      direccion: Number(this.rutaInfo.Iddireccion) > 0 ? Number(this.rutaInfo.Iddireccion) : null,
+      rutaHabilitada: this.rutaInfo.rutaActiva,
+      corresponde: this.rutaInfo.corresponde,
       resolucionActual: this.rutaInfo.resolucionActual,
       documento: this.rutaInfo.documento,
       nombreOriginal: this.rutaInfo.nombreOriginal,

@@ -110,8 +110,8 @@
           <tbody>
             <tr>
               <td><!-- TIPO DE LLEGADA -->
-                <select name="tipoLlegada" id="tipoLlegada" class="form-select" [(ngModel)]="rutaInfo.idTipoLlegada"
-                  (change)="maestraDirecciones(rutaInfo)" [disabled]="rutaInfo.codCpDestino === null">
+                <select name="tipoLlegada" id="tipoLlegadaRuta" class="form-select" [(ngModel)]="rutaInfo.idTipoLlegada"
+                  (change)="maestraDirecciones(rutaInfo, true)" [disabled]="rutaInfo.codCpDestino === null">
                   <option [value]="null">Seleccione una opción</option>
                   <option *ngFor="let tipo of tipoLlegada" [value]="tipo.id">{{tipo.descripcion}}</option>
                 </select>
@@ -170,13 +170,13 @@
             <table class="table custom-scroll">
               <thead class="encabezado">
                 <tr>
-                  <th colspan="3" style="text-align: center;">Información de las vias</th>
+                  <th colspan="3" style="text-align: center;">Información de las vías</th>
                   <th style="width: 65px !important;"></th>
                 </tr>
                 <tr>
-                  <th>Via en BD</th>
-                  <th>¿Corresponde la via?</th>
-                  <th>Via actual</th>
+                  <th>Vía en BD</th>
+                  <th>¿Corresponde la vía?</th>
+                  <th>Vía actual</th>
                   <th style="width: 65px !important;"></th>
                 </tr>
               </thead>
@@ -206,7 +206,7 @@
                 </tr>
                 <tr *ngIf="vias.length <= 0">
                   <td colspan="4">
-                    <h6 class="sin-registros"> -- No hay vias para mostrar. --</h6>
+                    <h6 class="sin-registros"> -- No hay vías para mostrar. --</h6>
                   </td>
                 </tr>
                 <tr style="margin-top: 10px; margin-left: 10px;">
@@ -214,12 +214,12 @@
                     <div class="d-flex">
                       <button type="button" class="boton primario relleno botones-agregar"
                         (click)="habilitarAgregarNuevo('via')">
-                        Agregar via <i class="bi bi-plus-circle"></i>
+                        Agregar vía <i class="bi bi-plus-circle"></i>
                       </button>
                       <div *ngIf="habilitarViaNueva" class="d-flex" style="width: 100%; margin-left: auto;">
                         <!-- <label for="viaNueva" class="fs-14px">Nombre de la nueva via</label> -->
                         <input type="text" class="form-control" id="viaNueva" [(ngModel)]="viaNueva"
-                          placeholder="Agregar via nueva." style="margin-right: 10px;">
+                          placeholder="Agregar vía nueva." style="margin-right: 10px;">
                         <button type="button" class="iconos" (click)="agregarRegistro(viaNueva,'via')">
                           <i class="bi bi-floppy"></i>
                         </button>
@@ -330,7 +330,7 @@
                 <tr>
                   <th colspan="5" style="position: relative;">
                     <div class="d-flex">
-                      Via: <span style="color: black;">{{via.via}}</span>
+                      Vía: <span style="color: black;">{{via.via}}</span>
                       <span class="centrado">Información de las paradas</span>
                     </div>
                   </th>

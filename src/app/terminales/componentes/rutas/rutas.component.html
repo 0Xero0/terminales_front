@@ -14,7 +14,7 @@
       Limpiar
     </button>
     <button type="button" class="boton primario relleno" style="margin-left: auto; margin-right: 60px;"
-    (click)="crearNuevaRuta()">
+    (click)="crearNuevaRuta()" *ngIf="!editable">
       Agregar ruta <i class="bi bi-plus-circle"></i>
     </button>
   </div>
@@ -28,8 +28,8 @@
     <table class="table custom-scroll">
       <thead class="encabezado">
         <tr>
-          <th rowspan="2" style="width: 70px; text-align: center;"><span>Ruta</span></th>
-          <th rowspan="2" style="width: 100px; text-align: center;"><span>N° de vias</span></th>
+          <th rowspan="2" style="width: 70px; text-align: center;"><span>N°</span></th>
+          <th rowspan="2" style="width: 100px; text-align: center;"><span>N° de vías</span></th>
           <th colspan="3" class="origen"><span class="fs-14px">Origen</span></th>
           <th colspan="3" class="destino"><span class="fs-14px">Destino</span></th>
           <th rowspan="2" style="text-align: center;"><span>Detalles</span></th>
@@ -46,8 +46,8 @@
       <tbody>
         <tr
           *ngFor="let ruta of rutasMostradas | paginate: { itemsPerPage: itemsPerPageRutas, currentPage: pageRutas, id:'Ruta' }; let i = index"
-          [class.faltante]="ruta.errorRutas">
-          <td>{{ruta.index}}</td>
+          [class.faltante]="ruta.errorRutas || compararFaltantes(ruta)">
+          <td style="text-align: center;">{{ruta.index}}</td>
           <td style="text-align: center;">{{ruta.numeroVias}}</td>
           <td style="text-align: center;">{{ruta.departamentoOrigen}}</td>
           <td style="text-align: center;">{{ruta.municipioOrigen}}</td>
