@@ -94,7 +94,7 @@
                   [disabled]="!rutaInfo.rutaActiva || rutaInfo.idTipoLlegada === null || editable" (change)="manejarDirecciones(rutaInfo)">
                   <option [value]="null">Seleccione una opción</option>
                   <option *ngFor="let direccion of direcciones" [value]="direccion.id">{{direccion.descripcion}}</option>
-                  <option value="abrirModal">Añadir nueva dirección</option>
+                  <option *ngIf="rutaInfo.idTipoLlegada === 4" value="abrirModal">Añadir nueva dirección</option>
                   <!-- Opción para abrir el modal *ngIf="ruta.tipo_llegada_id !== 1"-->
                 </select>
               </td>
@@ -349,7 +349,7 @@
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let direccion of parada.direcciones" [value]="direccion.id">
                       {{direccion.descripcion}}</option>
-                    <option value="abrirModal">Añadir nueva dirección</option>
+                    <option *ngIf="parada.tipollegada_id === 4" value="abrirModal">Añadir nueva dirección</option>
                     <!-- Opción para abrir el modal *ngIf="ruta.tipo_llegada_id !== 1"-->
                   </select>
                 </td>
