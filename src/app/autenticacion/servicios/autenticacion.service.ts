@@ -17,7 +17,7 @@ export class AutenticacionService {
   public readonly llaveTokenLocalStorage = 'jwtTerminales'
   public readonly llaveUsuarioLocalStorage = 'UsuarioTerminales'
   public readonly llaveRolesLocalStorage = 'rolTerminales'
-  public readonly aplicativos = 'aplicativosTerminales'
+  // public readonly aplicativos = 'aplicativosTerminales'
   userToken: string = '';
 
   constructor(private clientHttp:HttpClient) {
@@ -51,7 +51,7 @@ export class AutenticacionService {
     localStorage.setItem(this.llaveTokenLocalStorage, jwt),
     localStorage.setItem(this.llaveRolesLocalStorage, JSON.stringify(rol))
     localStorage.setItem(this.llaveUsuarioLocalStorage, JSON.stringify(Usuario))
-    localStorage.setItem(this.aplicativos,JSON.stringify(aplicativos))
+    /* localStorage.setItem(this.aplicativos,JSON.stringify(aplicativos)) */
   }
 
   public recuperarContraseña(informacionUsuario:PeticionRecuperarContrasena): Observable<string>{

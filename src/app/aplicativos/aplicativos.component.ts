@@ -28,8 +28,7 @@ export class AplicativosComponent implements OnInit{
   constructor(private servicioApp:ServicioApp,private router: Router, private servicioProveedores: ServicioProveedores){
     this.token = localStorage.getItem('tokenTerminales');
     this.rol = JSON.parse(localStorage.getItem('rolTerminales')!);
-    const aplicativosJSON = localStorage.getItem('aplicativosTerminales')
-    /* console.log(aplicativosJSON) */
+    /* const aplicativosJSON = localStorage.getItem('aplicativosTerminales')
     if(!aplicativosJSON){return ;}
     try{
       const aplicativosParseados = JSON.parse(aplicativosJSON);
@@ -42,7 +41,7 @@ export class AplicativosComponent implements OnInit{
     }catch (error){
       console.error('Error al parsear los aplicativos del localStorage:', error);
     return ;
-    }
+    } */
   }
   ngOnInit(): void {
     console.log(this.rol.id)
