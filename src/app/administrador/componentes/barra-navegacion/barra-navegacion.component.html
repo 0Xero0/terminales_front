@@ -8,12 +8,12 @@
         <img src="assets/img/iconos/user.png" alt="Icono" style="width: 24px; height: 24px;">
       </div>
       <div style="color: white; margin-right: 45px;" class="cursor-pointer">
-        <span (click)="cerrarSesion()" style="margin-left: 15px;">
+        <span *ngIf="inicioSesion" (click)="cerrarSesion()" style="margin-left: 15px;">
           <img src="assets/img/iconos/salir.png" alt="Icono" style="width: 30px; height: 24px;" title="Cerrar sesión">
         </span>
-        <button *ngIf="inicioVigia2" type="button" class="boton primario relleno" (click)="cerrarSesion()">
+        <span *ngIf="inicioVigia2" style="margin-left: 15px;" (click)="cerrarSesion()">
           <img src="assets/img/iconos/salir.png" alt="Icono" style="width: 30px; height: 24px;" title="Volver al menú de módulos">
-        </button>
+        </span>
       </div>
     </div>
 
