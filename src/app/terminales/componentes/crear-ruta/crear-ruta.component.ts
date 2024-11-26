@@ -452,7 +452,14 @@ export class CrearRutaComponent {
       this.servicioTerminales.eliminarClase(arreglo.id_ruta_vehiculos).subscribe({
         next: (respuesta: any) => {
           this.listarClases()
-          Swal.fire('!Clase eliminada!', 'success');
+          Swal.fire('¡Clase eliminada!', 'success');
+        },
+        error: (error: HttpErrorResponse) => {
+          if (error.status == 400) {
+            Swal.fire('¡Fallo al eliminar!', 'Por favor, vuelva a intentarlo más tarde.', 'error');
+          } else {
+            Swal.fire('¡Error desconocido!', 'Por favor, vuelva a intentarlo más tarde.', 'error');
+          }
         }
       })
     }
@@ -461,7 +468,14 @@ export class CrearRutaComponent {
       this.servicioTerminales.eliminarParada(Number(parada.parada_id), Number(parada.nodo_despacho_id)).subscribe({
         next: (respuesta: any) => {
           this.listarParadas()
-          Swal.fire('!Parada eliminada!', 'success');
+          Swal.fire('¡Parada eliminada!', 'success');
+        },
+        error: (error: HttpErrorResponse) => {
+          if (error.status == 400) {
+            Swal.fire('¡Fallo al eliminar!', 'Por favor, vuelva a intentarlo más tarde.', 'error');
+          } else {
+            Swal.fire('¡Error desconocido!', 'Por favor, vuelva a intentarlo más tarde.', 'error');
+          }
         }
       })
     }
@@ -470,7 +484,7 @@ export class CrearRutaComponent {
       this.servicioTerminales.eliminarVia(via.id).subscribe({
         next: (respuesta: any) => {
           this.obtenerRutaInfo()
-          Swal.fire({titleText:'!Vía eliminada!', icon:'success'});
+          Swal.fire({titleText:'¡Vía eliminada!', icon:'success'});
         },
         error: (error: HttpErrorResponse) => {
           if (error.status == 400) {

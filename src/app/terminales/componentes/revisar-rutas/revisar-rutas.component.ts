@@ -276,13 +276,7 @@ export class RevisarRutasComponent {
 
   /* ------------- ACCIONES ---------------- */
   manejarEstadoRuta(rutaInfo: RutaInfo) {
-    if (rutaInfo.rutaActiva === 'true') {
-      rutaInfo.rutaActiva = true
-    } else {
-      rutaInfo.idTipoLlegada = null
-      this.direcciones = []
-      rutaInfo.Iddireccion = null
-    }
+    if (rutaInfo.rutaActiva === 'true') rutaInfo.rutaActiva = true
     if (rutaInfo.rutaActiva === 'false') rutaInfo.rutaActiva = false
     if (rutaInfo.rutaActiva === 'null') rutaInfo.rutaActiva = null
   }
@@ -561,7 +555,7 @@ export class RevisarRutasComponent {
       this.servicioTerminales.eliminarClase(arreglo.id_ruta_vehiculos).subscribe({
         next: (respuesta: any) => {
           this.listarClases()
-          Swal.fire('!Clase eliminada!', '', 'success');
+          Swal.fire('¡Clase eliminada!', '', 'success');
         },
         error: (error: HttpErrorResponse) => {
           if (error.status == 400) {
@@ -577,7 +571,7 @@ export class RevisarRutasComponent {
       this.servicioTerminales.eliminarParada(Number(parada.parada_id), Number(parada.nodo_despacho_id)).subscribe({
         next: (respuesta: any) => {
           this.listarParadas()
-          Swal.fire('!Parada eliminada!', '', 'success');
+          Swal.fire('¡Parada eliminada!', '', 'success');
         },
         error: (error: HttpErrorResponse) => {
           if (error.status == 400) {
@@ -593,7 +587,7 @@ export class RevisarRutasComponent {
       this.servicioTerminales.eliminarVia(via.id).subscribe({
         next: (respuesta: any) => {
           this.obtenerRutaInfo()
-          Swal.fire('!Vía eliminada!', '', 'success');
+          Swal.fire('¡Vía eliminada!', '', 'success');
         },
         error: (error: HttpErrorResponse) => {
           if (error.status == 400) {

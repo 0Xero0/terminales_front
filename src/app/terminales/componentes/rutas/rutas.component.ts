@@ -192,7 +192,7 @@ export class RutasComponent implements OnInit {
     const rutasRevisadas = JSON.parse(localStorage.getItem('rutasRevisadas') || '[]');
     this.servicioTerminales.listarRutas(this.usuario?.id).subscribe({
       next: (respuesta: any) => {
-        console.log(this.rutasMostradas)
+        //console.log(this.rutasMostradas)
         // Actualizar "rutas" con los nuevos datos, restaurando "revisada" si existe
         this.rutas = respuesta.rutasVigilado.map((registro: any, index: any) => {
           const idRuta = registro.rutas.idRuta;
@@ -204,6 +204,9 @@ export class RutasComponent implements OnInit {
             revisada: rutaRevisada ? rutaRevisada.revisada : false, // Usar el valor del localStorage si existe
           };
         });
+        for(let ruta of this.rutas){
+          if(ruta.revisada === true) ruta.errorRutas = false
+        }
         // Actualizar rutasMostradas para reflejar el estado completo
         this.rutasMostradas = [...this.rutas];
 

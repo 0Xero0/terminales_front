@@ -112,7 +112,7 @@
               <td><!-- NÚMERO DE RESOLUCIÓN NUEVA -->
                 <input type="text" name="resolucionNueva" id="resolucionNueva" placeholder="-" class="form-control"
                   [(ngModel)]="rutaInfo.resolucionActual"
-                  [disabled]="!rutaInfo.rutaActiva || rutaInfo.corresponde !== 2 || editable" >
+                  [disabled]="editable" >
               </td>
               <td><!-- INPUT ARCHIVO PDF RESOLUCION-->
                 <label class="input-archivo d-flex" for="adjuntar" [ngClass]="{'disabled':editable}">
@@ -146,7 +146,7 @@
     <div class="d-flex">
       <!-- ------------- TABLA DE VIAS ---------------- -->
       <div class="via-clase w-100 custom-scroll" style="margin-right: 20px;">
-        <label for="" style="color: brown; margin-left: 10px; font-size: small;" *ngIf="vias.length <= 0">
+        <label for="" style="color: brown; margin-left: 10px; font-size: small;" *ngIf="vias.length <= 0 && rutaInfo.rutaActiva">
           Debe registrar al menos una vía
         </label>
         <div class="d-flex mx-0 table-container">
@@ -224,14 +224,14 @@
       </div>
       <!-- ------------ TABLA DE CLASES DE VEHICULOS ------------ -->
       <div class="via-clase w-100 custom-scroll">
-        <label for="" style="color: brown; margin-left: 10px; font-size: small;" *ngIf="clases.length <= 0">
+        <label for="" style="color: brown; margin-left: 10px; font-size: small;" *ngIf="clases.length <= 0 && rutaInfo.rutaActiva">
           Debe registrar al menos una clase
         </label>
         <div class="d-flex mx-0 table-container">
           <table class="table custom-scroll">
             <thead class="encabezado">
               <tr>
-                <th colspan="2" style="text-align: center;">Información de las clases de vehiculos</th>
+                <th colspan="2" style="text-align: center;">Información de las clases de vehículos</th>
                 <th style="width: 65px !important;"></th>
               </tr>
               <tr>
