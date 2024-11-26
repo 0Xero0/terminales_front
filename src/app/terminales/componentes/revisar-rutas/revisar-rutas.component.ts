@@ -417,7 +417,7 @@ export class RevisarRutasComponent {
     console.log(JSONviaNueva)
     if (validarCampos(JSONviaNueva)) {
       Swal.fire({
-        titleText: "¿Está usted seguro de querer agregar una vía nueva?",
+        titleText: "¿Está usted seguro de agregar una vía nueva?",
         confirmButtonText: "Agregar",
         icon: "warning",
         showCancelButton: true,
@@ -429,7 +429,7 @@ export class RevisarRutasComponent {
               this.obtenerRutaInfo()
               console.log(this.vias)
               this.deshabilitarAgregarNuevo('via')
-              Swal.fire({titleText: '¡Vía creada!', text: 'La nueva vía ha sido añadida.', icon: 'success'});
+              Swal.fire({titleText: '¡Vía creada!', text: 'La nueva vía ha sido agregada.', icon: 'success'});
             },
             error: (error: HttpErrorResponse) => {
               if (error.status == 400) {
@@ -458,7 +458,7 @@ export class RevisarRutasComponent {
     console.log(JSONClaseNueva)
     if (validarCampos(JSONClaseNueva)) {
       Swal.fire({
-        titleText: "¿Está usted seguro de querer agregar una clase nueva?",
+        titleText: "¿Está usted seguro de agregar una clase nueva?",
         confirmButtonText: "Agregar",
         icon: "warning",
         showCancelButton: true,
@@ -469,7 +469,7 @@ export class RevisarRutasComponent {
             next: (respuesta: any) => {
               this.listarClases()
               this.deshabilitarAgregarNuevo('clase')
-              Swal.fire('¡Clase creada!', 'La nueva clase ha sido añadida.', 'success');
+              Swal.fire('¡Clase creada!', 'La nueva clase ha sido agregada.', 'success');
             },
             error: (error: HttpErrorResponse) => {
               if (error.status == 400) {
@@ -500,7 +500,7 @@ export class RevisarRutasComponent {
     }
     if (validarCampos(JSONParadaNueva)) {
       Swal.fire({
-        titleText: "¿Está seguro de querer agregar una parada nueva?",
+        titleText: "¿Está seguro de agregar una parada nueva?",
         confirmButtonText: "Agregar",
         icon: "warning",
         showCancelButton: true,
@@ -512,7 +512,7 @@ export class RevisarRutasComponent {
               this.listarParadas()
               this.inicializarParadaNueva(via)
               via.paradaNueva.habilitarParadaNueva = false
-              Swal.fire('¡Parada creada!', 'La nueva parada ha sido añadida.', 'success');
+              Swal.fire('¡Parada creada!', 'La nueva parada ha sido agregada.', 'success');
             },
             error: (error: HttpErrorResponse) => {
               if (error.status == 400) {
@@ -561,7 +561,7 @@ export class RevisarRutasComponent {
       this.servicioTerminales.eliminarClase(arreglo.id_ruta_vehiculos).subscribe({
         next: (respuesta: any) => {
           this.listarClases()
-          Swal.fire('!Clase eliminada!', 'La clase ha sido eliminada.', 'success');
+          Swal.fire('!Clase eliminada!', '', 'success');
         },
         error: (error: HttpErrorResponse) => {
           if (error.status == 400) {
@@ -577,7 +577,7 @@ export class RevisarRutasComponent {
       this.servicioTerminales.eliminarParada(Number(parada.parada_id), Number(parada.nodo_despacho_id)).subscribe({
         next: (respuesta: any) => {
           this.listarParadas()
-          Swal.fire('!Parada eliminada!', 'La parada ha sido eliminada.', 'success');
+          Swal.fire('!Parada eliminada!', '', 'success');
         },
         error: (error: HttpErrorResponse) => {
           if (error.status == 400) {
@@ -593,7 +593,7 @@ export class RevisarRutasComponent {
       this.servicioTerminales.eliminarVia(via.id).subscribe({
         next: (respuesta: any) => {
           this.obtenerRutaInfo()
-          Swal.fire('!Vía eliminada!', 'La vía ha sido eliminada.', 'success');
+          Swal.fire('!Vía eliminada!', '', 'success');
         },
         error: (error: HttpErrorResponse) => {
           if (error.status == 400) {
