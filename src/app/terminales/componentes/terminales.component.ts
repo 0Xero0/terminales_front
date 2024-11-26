@@ -89,7 +89,7 @@ export class TerminalesComponent implements OnInit {
         //this.todoGuardado = respuesta.aprobado
         localStorage.removeItem('rutasRevisadas'); // Elimina solo la clave "rutasRevisadas"
         if (this.faltantes.length <= 0) {
-          Swal.fire('¡Envio exitoso!', 'Enviado a la Superintendencia de transporte.', 'success');
+          Swal.fire('¡Envío exitoso!', 'Enviado a la Superintendencia de transporte.', 'success');
         }
         else {
           Swal.fire('¡Errores encontrados!', 'Por favor, corrija antes de volver a enviar.', 'error');
