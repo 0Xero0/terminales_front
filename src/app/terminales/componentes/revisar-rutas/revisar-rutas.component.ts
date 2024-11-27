@@ -198,6 +198,10 @@ export class RevisarRutasComponent {
             paradaNueva.direcciones = respuesta.respuestaDirecciones
           }
         })
+      } else {
+        paradaNueva.direccion_id = null
+        paradaNueva.tipollegada_id = null
+        paradaNueva.direcciones = []
       }
     }
     if (parada) {
@@ -208,6 +212,10 @@ export class RevisarRutasComponent {
             parada.direcciones = respuesta.respuestaDirecciones
           }
         })
+      } else {
+        parada.direccion_id = null
+        parada.tipollegada_id = null
+        parada.direcciones = []
       }
     }
 
@@ -305,6 +313,7 @@ export class RevisarRutasComponent {
       via.viaNueva = null
     }
     if (via.corresponde === '2') via.corresponde = 2
+    console.log(via.corresponde)
   }
 
   manejarTipoVehiculo(select: HTMLSelectElement, event?: any, index?: any) {
@@ -619,7 +628,7 @@ export class RevisarRutasComponent {
       vias: this.vias.map((via: Via) => ({
         id: Number(via.id),
         via: via.via,
-        corresponde: Number(via.corresponde),
+        corresponde: Number(via.corresponde) > 0 ? Number(via.corresponde) : null,
         viaNueva: via.viaNueva,
         paradas: via.paradas?.map((parada: Paradas2) => ({
           id: Number(parada.parada_id),
@@ -631,7 +640,7 @@ export class RevisarRutasComponent {
       })),
       clases: this.clases.map((clase: Clases) => ({
         id: Number(clase.id_ruta_vehiculos),
-        idClaseVehiculo: Number(clase.tipo_vehiculo_id),
+        idClaseVehiculo: Number(clase.tipo_vehiculo_id) > 0 ? Number(clase.tipo_vehiculo_id) : null,
         estado: true
       }))
     }

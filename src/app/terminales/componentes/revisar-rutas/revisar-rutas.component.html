@@ -75,7 +75,7 @@
           <tbody>
             <tr>
               <td><!-- ESTADO DE LA RUTA -->
-                <select name="estadoRuta" id="estadoRuta" class="form-select" [(ngModel)]="rutaInfo.rutaActiva"
+                <select name="estadoRuta" id="estadoRuta" class="form-select" [(ngModel)]="rutaInfo.rutaActiva" [class.faltante]="rutaInfo.rutaActiva === null && ruta.errorRutas"
                   (change)="manejarEstadoRuta(rutaInfo)" [disabled]="editable">
                   <option [value]="null">Seleccione una opción</option>
                   <option [value]="true">Si</option>
@@ -83,14 +83,14 @@
                 </select>
               </td>
               <td><!-- TIPO DE LLEGADA -->
-                <select name="tipoLlegada" id="tipoLlegada" class="form-select" [(ngModel)]="rutaInfo.idTipoLlegada"
+                <select name="tipoLlegada" id="tipoLlegada" class="form-select" [(ngModel)]="rutaInfo.idTipoLlegada" [class.faltante]="rutaInfo.idTipoLlegada === null && ruta.errorRutas && rutaInfo.rutaActiva"
                   (change)="maestraDirecciones(ruta,rutaInfo, true)" [disabled]="!rutaInfo.rutaActiva || editable">
                   <option [value]="null">Seleccione una opción</option>
                   <option *ngFor="let tipo of tipoLlegada" [value]="tipo.id">{{tipo.descripcion}}</option>
                 </select>
               </td>
               <td><!-- DIRECCIÓN -->
-                <select name="direccion" id="direccion" class="form-select" [(ngModel)]="rutaInfo.Iddireccion"
+                <select name="direccion" id="direccion" class="form-select" [(ngModel)]="rutaInfo.Iddireccion" [class.faltante]="rutaInfo.Iddireccion === null && ruta.errorRutas && rutaInfo.rutaActiva"
                   [disabled]="!rutaInfo.rutaActiva || rutaInfo.idTipoLlegada === null || editable" (change)="manejarDirecciones(rutaInfo)">
                   <option [value]="null">Seleccione una opción</option>
                   <option *ngFor="let direccion of direcciones" [value]="direccion.id">{{direccion.descripcion}}</option>
@@ -102,7 +102,7 @@
                 {{rutaInfo.resolucion}}
               </td>
               <td><!-- RESOLUCIÓN CORRESPONDE -->
-                <select name="corresponde?" id="corresponde" class="form-select" [(ngModel)]="rutaInfo.corresponde"
+                <select name="corresponde?" id="corresponde" class="form-select" [(ngModel)]="rutaInfo.corresponde" [class.faltante]="rutaInfo.corresponde === null && ruta.errorRutas && rutaInfo.rutaActiva"
                   [disabled]="!rutaInfo.rutaActiva || editable" (change)="manejarCorresponde(rutaInfo)">
                   <option [value]="null">Seleccione una opción</option>
                   <option [value]="1">Si</option>
@@ -111,11 +111,11 @@
               </td>
               <td><!-- NÚMERO DE RESOLUCIÓN NUEVA -->
                 <input type="text" name="resolucionNueva" id="resolucionNueva" placeholder="-" class="form-control"
-                  [(ngModel)]="rutaInfo.resolucionActual"
-                  [disabled]="editable" >
+                  [(ngModel)]="rutaInfo.resolucionActual" [class.faltante]="(rutaInfo.resolucionActual === null || rutaInfo.resolucionActual === '') && ruta.errorRutas"
+                  [disabled]="editable || (rutaInfo.corresponde !== 2 && rutaInfo.rutaActiva!)" >
               </td>
               <td><!-- INPUT ARCHIVO PDF RESOLUCION-->
-                <label class="input-archivo d-flex" for="adjuntar" [ngClass]="{'disabled':editable}">
+                <label class="input-archivo d-flex" for="adjuntar" [ngClass]="{'disabled':editable,'faltante':rutaInfo.nombreOriginal === '' && ruta.errorRutas}">
                   <!-- [class.marcar-error]="!rutaInfo.nombreOriginal && error" -->
                   <div class="boton-adjuntar d-flex align-items-center justify-content-center">Seleccionar archivo</div>
                   <div class="archivos">
@@ -168,7 +168,7 @@
                 *ngFor="let via of vias | paginate: { itemsPerPage: itemsPerPageVia, currentPage: pageVias, id:'Via' }; let i = index">
                 <td>{{via.via}}</td>
                 <td>
-                  <select name="correspondeVia" [id]="'correspondeVia'+i" class="form-select"
+                  <select name="correspondeVia" [id]="'correspondeVia'+i" class="form-select" [class.faltante]="via.corresponde === null && ruta.errorRutas && rutaInfo.rutaActiva"
                     [(ngModel)]="via.corresponde" [disabled]="!rutaInfo.rutaActiva || editable"
                     (change)="manejarCorrespondeVia(via)">
                     <option [value]="null">Seleccione una opción</option>
@@ -178,6 +178,7 @@
                 </td>
                 <td>
                   <input type="text" name="viaNueva" [id]="'viaNueva'+i" placeholder="-" class="form-control"
+                    [class.faltante]="via.viaNueva === null && ruta.errorRutas && rutaInfo.rutaActiva"
                     [(ngModel)]="via.viaNueva" [disabled]="!rutaInfo.rutaActiva || via.corresponde !==2 || editable">
                 </td>
                 <td style="width: 65px !important;">
@@ -246,7 +247,8 @@
                 <td>{{clase.clase}}</td>
                 <td>
                   <select name="tipoVehiculo" [id]="'tipoVehiculo'+i" class="form-select" (change)="manejarTipoVehiculo(tipo,$event,i)"
-                    [(ngModel)]="clase.tipo_vehiculo_id" [disabled]="!rutaInfo.rutaActiva || editable" #tipo>
+                    [(ngModel)]="clase.tipo_vehiculo_id" [disabled]="!rutaInfo.rutaActiva || editable"
+                    [class.faltante]="(clase.tipo_vehiculo_id === null || clase.tipo_vehiculo_id === 'null') && ruta.errorRutas && rutaInfo.rutaActiva" #tipo>
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let tipo of clase.tipoVehiculo" [value]="tipo.id">{{tipo.descripcion}}</option>
                   </select>
@@ -338,6 +340,7 @@
                 <td style="text-align: center;"><!-- TIPO DE LLEGADA -->
                   <select name="tipoLlegada" [id]="'tipoLlegadaP'+i" class="form-select"
                     [(ngModel)]="parada.tipollegada_id" (change)="maestraDireccionesP(undefined, parada)"
+                    [class.faltante]="parada.tipollegada_id === null && ruta.errorRutas && rutaInfo.rutaActiva"
                     [disabled]="!rutaInfo.rutaActiva || editable">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let tipo of parada.tiposLlegada" [value]="tipo.id">{{tipo.descripcion}}</option>
@@ -345,6 +348,7 @@
                 </td>
                 <td style="text-align: center;"><!-- DIRECCIÓN -->
                   <select name="direccion" [id]="'direccionP'+i" class="form-select" [(ngModel)]="parada.direccion_id"
+                    [class.faltante]="(parada.direccion_id === null || parada.direccion_id === 'null') && ruta.errorRutas && rutaInfo.rutaActiva"
                     [disabled]="!rutaInfo.rutaActiva || parada.tipollegada_id === null || editable">
                     <option [value]="null">Seleccione una opción</option>
                     <option *ngFor="let direccion of parada.direcciones" [value]="direccion.id">
