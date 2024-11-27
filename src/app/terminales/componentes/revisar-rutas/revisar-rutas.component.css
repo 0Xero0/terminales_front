@@ -195,6 +195,9 @@ input[type="file"]{
 }
 
 /* NUEVO */
+.faltante{
+  border: 2px solid #c55275 !important;
+}
 .origen{
   text-align: center;
   border-bottom: 2px solid #c7d4ed;
