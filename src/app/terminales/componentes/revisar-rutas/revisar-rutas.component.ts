@@ -315,7 +315,7 @@ export class RevisarRutasComponent {
     }
     if (via.corresponde === 'null') {
       via.corresponde = null
-      via.viaNueva = null
+      via.viaNueva = ''
     }
     if (via.corresponde === '2') via.corresponde = 2
     console.log(via.corresponde)
