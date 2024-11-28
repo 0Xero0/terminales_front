@@ -115,7 +115,8 @@
                   [disabled]="editable || (rutaInfo.corresponde !== 2 && rutaInfo.rutaActiva!)" >
               </td>
               <td><!-- INPUT ARCHIVO PDF RESOLUCION-->
-                <label class="input-archivo d-flex" for="adjuntar" [ngClass]="{'disabled':editable,'faltante':rutaInfo.nombreOriginal === '' && ruta.errorRutas}">
+                <label class="input-archivo d-flex" for="adjuntar"
+                [ngClass]="{'disabled':editable,'faltante':(rutaInfo.nombreOriginal === '' || rutaInfo.nombreOriginal === null) && ruta.errorRutas}">
                   <!-- [class.marcar-error]="!rutaInfo.nombreOriginal && error" -->
                   <div class="boton-adjuntar d-flex align-items-center justify-content-center">Seleccionar archivo</div>
                   <div class="archivos">
