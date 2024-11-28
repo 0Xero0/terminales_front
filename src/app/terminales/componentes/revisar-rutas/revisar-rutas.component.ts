@@ -284,7 +284,12 @@ export class RevisarRutasComponent {
 
   /* ------------- ACCIONES ---------------- */
   manejarEstadoRuta(rutaInfo: RutaInfo) {
-    if (rutaInfo.rutaActiva === 'true') rutaInfo.rutaActiva = true
+    if (rutaInfo.rutaActiva === 'true') {
+      rutaInfo.rutaActiva = true
+      if (rutaInfo.corresponde === 1) {
+        rutaInfo.resolucionActual = rutaInfo.resolucion
+      }
+    }
     if (rutaInfo.rutaActiva === 'false') rutaInfo.rutaActiva = false
     if (rutaInfo.rutaActiva === 'null') rutaInfo.rutaActiva = null
   }
