@@ -167,7 +167,7 @@
               <tr
                 *ngFor="let via of vias | paginate: { itemsPerPage: itemsPerPageVia, currentPage: pageVias, id:'Via' }; let i = index">
                 <td>{{via.via}}</td>
-                <td>
+                <td><!-- CORRESPONDE VIA -->
                   <select name="correspondeVia" [id]="'correspondeVia'+i" class="form-select" [class.faltante]="via.corresponde === null && ruta.errorRutas && rutaInfo.rutaActiva"
                     [(ngModel)]="via.corresponde" [disabled]="!rutaInfo.rutaActiva || editable"
                     (change)="manejarCorrespondeVia(via)">
@@ -178,7 +178,7 @@
                 </td>
                 <td>
                   <input type="text" name="viaNueva" [id]="'viaNueva'+i" placeholder="-" class="form-control"
-                    [class.faltante]="via.viaNueva === null && ruta.errorRutas && rutaInfo.rutaActiva"
+                    [class.faltante]="via.corresponde === 2 && via.viaNueva === null && ruta.errorRutas && rutaInfo.rutaActiva"
                     [(ngModel)]="via.viaNueva" [disabled]="!rutaInfo.rutaActiva || via.corresponde !==2 || editable">
                 </td>
                 <td style="width: 65px !important;">
