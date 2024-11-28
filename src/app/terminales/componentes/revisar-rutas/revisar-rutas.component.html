@@ -115,7 +115,8 @@
                   [disabled]="editable || (rutaInfo.corresponde !== 2 && rutaInfo.rutaActiva!)" >
               </td>
               <td><!-- INPUT ARCHIVO PDF RESOLUCION-->
-                <label class="input-archivo d-flex" for="adjuntar" [ngClass]="{'disabled':editable,'faltante':rutaInfo.nombreOriginal === '' && ruta.errorRutas}">
+                <label class="input-archivo d-flex" for="adjuntar"
+                [ngClass]="{'disabled':editable,'faltante':(rutaInfo.nombreOriginal === '' || rutaInfo.nombreOriginal === null) && ruta.errorRutas}">
                   <!-- [class.marcar-error]="!rutaInfo.nombreOriginal && error" -->
                   <div class="boton-adjuntar d-flex align-items-center justify-content-center">Seleccionar archivo</div>
                   <div class="archivos">
@@ -178,7 +179,7 @@
                 </td>
                 <td>
                   <input type="text" name="viaNueva" [id]="'viaNueva'+i" placeholder="-" class="form-control"
-                    [class.faltante]="via.corresponde === 2 && via.viaNueva === null && ruta.errorRutas && rutaInfo.rutaActiva"
+                    [class.faltante]="via.corresponde === 2 && via.viaNueva === '' && ruta.errorRutas && rutaInfo.rutaActiva"
                     [(ngModel)]="via.viaNueva" [disabled]="!rutaInfo.rutaActiva || via.corresponde !==2 || editable">
                 </td>
                 <td style="width: 65px !important;">
